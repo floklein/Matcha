@@ -117,11 +117,43 @@ app.post('/api/create', (req, res) => {
 
         //Send an email if everything is alright
 
+        //end if everything went fine
         res.end(`User created: ${response.login}`);
     })
-
 });
 
+app.post('/api/login', (req, res) => {
+    let response = {
+        login : req.query.login,
+        password : req.query.password,
+    }
+
+    let error = false;
+
+    //Check if every field is full
+    if (typeof response.login == 'undefined' || response.login == ''  || typeof response.password == 'undefined' || response.password == '') {
+        error = true;
+        res.status(400);
+        res.write("Empty field\n");
+    }
+
+    let sql = `SELECT login, pwd from users WHERE login = "${response.login}";`;
+    connection.query(sql , (err, result) => {
+        if (err) throw err;
+        if (result.length == 0) {
+            error = true;
+            res.status(400);
+        }
+        else if (!pw_hash.verify(response.password, result[0].pwd)) {
+            error = true;
+            res.status(400);
+        }
+        if (!error)
+            res.end("Success");
+        else
+            res.end("Login/pw broken");
+    })
+});
 
 const port = 5000;
 
