@@ -3,12 +3,15 @@ const express = require('express');
 const mysql = require('mysql');
 const app = express();
 const nodeadmin = require('nodeadmin');
+const crypto = require('crypto');
+const pw_hash = require('password-hash');
 
 let connection = mysql.createConnection({
     host: 'localhost',
     port: '3306',
     user: 'root',
-    password: 'root'
+    password: 'root',
+    database: 'matcha'
 })
 
 connection.connect(function(err) {
@@ -18,15 +21,28 @@ connection.connect(function(err) {
 
 app.use(nodeadmin(app));
 
-app.get('/api/customers', (req, res) => {
-  const customers = [
-    {id: 1, firstName: 'John', lastName: 'Doe'},
-    {id: 2, firstName: 'Brad', lastName: 'Traversy'},
-    {id: 3, firstName: 'Mary', lastName: 'Swanson'},
-  ];
+app.post('/api/login', (req, res) => {
+    let response = {
+        email : req.query.email,
+        login : req.query.login,
+        firstName : req.query.firstname,
+        lastName : req.query.lastname,
+        gender : req.query.gender,
+        password : req.query.password,
+        re_pw : req.query.confirm
+    }
 
-  res.json(customers);
+    let hashed_pw = pw_hash.generate(response.password);
+
+    const sql = "INSERT INTO users(login, firstName, lastName, gender, email, pwd) " +
+        `VALUES("${response.login}", "${response.firstName}", "${response.lastName}", "${response.gender}", "${response.email}", "${hashed_pw}");`;
+
+     connection.query(sql , (err, result) => {
+         if (err) throw err;
+         console.log("Result: " + result);
+     })
 });
+
 
 const port = 5000;
 
