@@ -14,10 +14,12 @@ connection.connect(function(err) {
 
     const sql = "CREATE TABLE IF NOT EXISTS users (" +
         "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+        "login VARCHAR (24), " +
         "firstName VARCHAR(24), " +
         "lastName VARCHAR(50), " +
-        "pwd VARCHAR(128), " +
-        "salt VARCHAR(20));";
+        "gender VARCHAR(8), " +
+        "email VARCHAR(50), " +
+        "pwd VARCHAR(128)); ";
     connection.query(sql , (err, result) => {
         if (err) throw err;
         console.log("Result: " + result);
