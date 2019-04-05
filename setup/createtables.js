@@ -5,10 +5,11 @@ let connection = mysql.createConnection({
     port: '3306',
     user: 'root',
     password: 'root',
-    database: 'matcha'
+    database: 'matcha',
+    multipleStatements: 'true'
 })
 
-connection.connect(function(err) {
+connection.connect( (err) => {
     if (err) throw err
     console.log('You are now connected...');
 
@@ -19,7 +20,14 @@ connection.connect(function(err) {
         "lastName VARCHAR(30), " +
         "gender VARCHAR(8), " +
         "email VARCHAR(50), " +
-        "pwd VARCHAR(128)); ";
+        "pwd VARCHAR(128)); " +
+        "" +
+        "CREATE TABLE IF NOT EXISTS additional(" +
+        "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+        "user_id INT NOT NULL," +
+        "sexuality VARCHAR(20)," +
+        "bio VARCHAR(460)," +
+        "pictures VARCHAR(1024));"
     connection.query(sql , (err, result) => {
         if (err) throw err;
         console.log("Result: " + result);
