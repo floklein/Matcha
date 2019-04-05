@@ -1,0 +1,147 @@
+<div class="container-fluid">
+  <div class="row">
+    <alert-center class="col-md-11"></alert-center>
+    <!-- <uib-alert class="col-md-11" ng-repeat="alert in alerts.success" dismiss-on-timeout="5000"
+    type="success" close="closeAlert('success', $index)">{{alert.status}} / {{ alert.msg }} successful {{ alert.method }}
+    </uib-alert>
+    <uib-alert class="col-md-11" ng-repeat="alert in alerts.error"
+    type="danger" close="closeAlert('error', $index)"> 
+    Error {{alert.status}} / {{ alert.statusText }} ( {{ alert.data.sqlState }} - {{ alert.data.code }} )
+    </uib-alert> -->
+  </div>
+
+  <div class="row well" style="margin-top:10px;">
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="tablename">Table Name: </label>
+        <input ng-required='true' type="text" class="form-control" id="tablename" ng-model="tablename" placeholder="Table Name" autofocus>
+      </div>
+      <div class="input-group col-xs-2 pull-right">
+        <!-- decrement button -->
+        <!-- text input -->
+        <!-- <label  for="">Add Column</label> -->
+        <input class="form-control" ng-model="toAdd" type="text" name="" value="1" id="fieldamount">
+        <!-- increment & add -->
+        <div class="input-group-btn">
+          <button ng-click="toAdd = toAdd + 1" class="btn btn-success">+</button>
+          <button ng-click="addField( toAdd ); toAdd = 1" class="btn btn-default">Add Field</button>
+        </div>
+      
+      </div>
+    </form>
+  </div>
+  
+  <div class="table-container">
+    <table class="table table-hover table-bordered table-condensed" style="margin-top:40px;">
+      <tbody>
+      <thead>
+      <tr>
+        <th></th>
+        <th>Name</th>
+        <th>
+          Type
+        </th>
+        <th><span class="glyphicon glyphicon-info-sign" data-placement="top"
+          uib-tooltip='For column type "enum" and "set" use this format: "val1", "val2"...'></span>
+          Length / Values
+        </th>
+        <th><span class="glyphicon glyphicon-info-sign" data-placement="top"
+          uib-tooltip='If specifying a default value, enter a single value without spaces.'></span>Default
+        </th>
+        <th>Null</th>
+        <th>Index</th>
+        <th>AUTO INC</th>
+      </tr>
+      </thead>
+
+      <tr ng-repeat="field in fields track by $index">
+
+        <td>
+          <button class="btn btn-sm btn-danger" ng-click="remove($index)">–</button>
+        </td>
+
+        <td>
+          <input class="form-control" type="text" name="" ng-model="field.fieldName" id="">
+        </td>
+
+        <td>
+          <select class="form-control" ng-model="field.type" name="" id="">
+          <option value="INT"> INT </option>
+          <option value="VARCHAR"> VARCHAR </option>
+          <option value="TEXT"> TEXT </option>
+          <option value="DATE"> DATE </option>
+
+          <optgroup label="Numeric">
+            <option value="SMALLINT">SMALLINT</option>
+            <option value="MEDIUMINT">MEDIUMINT</option>
+            <option value="INT">INT</option>
+            <option value="INTEGER">INTEGER</option>
+            <option value="BIGINT">BIGINT</option>
+            <option value="REAL">REAL</option>
+            <option value="DOUBLE">DOUBLE</option>
+            <option value="FLOAT">FLOAT</option>
+            <option value="DECIMAL">DECIMAL</option>
+            <option value="NUMERIC">NUMERIC</option>
+          </optgroup>
+          <optgroup label="Date And Time">
+            <option value="DATE">DATE</option>
+            <option value="TIME">TIME</option>
+            <option value="TIMESTAMP">TIMESTAMP</option>
+            <option value="DATETIME">DATETIME</option>
+            <option value="YEAR">YEAR</option>
+          </optgroup>
+          <optgroup label="String">
+            <option value="CHAR">CHAR</option>
+            <option value="BINARY">BINARY</option>
+            <option value="VARBINARY">VARBINARY</option>
+            <option value="TINYBLOB">TINYBLOB</option>
+            <option value="BLOB">BLOB</option>
+            <option value="MEDIUMBLOB">MEDIUMBLOB</option>
+            <option value="LONGBLOB">LONGBLOB</option>
+            <option value="TINYTEXT">TINYTEXT</option>
+            <option value="TEXT">TEXT</option>
+            <option value="MEDIUMTEXT">MEDIUMTEXT</option>
+            <option value="LONGTEXT">LONGTEXT</option>
+            <option value="ENUM">ENUM</option>
+            <option value="SET">SET</option>
+          </optgroup> 
+          </select>
+        </td>
+
+        <td>
+          <input class="form-control" type="text" name="" ng-model="field.fieldLength" id="">
+        </td>
+        <td>
+          <select class="form-control" ng-model="field.default" ng-change="toggleDefault(field.default, $index)" name="" id="">
+            <option value="">NONE</option>
+            <option value="custom">AS DEFINED:</option>
+            <option value="NULL">NULL</option>
+            <option value="CURRENT_TIMESTAMP">CURRENT_TIMESTAMP</option>
+            <input style="margin-top:.5em; width:90%;" ng-model="field.default" ng-show="field.customDefault" type="text">
+          </select>
+        </td>
+        
+        <td>
+          <input ng-change="nullChange($index)" ng-model="field.null" type="checkbox" name="" id="">
+        </td>
+
+        <td>
+          <select class="form-control" ng-model="field.quality" name="" id="">
+            <option value="PRIMARY KEY">PRIMARY</option>
+            <option value="UNIQUE">UNIQUE</option>
+            <option value="INDEX">INDEX</option>
+          </select>
+        </td>
+
+        <td>
+          <input ng-model="field.auto" type="checkbox" ng-true-value="'AUTO_INCREMENT'">
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+      <button ng-click="processTable()" class="pull-right btn btn-primary">Create</button>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">
+        <img src="resources/nodejs-logo.png" style="position: relative; height: 1.5em; display: inline; bottom: .125em;"/>
+        <!-- <span class="glyphicon glyphicon-compressed" aria-hidden="true"></span> -->
+        NODEADMIN
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-init="currTab = 'home'">
+      <ul class="nav navbar-nav">
+        <li ng-class="{active: (currTab == 'home')}" ng-click="currTab = 'home'">
+          <a ui-sref="home">
+            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+            Overview
+          </a>
+        </li>
+        <li ng-class="{active: (currTab == 'db')}" ng-click="currTab = 'db'">
+          <a ui-sref="dbhome">
+            <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
+            DB
+          </a>
+        </li>
+        <li ng-class="{active: (currTab == 'system')}" ng-click="currTab = 'system'">
+          <a ui-sref="modules">
+            <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
+            System
+          </a>
+        </li>
+        <li ng-class="{active: (currTab == 'kwikwery')}" ng-click="currTab = 'kwikwery'">
+          <a ui-sref="kwikwery">
+            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+            Direct Queries
+          </a>
+        </li>
+        <li ng-class="{active: (currTab == 'settings')}" ng-click="currTab = 'settings'">
+          <a ui-sref="users">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            Settings
+          </a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-click="logout()">
+          <a ui-sref="login">
+            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+</nav>
+
+<div ui-view></div>
