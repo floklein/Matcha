@@ -39,71 +39,87 @@ app.post('/api/create', (req, res) => {
         res.status(400);
         res.write("Empty field\n");
     }
-    //Check if passwords are both equal
-    else if (response.password != response.re_pw) {
-        error = true;
-        res.status(400);
-        res.write("Passwords don't match\n");
-    }
-
-    //Check is password is long and good enough
-    if (!response.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
-        error = true;
-        res.status(400);
-        res.write("Password not strong enough\n");
-    }
 
     //Check if login is unique (see how to do multiple queries)
+    let sql = `SELECT login from users WHERE login = "${response.login}";`;
+    connection.query(sql , (err, result) => {
+        if (err) throw err;
+        if (result.length != 0) {
+            error = true;
+            res.status(400);
+            res.end("Login already exists\n");
+        }
+
+        //Check if passwords are both equal
+        if (response.password != response.re_pw) {
+            error = true;
+            res.status(400);
+            res.write("Passwords don't match\n");
+        }
+
+        //Check is password is long and good enough
+        if (!response.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
+            error = true;
+            res.status(400);
+            res.write("Password not strong enough\n");
+        }
+
+        //Check if login is long enough
+        if (!response.login.match('^[a-zA-Z]{4,30}$')) {
+            error = true;
+            res.status(400);
+            res.write("Login must be between 4 and 30 characters\n");
+        }
+
+        //Check if gender is either Male or female
+        if (response.gender != "Homme" && response.gender != "Femme") {
+            error = true;
+            res.status(400);
+            res.write("Gender should be Male or Female\n");
+        }
+
+        //Check if firstname is correct
+        if (!response.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+            error = true;
+            res.status(400);
+            res.write("First name is wrong\n");
+        }
+
+        //Check if lastname is correct
+        if (!response.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+            error = true;
+            res.status(400);
+            res.write("Last name is wrong\n");
+        }
+
+        //Check if email has right format
+        if (!response.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+            error = true;
+            res.status(400);
+            res.write("Email has wrong format");
+        }
+
+        if (error) {
+            res.end();
+            return;
+        }
+
+        let hashed_pw = pw_hash.generate(response.password);
 
 
-    //Check if login is long enough
-    if (!response.login.match('^[a-z]{4,30}$')) {
-        error = true;
-        res.status(400);
-        res.write("Login must be between 4 and 30 characters\n");
-    }
+        const sql2 = "INSERT INTO users(login, firstName, lastName, gender, email, pwd) " +
+            `VALUES("${response.login}", "${response.firstName}", "${response.lastName}", "${response.gender}", "${response.email}", "${hashed_pw}");`;
 
-    //Check if gender is either Male or female
-    if (response.gender != "Homme" && response.gender !="Femme") {
-        error = true;
-        res.status(400);
-        res.write("Gender should be Male or Female\n");
-    }
+        connection.query(sql2 , (err, result) => {
+            if (err) throw err;
+            console.log("Result: " + result);
+        })
 
-    //Check if firtsname is correct
-    if (!response.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
-        error = true;
-        res.status(400);
-        res.write("First name is wrong\n");
-    }
+        //Send an email if everything is alright
 
-    //Check if lastname is correct
-    if (!response.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
-        error = true;
-        res.status(400);
-        res.write("Last name is wrong\n");
-    }
+        res.end(`User created: ${response.login}`);
+    })
 
-    if (error)
-        res.end();
-    //Check if email has right format
-
-    let hashed_pw = pw_hash.generate(response.password);
-
-
-    // const sql = "INSERT INTO users(login, firstName, lastName, gender, email, pwd) " +
-    //     `VALUES("${response.login}", "${response.firstName}", "${response.lastName}", "${response.gender}", "${response.email}", "${hashed_pw}");`;
-    //
-    //  connection.query(sql , (err, result) => {
-    //      if (err) throw err;
-    //      console.log("Result: " + result);
-    //  })
-
-
-    //Send an email if everything is alright
-
-
-    res.end("User created");
 });
 
 
