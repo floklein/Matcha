@@ -18,12 +18,12 @@ connection.connect( (err) => {
         "login VARCHAR (24), " +
         "firstName VARCHAR(30), " +
         "lastName VARCHAR(30), " +
-        "gender VARCHAR(8), " +
         "email VARCHAR(50), " +
         "pwd VARCHAR(128)); " +
         "" +
         "CREATE TABLE IF NOT EXISTS additional(" +
         "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+        "gender VARCHAR(8)" +
         "user_id INT NOT NULL," +
         "sexuality VARCHAR(20)," +
         "bio VARCHAR(460)," +
