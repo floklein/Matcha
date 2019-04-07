@@ -32,13 +32,7 @@ app.post('/api/create', (req, res) => {
         re_pw : req.query.confirm
     }
     let error = false;
-
-    //Check if every field is full
-    if (typeof response.email == 'undefined' || response.email == '' ||  typeof response.login == 'undefined' || response.login == '' || typeof response.firstName == 'undefined'|| response.firstName == '' || typeof response.lastName == 'undefined' || response.lastName == '' || typeof response.gender == 'undefined' || response.gender == '' || typeof response.password == 'undefined' || response.password == '' || typeof response.re_pw == 'undefined' || response.re_pw == '') {
-        error = true;
-        res.status(400);
-        res.write("Empty field\n");
-    }
+    let res_array = [];
 
     //Check if login is unique (see how to do multiple queries)
     let sql = `SELECT login from users WHERE login = "${response.login}";`;
@@ -46,79 +40,107 @@ app.post('/api/create', (req, res) => {
         if (err) throw err;
         if (result.length != 0) {
             error = true;
-            res.status(400);
-            res.end("Login already exists\n");
-        }
-
-        //Check if passwords are both equal
-        if (response.password != response.re_pw) {
-            error = true;
-            res.status(400);
-            res.write("Passwords don't match\n");
-        }
-
-        //Check is password is long and good enough
-        if (!response.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
-            error = true;
-            res.status(400);
-            res.write("Password not strong enough\n");
+            res_array.push({
+                error: "login",
+                errorText: "Le login existe deja"
+            });
         }
 
         //Check if login is long enough
-        if (!response.login.match('^[a-zA-Z]{4,30}$')) {
+        if (typeof response.login == 'undefined' || !response.login.match('^[a-zA-Z]{4,30}$')) {
             error = true;
-            res.status(400);
-            res.write("Login must be between 4 and 30 characters\n");
+            res_array.push({
+                error: "login",
+                errorText: "Le login doit etre forme de 4 a 30 lettres"
+            });
         }
 
-        //Check if gender is either Male or female
-        if (response.gender != "Homme" && response.gender != "Femme") {
+        //Check is password is long and good enough
+        if (typeof response.password == 'undefined' || !response.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
             error = true;
-            res.status(400);
-            res.write("Gender should be Male or Female\n");
+            res_array.push({
+                error: "password",
+                errorText: "Le mot de passe doivent contenir au moins 8 caracteres (au moins une minuscule, une majuscule et un chiffre)"
+            });
+        }
+
+        //Check if passwords are both equal
+        else if (typeof response.password == 'undefined' || typeof response.password == 'undefined' ||  response.password != response.re_pw) {
+            error = true;
+            res_array.push({
+                error: "password",
+                errorText: "Les mots de passe ne correspondent pas"
+            });
+        }
+
+
+        //Check if gender is either Male or female
+        if (typeof response.gender == 'undefined' || response.gender != "male" && response.gender != "female") {
+            error = true;
+            res_array.push({
+                error: "gender",
+                errorText: "Le genre est errone"
+            });
+        }
+
+        //Check if both names are incorrect
+        if ((typeof response.firstName == 'undefined' || !response.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof response.lastName == 'undefined' || !response.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$'))) {
+            error = true;
+            res_array.push({
+                error: "name",
+                errorText: "Le prenom et le nom sont invalides"
+            });
         }
 
         //Check if firstname is correct
-        if (!response.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+        else if (typeof response.firstName == 'undefined' || !response.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
             error = true;
-            res.status(400);
-            res.write("First name is wrong\n");
+            res_array.push({
+                error: "name",
+                errorText: "Le prenom est invalide"
+            });
         }
 
         //Check if lastname is correct
-        if (!response.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+        else if (typeof response.lastName == 'undefined' || !response.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
             error = true;
-            res.status(400);
-            res.write("Last name is wrong\n");
+            res_array.push({
+                error: "name",
+                errorText: "Le nom est invalide"
+            });
         }
 
         //Check if email has right format
-        if (!response.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+        if (typeof response.email == 'undefined' || !response.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
             error = true;
-            res.status(400);
-            res.write("Email has wrong format");
+            res_array.push({
+                error: "email",
+                errorText: "L'email est invalide"
+            });
         }
 
+        //send json if there is an error and quit
         if (error) {
-            res.end();
+            res.status(400);
+            res.end(JSON.stringify(res_array));
             return;
         }
 
+        //hash pw
         let hashed_pw = pw_hash.generate(response.password);
 
-
+        //insert user in db
         const sql2 = "INSERT INTO users(login, firstName, lastName, gender, email, pwd) " +
             `VALUES("${response.login}", "${response.firstName}", "${response.lastName}", "${response.gender}", "${response.email}", "${hashed_pw}");`;
 
         connection.query(sql2 , (err, result) => {
             if (err) throw err;
-            console.log("Result: " + result);
         })
 
         //Send an email if everything is alright
 
         //end if everything went fine
-        res.end(`User created: ${response.login}`);
+        res.end();
     })
 });
 
