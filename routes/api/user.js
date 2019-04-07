@@ -132,8 +132,8 @@ router.post('/signin', (req, res) => {
 
         connection.query(sql2 , (err, result) => {
             if (err) throw err;
-            const sql3 = "INSERT INTO additional(gender, user_id)" +
-                `VALUES("${response.gender}", ${result.insertId})`;
+            const sql3 = "INSERT INTO additional(gender, user_id, popularity)" +
+                `VALUES("${response.gender}", ${result.insertId}, 0)`;
             connection.query(sql3 , (err, result) => {
                 if (err) throw err;
             })
