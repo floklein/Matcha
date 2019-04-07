@@ -22,12 +22,11 @@ connection.connect( (err) => {
         "pwd VARCHAR(128)); " +
         "" +
         "CREATE TABLE IF NOT EXISTS additional(" +
-        "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-        "gender VARCHAR(8)" +
-        "user_id INT NOT NULL," +
+        "user_id INT NOT NULL,," +
+        "gender VARCHAR(8)," +
         "sexuality VARCHAR(20)," +
         "bio VARCHAR(460)," +
-        "pictures VARCHAR(1024));"
+        "profile_picture VARCHAR(24));"
     connection.query(sql , (err, result) => {
         if (err) throw err;
         console.log("Result: " + result);

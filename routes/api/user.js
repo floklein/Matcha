@@ -208,5 +208,63 @@ router.post('/login', (req, res) => {
 });
 
 
+router.post('/additional/:id', (req, res) => {
+    let response = {
+        bio : req.query.bio,
+        sexuality : req.query.sexuality
+    }
+
+    let error = false;
+    let res_array = [];
+
+    const sql = `SELECT id from additional WHERE id = ${req.params.id}`;
+    connection.query(sql, (err, result) => {
+        if (result.length == 0) {
+            res_array.push({
+                error: "id",
+                errorText: "Utilisateur non trouve"
+            });
+            res.status(400);
+            res.end(JSON.stringify(res_array));
+        }
+        else {
+            if (typeof response.bio == 'undefined' || response.bio == "") {
+                error = true;
+                res_array.push({
+                    error: "bio",
+                    errorText: "la biographie est requise"
+                })
+            }
+            else if (response.bio.length > 420) {
+                    error = true;
+                    res_array.push({
+                        error: "bio",
+                        errorText: "la biographie doit faire moins de 420 characteres"
+                    })
+            }}
+            if (typeof response.sexuality == 'undefined' || (response.sexuality != "bisexual" && response.sexuality != "heterosexual" && response.sexuality != "homosexual")) {
+                error = true;
+                res_array.push({
+                    error: "sexualite",
+                    errorText: "La sexualite est incorrecte"
+                })
+            }
+            if (error) {
+                res.status(400);
+                res.end(JSON.stringify(res_array));
+            }
+            else {
+                const sql2 = `UPDATE additional SET bio = "${response.bio}", sexuality = "${response.sexuality}"` +
+                `WHERE user_id = ${req.params.id}`;
+                connection.query(sql2, (err) => {
+                    if (err) throw (err);
+                })
+
+            }
+            res.end();
+        })
+});
+
+
 module.exports = router;
 
