@@ -4,6 +4,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const pw_hash = require('password-hash');
 const mysql = require('mysql');
+const uuid = require('uuid');
 
 let connection = mysql.createConnection({
     host: 'localhost',
@@ -134,15 +135,18 @@ router.post('/signin', (req, res) => {
             if (err) throw err;
             const sql3 = "INSERT INTO additional(gender, user_id, popularity)" +
                 `VALUES("${response.gender}", ${result.insertId}, 0)`;
+            const id = result.insertId;
             connection.query(sql3 , (err, result) => {
-                if (err) throw err;
+                const sql4 = "INSERT INTO validation(user_id, code, validated)" +
+                    `VALUES (${id}, "${uuid.v4()}", false);`
+                //Send an email if everything is alright
+                connection.query(sql4, (err, result) => {
+                    if (err) throw err;
+                })
+                //end if everything went fine
+                res.end();
             })
         })
-
-        //Send an email if everything is alright
-
-        //end if everything went fine
-        res.end();
     })
 });
 

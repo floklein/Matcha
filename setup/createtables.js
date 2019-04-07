@@ -29,6 +29,11 @@ connection.connect( (err) => {
         "profile_picture VARCHAR(24), " +
         "popularity INT NOT NULL);" +
         "" +
+        "CREATE TABLE IF NOT EXISTS validation(" +
+        "user_id INT NOT NULL," +
+        "code VARCHAR(36)," +
+        "validated BOOLEAN);" +
+        "" +
         "CREATE TABLE IF NOT EXISTS blocks(" +
         "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
         "blocker_id INT NOT NULL, " +
