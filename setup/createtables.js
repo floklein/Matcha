@@ -22,11 +22,22 @@ connection.connect( (err) => {
         "pwd VARCHAR(128)); " +
         "" +
         "CREATE TABLE IF NOT EXISTS additional(" +
-        "user_id INT NOT NULL,," +
-        "gender VARCHAR(8)," +
-        "sexuality VARCHAR(20)," +
-        "bio VARCHAR(460)," +
-        "profile_picture VARCHAR(24));"
+        "user_id INT NOT NULL, " +
+        "gender VARCHAR(8), " +
+        "sexuality VARCHAR(20), " +
+        "bio VARCHAR(460), " +
+        "profile_picture VARCHAR(24), " +
+        "popularity INT NOT NULL);" +
+        "" +
+        "CREATE TABLE IF NOT EXISTS blocks(" +
+        "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+        "blocker_id INT NOT NULL, " +
+        "blockee_id INT NOT NULL);" +
+        "" +
+        "CREATE TABLE IF NOT EXISTS likes(" +
+        "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+        "liker_id INT NOT NULL, " +
+        "likee_id INT NOT NULL);"
     connection.query(sql , (err, result) => {
         if (err) throw err;
         console.log("Result: " + result);
