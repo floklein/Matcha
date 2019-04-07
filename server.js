@@ -151,31 +151,56 @@ app.post('/api/login', (req, res) => {
     }
 
     let error = false;
+    let res_array = [];
 
-    //Check if every field is full
-    if (typeof response.login == 'undefined' || response.login == ''  || typeof response.password == 'undefined' || response.password == '') {
+    //Check if password and login are not empty and defined
+    if (typeof response.login == 'undefined' || response.login == "") {
         error = true;
-        res.status(400);
-        res.write("Empty field\n");
+        res_array.push({
+            error: "login",
+            errorText: "le login est requis"
+        })
+    }
+    if (typeof response.password == 'undefined' || response.password == "") {
+        error = true;
+        res_array.push({
+            error: "password",
+            errorText: "le mot de passe est requis"
+        })
     }
 
-    let sql = `SELECT login, pwd from users WHERE login = "${response.login}";`;
-    connection.query(sql , (err, result) => {
-        if (err) throw err;
-        if (result.length == 0) {
-            error = true;
-            res.status(400);
-        }
-        else if (!pw_hash.verify(response.password, result[0].pwd)) {
-            error = true;
-            res.status(400);
-        }
-        if (!error)
-            res.end("Success");
-        else
-            res.end("Login/pw broken");
-    })
-});
+    //If both fields are full, keep going with the connection
+    if (!error) {
+        //Check if login matches a user
+        let sql = `SELECT login, pwd from users WHERE login = "${response.login}";`;
+        connection.query(sql , (err, result) => {
+            if (err) throw err;
+            if (result.length == 0) {
+                error = true;
+                res_array.push({
+                    error: "password",
+                    errorText: "Erreur de connection. Login et/ou mot de passe errones"
+                })
+            }
+            //Check if password is wrong
+            else if (!pw_hash.verify(response.password, result[0].pwd)) {
+                error = true;
+                res_array.push({
+                    error: "password",
+                    errorText: "Erreur de connection. Login et/ou mot de passe errones"
+                })
+            }
+            //if everything is good, connect the guy (don't know how to do it yet)
+            if (!error)
+                res.end();
+            else {
+                res.status(400);
+                res.end(JSON.stringify(res_array));
+            }
+        })
+    }
+    });
+
 
 const port = 5000;
 
