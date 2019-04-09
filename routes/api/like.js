@@ -29,3 +29,6 @@ router.post('/:id', (req, res) => {
             //Else, like
     }
 });
+
+
+module.exports = router;
