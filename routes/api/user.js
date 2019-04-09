@@ -5,7 +5,12 @@ const crypto = require('crypto');
 const pw_hash = require('password-hash');
 const mysql = require('mysql');
 const uuid = require('uuid');
+const bodyParser = require('body-parser');
 
+const jsonParser = bodyParser.json();
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+//Connect to db
 let connection = mysql.createConnection({
     host: 'localhost',
     port: '3306',
@@ -19,15 +24,17 @@ connection.connect(function(err) {
     console.log('You are now connected...')
 })
 
-router.post('/signin', (req, res) => {
+
+
+router.post('/signin', jsonParser, (req, res) => {
     let response = {
-        email : req.query.email,
-        login : req.query.login,
-        firstName : req.query.firstname,
-        lastName : req.query.lastname,
-        gender : req.query.gender,
-        password : req.query.password,
-        re_pw : req.query.confirm
+        email : req.body.email,
+        login : req.body.login,
+        firstName : req.body.firstname,
+        lastName : req.body.lastname,
+        gender : req.body.gender,
+        password : req.body.password,
+        re_pw : req.body.confirm
     }
     let error = false;
     let res_array = [];
@@ -45,7 +52,7 @@ router.post('/signin', (req, res) => {
         }
 
         //Check if login is long enough
-        if (typeof response.login == 'undefined' || !response.login.match('^[a-zA-Z]{4,30}$')) {
+        if (typeof response.login == 'undefined' || !response.login.match('^[a-zA-Z0-9]{4,30}$')) {
             error = true;
             res_array.push({
                 error: "login",
@@ -144,7 +151,7 @@ router.post('/signin', (req, res) => {
                     if (err) throw err;
                 })
                 //end if everything went fine
-                res.end();
+                res.end(String(id));
             })
         })
     })
@@ -216,18 +223,19 @@ router.post('/login', (req, res) => {
 });
 
 
-router.post('/additional/:id', (req, res) => {
+router.post('/additional/:id', jsonParser, (req, res) => {
     let response = {
-        bio : req.query.bio,
-        sexuality : req.query.sexuality
+        bio : req.body.bio,
+        sexuality : req.body.sexuality
     }
 
+    res.write("bio : " + req.body.bio + "sexuality : " + req.body.sexuality +  " MERDE");
     let error = false;
     let res_array = [];
 
     const sql = `SELECT id from additional WHERE id = ${req.params.id}`;
     connection.query(sql, (err, result) => {
-        if (result.length == 0) {
+        if (result && result.length == 0) {
             res_array.push({
                 error: "id",
                 errorText: "Utilisateur non trouve"
