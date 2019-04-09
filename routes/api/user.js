@@ -178,7 +178,7 @@ router.post('/login', (req, res) => {
     //If both fields are full, keep going with the connection
     if (!error) {
         //Check if login matches a user
-        let sql = `SELECT login, pwd from users WHERE login = "${response.login}";`;
+        let sql = `SELECT login, pwd, id, email from users WHERE login = "${response.login}";`;
         connection.query(sql , (err, result) => {
             if (err) throw err;
             if (result.length == 0) {
@@ -197,8 +197,12 @@ router.post('/login', (req, res) => {
                 })
             }
             //if everything is good, connect the guy (don't know how to do it yet)
-            if (!error)
-                res.end();
+            if (!error) {
+                req.session.login = result[0].login;
+                req.session.user_id = result[0].id;
+                req.session.email = result[0].email;
+                res.json(req.session);
+            }
             else {
                 res.status(400);
                 res.end(JSON.stringify(res_array));
