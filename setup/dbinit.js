@@ -15,6 +15,7 @@ connection.connect(function(err) {
     connection.query("CREATE DATABASE IF NOT EXISTS matcha;" , (err) => {
         if (err) throw err;
         console.log("DB CREATED")
+        connection.end();
     })
 })
 
