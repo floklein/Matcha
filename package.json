@@ -1,11 +1,7 @@
 {
   "name": "reactexpress",
   "version": "1.0.0",
-<<<<<<< HEAD
   "description": "Starter kit for creating React/Redux and Express apps",
-=======
-  "description": "Starter kit for creating React and Express apps",
->>>>>>> tb-dev
   "main": "server.js",
   "scripts": {
     "client-install": "cd client && npm install",
@@ -14,15 +10,6 @@
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-<<<<<<< HEAD
-  "author": "Brad Traversy & Gregory Assasie",
-  "license": "MIT",
-  "devDependencies": {},
-  "dependencies": {
-    "concurrently": "^3.5.1",
-    "express": "^4.16.2",
-    "nodemon": "^1.14.7"
-=======
   "author": "Brad Traversy",
   "license": "MIT",
   "devDependencies": {
@@ -45,6 +32,5 @@
     "react-spring": "^8.0.19",
     "session": "^0.1.0",
     "uuid": "^3.3.2"
->>>>>>> tb-dev
   }
 }
