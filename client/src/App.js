@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 
@@ -15,10 +16,18 @@ import Sidebar from './components/Sidebar/sidebar';
 import Footer from "./components/Footer/footer";
 import UserForm from "./components/UserForm/UserForm";
 import ChatPanel from "./components/Chat/ChatPanel";
+=======
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import Customers from './components/customers';
+import { Spring } from 'react-spring/renderprops';
+>>>>>>> tb-dev
 
 class App extends Component {
   render() {
     return (
+<<<<<<< HEAD
       <Provider store={store}>
         <React.Fragment>
           <Sidebar/>
@@ -76,3 +85,13 @@ class App extends Component {
 }
 
 export default App
+=======
+        <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
+      {props => <div style={props}>hello</div>}
+          </Spring>
+      );
+  }
+}
+
+export default App;
+>>>>>>> tb-dev
