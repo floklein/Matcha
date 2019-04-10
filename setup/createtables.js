@@ -27,6 +27,7 @@ connection.connect( (err) => {
         "sexuality VARCHAR(20), " +
         "bio VARCHAR(460), " +
         "profile_picture VARCHAR(24), " +
+        "age INT" +
         "popularity INT NOT NULL);" +
         "" +
         "CREATE TABLE IF NOT EXISTS validation(" +

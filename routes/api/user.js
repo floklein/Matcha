@@ -226,7 +226,8 @@ router.post('/login', (req, res) => {
 router.post('/additional/:id', jsonParser, (req, res) => {
     let response = {
         bio : req.body.bio,
-        sexuality : req.body.sexuality
+        sexuality : req.body.sexuality,
+        age: req.body.age
     }
 
     res.write("bio : " + req.body.bio + "sexuality : " + req.body.sexuality +  " MERDE");
@@ -263,6 +264,13 @@ router.post('/additional/:id', jsonParser, (req, res) => {
                 res_array.push({
                     error: "sexualite",
                     errorText: "La sexualite est incorrecte"
+                })
+            }
+            if (typeof response.age == 'undefined' || response.age == "" || isNaN(response.age)) {
+                error = true;
+                res_array.push({
+                    error: "age",
+                    errorText: "l'age est incorrect"
                 })
             }
             if (error) {
