@@ -18,4 +18,3 @@ connection.connect(function(err) {
         connection.end();
     })
 })
-
