@@ -27,7 +27,7 @@ connection.connect( (err) => {
         "sexuality VARCHAR(20), " +
         "bio VARCHAR(460), " +
         "profile_picture VARCHAR(24), " +
-        "age INT" +
+        "age INT," +
         "popularity INT NOT NULL);" +
         "" +
         "CREATE TABLE IF NOT EXISTS validation(" +
@@ -43,7 +43,7 @@ connection.connect( (err) => {
         "CREATE TABLE IF NOT EXISTS likes(" +
         "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
         "liker_id INT NOT NULL, " +
-        "likee_id INT NOT NULL);"
+        "likee_id INT NOT NULL);";
     connection.query(sql , (err, result) => {
         if (err) throw err;
         console.log("Result: " + result);
