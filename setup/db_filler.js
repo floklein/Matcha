@@ -13,21 +13,22 @@ let connection = mysql.createConnection({
 
 function fill_db() {
     return new Promise((resolve, reject) => {
-        const firstname = faker.name.firstName();
-        const lastname = faker.name.lastName();
+        const firstName = faker.name.firstName();
+        const lastName = faker.name.lastName();
         const gender = (faker.random.boolean() ? "male" : "female");
         const password = "Qwerty123";
         const confirm = password;
         const email = faker.internet.email();
-        const login = firstname;
+        const username = firstName;
         const bio = faker.lorem.sentences();
         const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
+        const age = Math.floor(Math.random() * 40) + 18;
 
-        axios.post('http://localhost:5000/api/user/signin', {
+        axios.post('http://localhost:5000/api/user/register', {
             email,
-            lastname,
-            firstname,
-            login,
+            lastName,
+            firstName,
+            username,
             password,
             confirm,
             gender
@@ -36,7 +37,8 @@ function fill_db() {
                 const newurl = "http://localhost:5000/api/user/additional/" + response.data;
                 axios.post(newurl, {
                     bio,
-                    sexuality
+                    sexuality,
+                    age
                 })
                     .then (resp => {
                         connection.query("UPDATE validation SET validated = 1 WHERE user_id > 0", err => {
