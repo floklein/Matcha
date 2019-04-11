@@ -278,7 +278,7 @@ router.post('/additional/:id', jsonParser, (req, res) => {
                 res.end(JSON.stringify(res_array));
             }
             else {
-                const sql2 = `UPDATE additional SET bio = "${response.bio}", sexuality = "${response.sexuality}"` +
+                const sql2 = `UPDATE additional SET bio = "${response.bio}", sexuality = "${response.sexuality}", age = "${response.age}"` +
                 `WHERE user_id = ${req.params.id}`;
                 connection.query(sql2, (err) => {
                     if (err) throw (err);

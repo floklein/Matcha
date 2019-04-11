@@ -22,6 +22,7 @@ function fill_db() {
         const login = firstname;
         const bio = faker.lorem.sentences();
         const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
+        const age = Math.floor(Math.random() * 30) + 18;
 
         axios.post('http://localhost:5000/api/user/signin', {
             email,
@@ -30,13 +31,14 @@ function fill_db() {
             login,
             password,
             confirm,
-            gender
+            gender,
         })
             .then (response => {
                 const newurl = "http://localhost:5000/api/user/additional/" + response.data;
                 axios.post(newurl, {
                     bio,
-                    sexuality
+                    sexuality,
+                    age
                 })
                     .then (resp => {
                         connection.query("UPDATE validation SET validated = 1 WHERE user_id > 0", err => {
