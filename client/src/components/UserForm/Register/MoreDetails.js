@@ -1,9 +1,22 @@
 import React, {Component} from 'react';
 import {Spring, config} from 'react-spring/renderprops';
 
+const axios = require('axios');
+
 export class MoreDetails extends Component {
   continue = e => {
+    const {values} = this.props;
+
     e.preventDefault();
+
+    axios.post('routes/api/user/register', values)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     this.props.nextStep();
   };
 
