@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Spring, config} from 'react-spring/renderprops';
-
-const axios = require('axios');
+import Axios from 'axios';
 
 export class MoreDetails extends Component {
   continue = e => {
@@ -9,7 +8,7 @@ export class MoreDetails extends Component {
 
     e.preventDefault();
 
-    axios.post('/api/user/register', values)
+    Axios.post('/api/user/register', values)
       .then(res => {
         console.log(res);
       })

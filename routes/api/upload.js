@@ -14,6 +14,6 @@ router.post('/:id', upload.single('picture'), (req, res) =>{
         })
     }
     else throw 'error';
-})
+});
 
 module.exports = router;
