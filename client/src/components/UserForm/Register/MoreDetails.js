@@ -9,7 +9,7 @@ export class MoreDetails extends Component {
 
     e.preventDefault();
 
-    axios.post('routes/api/user/register', values)
+    axios.post('/api/user/register', values)
       .then(res => {
         console.log(res);
       })
@@ -17,7 +17,7 @@ export class MoreDetails extends Component {
         console.log(err);
       });
 
-    this.props.nextStep();
+   // this.props.nextStep();
   };
 
   previous = e => {

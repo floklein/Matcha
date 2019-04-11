@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const crypto = require('crypto');
 const pw_hash = require('password-hash');
 const mysql = require('mysql');
 const uuid = require('uuid');
 const bodyParser = require('body-parser');
 
 const jsonParser = bodyParser.json();
-const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -24,12 +22,20 @@ connection.connect(function (err) {
   console.log('You are now connected...')
 })
 
-router.post('/signin', jsonParser, (req, res) => {
+router.get('/test', (req, res) => {
+  const test = [{
+    test: "test"
+  }]
+
+  res.json(test);
+})
+
+router.post('/register', jsonParser, (req, res) => {
   let response = {
     email: req.body.email,
-    login: req.body.login,
-    firstName: req.body.firstname,
-    lastName: req.body.lastname,
+    login: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
     gender: req.body.gender,
     password: req.body.password,
     re_pw: req.body.confirm
@@ -37,6 +43,7 @@ router.post('/signin', jsonParser, (req, res) => {
   let error = false;
   let res_array = [];
 
+  console.log(response);
   //Check if login is unique (see how to do multiple queries)
   let sql = `SELECT login from users WHERE login = "${response.login}";`;
   connection.query(sql, (err, result) => {
@@ -277,7 +284,7 @@ router.post('/additional/:id', jsonParser, (req, res) => {
       res.end(JSON.stringify(res_array));
     }
     else {
-      const sql2 = `UPDATE additional SET bio = "${response.bio}", sexuality = "${response.sexuality}"` +
+      const sql2 = `UPDATE additional SET bio = "${response.bio}", sexuality = "${response.sexuality}", age = ${response.age} ` +
         `WHERE user_id = ${req.params.id}`;
       connection.query(sql2, (err) => {
         if (err) throw (err);
