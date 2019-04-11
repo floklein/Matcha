@@ -15,7 +15,6 @@ app.use('/api/user', require('./routes/api/user'));
 app.use('/api/like', require('./routes/api/like'));
 app.use('/api/upload', require('./routes/api/upload'));
 
-
 const port = 5000;
 
 app.listen(port, () => `Server running on port ${port}`);

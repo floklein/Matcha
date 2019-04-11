@@ -290,5 +290,19 @@ router.post('/additional/:id', jsonParser, (req, res) => {
 });
 
 
+router.get('/logout', (req, res) => {
+    if (req.session) {
+        req.session.destroy();
+        res.end();
+    }
+    else {
+        const res_array = {
+            error: "user",
+            errorText: "Utilisateur non connecté"
+        }
+        res.status(400).end(JSON.stringify(res_array));
+    }
+});
+
 module.exports = router;
 
