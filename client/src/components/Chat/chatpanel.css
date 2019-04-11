@@ -2,7 +2,7 @@
     position: fixed;
     bottom: 0;
     right: 5rem;
-    width: 20rem;
+    width: 18rem;
     z-index: 5000;
     background-color: white;
     border: 1px solid lightgrey;
@@ -14,8 +14,9 @@
 /*TITLE BAR*/
 
 .chat__title-bar {
-    display: grid;
-    grid-template-columns: 5fr 1fr;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     height: 2.5rem;
     border-bottom: 1px solid lightgrey;
     cursor: pointer;
@@ -29,10 +30,15 @@
     display: grid;
     align-items: center;
     justify-items: start;
+    margin-left: 0.5rem;
 }
 
 .chat__title-text h4 {
-    margin: 0 0 0 0.5rem;
+    margin: 0;
+}
+
+.chat__title-notifs {
+    margin-right: 0.5rem;
 }
 
 .chat__title-notifs,
@@ -182,5 +188,34 @@
 /*INPUT BAR*/
 
 .chat__input-bar {
+    display: flex;
+    flex-wrap: nowrap;
     height: 2.5rem;
+}
+
+.chat__input {
+    flex-grow: 1;
+}
+
+.chat__input input {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding-left: 0.5rem;
+}
+
+.chat__submit {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    width: 2.5rem;
+}
+
+.chat__button {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0 0.5rem;
+    background-color: dodgerblue;
+    border-radius: 0.75rem;
 }

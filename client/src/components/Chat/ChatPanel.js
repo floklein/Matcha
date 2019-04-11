@@ -47,7 +47,12 @@ class ChatPanel extends Component {
             </div>
             <Messages/>
             <div className="chat__input-bar">
-
+              <div className="chat__input">
+                <input type="text" placeholder="Écrivez votre message..."/>
+              </div>
+              <div className="chat__submit">
+                <div className="chat__button"/>
+              </div>
             </div>
           </div>
         </div>
