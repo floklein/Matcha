@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {NavLink} from 'react-router-dom';
 
 import './navbar.css'
 
@@ -20,11 +21,11 @@ class Navbar extends Component {
             </div>
           </div>
           <div className="defaultLinks">
-            <div><a href="#test">Accueil</a></div>
+            <div><NavLink to={'/'}>Accueil</NavLink></div>
             <div className="vr"/>
-            <div><a href="">Soulmatcher</a></div>
+            <div><NavLink to={'/soulmatcher'}>Soulmatcher</NavLink></div>
             <div className="vr"/>
-            <div><a href="">Recherche</a></div>
+            <div><NavLink to={'/search'}>Recherche</NavLink></div>
           </div>
           <div className="logo">
             <a href=""><img src={logo} alt="logo"/></a>

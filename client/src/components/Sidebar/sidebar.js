@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {NavLink} from 'react-router-dom';
 
 import './sidebar.css';
 
@@ -19,13 +20,13 @@ export class Sidebar extends Component {
               <h1>Soulmatch</h1>
             </div>
             <div>
-              <a href="">Accueil</a>
+              <NavLink to={'/'}>Accueil</NavLink>
             </div>
             <div>
-              <a href="#soulmatcher">Soulmatcher</a>
+              <NavLink to={'/soulmatcher'}>Soulmatcher</NavLink>
             </div>
             <div>
-              <a href="#recherche">Recherche</a>
+              <NavLink to={'/search'}>Recherche</NavLink>
             </div>
           </div>
         </div>
