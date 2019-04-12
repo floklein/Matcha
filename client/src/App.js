@@ -6,7 +6,7 @@ import store from './store';
 import Root from './components/Root';
 import Home from './components/Home';
 import Error from './components/Error';
-import Profile from './components/Profile';
+import Profile from './components/UserProfile/Profile';
 
 import './css/normalize.css';
 import './css/global.css';

@@ -48,7 +48,7 @@
     font-size: 0.9rem;
     color: #8A8DAA;
     letter-spacing: 0.05rem;
-    transition: color 0.4s ease-in-out;
+    transition: color 0.2s;
 }
 
 #navbar .nav-items > div > div:hover {
@@ -59,7 +59,7 @@
     width: 1.3rem;
     margin-top: 3px;
     stroke: #8A8DAA;
-    transition: stroke 0.4s;
+    transition: stroke 0.2s;
     cursor: pointer;
 }
 

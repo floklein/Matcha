@@ -1,0 +1,27 @@
+.profile__top {
+    width: 100vw;
+    height: 15rem;
+    background-color: red;
+}
+
+.profile__main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: green;
+}
+
+.profile__side-panel {
+    margin-top: -7.5rem;
+    width: 20rem;
+    height: 30rem;
+    background-color: yellow;
+}
+
+.profile__center-panel {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 20rem;
+    height: 50rem;
+    background-color: blue;
+}
