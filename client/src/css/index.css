@@ -3,7 +3,7 @@
 #carousel {
     width: 100vw;
     min-height: 40rem;
-    background: url("../assets/pics/home.jpg") no-repeat center;
+    background: url("../assets/pic/home.jpg") no-repeat center;
     background-size: cover;
 }
 
