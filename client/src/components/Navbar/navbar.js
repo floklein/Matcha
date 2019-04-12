@@ -21,14 +21,14 @@ class Navbar extends Component {
             </div>
           </div>
           <div className="defaultLinks">
-            <div><NavLink to={'/'}>Accueil</NavLink></div>
+            <div><NavLink to="/">Accueil</NavLink></div>
             <div className="vr"/>
-            <div><NavLink to={'/soulmatcher'}>Soulmatcher</NavLink></div>
+            <div><NavLink to="/soulmatcher">Soulmatcher</NavLink></div>
             <div className="vr"/>
-            <div><NavLink to={'/search'}>Recherche</NavLink></div>
+            <div><NavLink to="/search">Recherche</NavLink></div>
           </div>
           <div className="logo">
-            <a href=""><img src={logo} alt="logo"/></a>
+            <NavLink to="/"><img src={logo} alt="logo"/></NavLink>
           </div>
           <div className="rightButtons">
             <div>

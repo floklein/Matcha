@@ -39,7 +39,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .centered > div {
-    width: 90vw;
+    width: 100vw;
     max-width: 70rem;
 }
 

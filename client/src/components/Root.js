@@ -4,7 +4,6 @@ import Sidebar from "./Sidebar/sidebar";
 import Navbar from "./Navbar/navbar";
 import Footer from "./Footer/footer";
 import ChatPanel from "./Chat/ChatPanel";
-import Home from "./Home";
 
 class Root extends Component {
   render() {
