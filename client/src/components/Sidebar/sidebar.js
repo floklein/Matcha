@@ -20,13 +20,13 @@ export class Sidebar extends Component {
               <h1>Soulmatch</h1>
             </div>
             <div>
-              <NavLink to={'/'}>Accueil</NavLink>
+              <NavLink to="/">Accueil</NavLink>
             </div>
             <div>
-              <NavLink to={'/soulmatcher'}>Soulmatcher</NavLink>
+              <NavLink to="/soulmatcher">Soulmatcher</NavLink>
             </div>
             <div>
-              <NavLink to={'/search'}>Recherche</NavLink>
+              <NavLink to="/search">Recherche</NavLink>
             </div>
           </div>
         </div>

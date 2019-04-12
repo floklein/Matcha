@@ -22,7 +22,7 @@
     display: grid;
     align-items: center;
     justify-items: center;
-    margin: 5%;
+    margin: 0 10%;
 }
 
 #carousel .intro {
@@ -110,6 +110,9 @@
 @media screen and (max-width: 800px) {
     #triptych > div {
         grid-template-columns: 1fr;
+    }
+    #triptych > div > div:nth-child(2) {
+        margin: 0 !important;
     }
 }
 
