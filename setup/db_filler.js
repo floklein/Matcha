@@ -14,7 +14,7 @@ function fill_db() {
   return new Promise((resolve, reject) => {
     const firstName = faker.name.firstName();
     const lastName = faker.name.lastName();
-    const username = firstName;
+    const username = firstName + lastName;
     const email = faker.internet.email();
     const gender = (faker.random.boolean() ? "male" : "female");
     const password = "Qwerty123";
@@ -41,7 +41,6 @@ function fill_db() {
         })
           .then(resp => {
             connection.query("UPDATE verified SET status = 1 WHERE user_id > 0", err => {
-              if (err) throw err;
               resolve(resp);
             });
           })
@@ -50,7 +49,6 @@ function fill_db() {
           })
       })
       .catch((error) => {
-
         resolve(error);
       })
   })
