@@ -120,22 +120,25 @@ router.post('/register', jsonParser, (req, res) => {
     let hashed_pw = pw_hash.generate(info.password);
 
     //insert user in db
-    const sql2 = "INSERT INTO users(username, firstName, lastName, email, password) " +
-      `VALUES("${info.username}", "${info.firstName}", "${info.lastName}", "${info.email}", "${hashed_pw}");`;
+    const sql2 = "INSERT INTO users(username, email, password) " +
+      `VALUES("${info.username}", "${info.email}", "${hashed_pw}");`;
 
     connection.query(sql2, (err, result) => {
-      if (err) throw err;
-      const sql3 = "INSERT INTO infos(gender, user_id, popularity)" +
-        `VALUES("${info.gender}", ${result.insertId}, 0)`;
+        if (err) throw err;
+
+        const sql3 = "INSERT INTO infos(gender, user_id, firstName, lastName, popularity)" +
+        `VALUES("${info.gender}", ${result.insertId}, "${String(info.firstName)}", "${String(info.lastName)}", 0)`;
       const id = result.insertId;
       connection.query(sql3, (err, result) => {
+          if (err) throw err;
+
         const sql4 = "INSERT INTO verified(user_id, code, status)" +
           `VALUES (${id}, "${uuid.v4()}", false);`;
+
+
         //Send an email if everything is alright
         connection.query(sql4, (err, result) => {
-          if (err) throw err;
           //end if everything went fine
-          console.log(`${info.firstName}'s fake account create`);
           res.end(String(id));
         });
       })
@@ -143,7 +146,7 @@ router.post('/register', jsonParser, (req, res) => {
   })
 });
 
-router.post('/username', (req, res) => {
+router.post('/signin', (req, res) => {
   let info = {
     username: req.query.username,
     password: req.query.password,
@@ -183,7 +186,7 @@ router.post('/username', (req, res) => {
           errorText: "Erreur de connection. Login et/ou mot de passe errones"
         })
       }
-      //if everything is good, connect the guy (don't know how to do it yet)
+      //if everything is good, connect the guy
       if (!res_array.length) {
         req.session.username = result[0].username;
         req.session.user_id = result[0].id;
@@ -207,110 +210,60 @@ router.post('/infos/:id', jsonParser, (req, res) => {
   let info = {
     bio: req.body.bio,
     sexuality: req.body.sexuality,
-    age: req.body.age
+    age: req.body.age,
   };
-  let res_array = [];
 
   const sql = `SELECT id from users WHERE id = ${req.params.id}`;
   connection.query(sql, (err, result) => {
-    if (result && result.length == 0) {
-      res_array.push({
-        error: "id",
-        errorText: "Utilisateur non trouve"
-      });
-      res.status(400);
-      res.end(JSON.stringify(res_array));
-    }
-    else {
-      if (typeof info.bio == 'undefined' || info.bio == "") {
-        res_array.push({
-          error: "bio",
-          errorText: "la biographie est requise"
-        })
+      let res_array = [];
+      if (result && result.length == 0) {
+          res_array.push({
+              error: "id",
+              errorText: "Utilisateur non trouve"
+          });
+          res.status(400);
+          res.end(JSON.stringify(res_array));
       }
-      else if (info.bio.length > 420) {
-        res_array.push({
-          error: "bio",
-          errorText: "la biographie doit faire moins de 420 characteres"
-        })
+      else {
+          if (typeof info.bio == 'undefined' || info.bio == "") {
+              res_array.push({
+                  error: "bio",
+                  errorText: "la biographie est requise"
+              })
+          }
+          else if (info.bio.length > 420) {
+              res_array.push({
+                  error: "bio",
+                  errorText: "la biographie doit faire moins de 420 characteres"
+              })
+          }
       }
-    }
-    if (typeof info.sexuality == 'undefined' || (info.sexuality != "bisexual" && info.sexuality != "heterosexual" && info.sexuality != "homosexual")) {
-      res_array.push({
-        error: "sexualite",
-        errorText: "La sexualite est incorrecte"
+      if (typeof info.sexuality == 'undefined' || (info.sexuality != "bisexual" && info.sexuality != "heterosexual" && info.sexuality != "homosexual")) {
+          res_array.push({
+              error: "sexualite",
+              errorText: "La sexualite est incorrecte"
+          })
+      }
+      if (typeof info.age == 'undefined' || info.age == "" || isNaN(info.age)) {
+          res_array.push({
+              error: "age",
+              errorText: "l'age est incorrect"
+          })
+      }
+      if (res_array.length) {
+          res.status(400);
+          res.end(JSON.stringify(res_array));
+      }
+          else {
+              const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = "${info.age}"` +
+                  `WHERE user_id = ${req.params.id}`;
+              connection.query(sql2, (err) => {
+              })
+
+          }
+          res.end();
       })
-    }
-    if (typeof info.age == 'undefined' || info.age == "" || isNaN(info.age)) {
-      res_array.push({
-        error: "age",
-        errorText: "l'age est incorrect"
-      })
-    }
-    if (res_array.length) {
-      res.status(400);
-      res.end(JSON.stringify(res_array));
-    }
-
-    res.write("bio : " + req.body.bio + "sexuality : " + req.body.sexuality +  " MERDE");
-    let error = false;
-    let res_array = [];
-
-    const sql = `SELECT id from additional WHERE id = ${req.params.id}`;
-    connection.query(sql, (err, result) => {
-        if (result && result.length == 0) {
-            res_array.push({
-                error: "id",
-                errorText: "Utilisateur non trouve"
-            });
-            res.status(400);
-            res.end(JSON.stringify(res_array));
-        }
-        else {
-            if (typeof response.bio == 'undefined' || response.bio == "") {
-                error = true;
-                res_array.push({
-                    error: "bio",
-                    errorText: "la biographie est requise"
-                })
-            }
-            else if (response.bio.length > 420) {
-                    error = true;
-                    res_array.push({
-                        error: "bio",
-                        errorText: "la biographie doit faire moins de 420 characteres"
-                    })
-            }}
-            if (typeof response.sexuality == 'undefined' || (response.sexuality != "bisexual" && response.sexuality != "heterosexual" && response.sexuality != "homosexual")) {
-                error = true;
-                res_array.push({
-                    error: "sexualite",
-                    errorText: "La sexualite est incorrecte"
-                })
-            }
-            if (typeof response.age == 'undefined' || response.age == "" || isNaN(response.age)) {
-                error = true;
-                res_array.push({
-                    error: "age",
-                    errorText: "l'age est incorrect"
-                })
-            }
-            if (error) {
-                res.status(400);
-                res.end(JSON.stringify(res_array));
-            }
-            else {
-                const sql2 = `UPDATE additional SET bio = "${response.bio}", sexuality = "${response.sexuality}", age = "${response.age}"` +
-                `WHERE user_id = ${req.params.id}`;
-                connection.query(sql2, (err) => {
-                    if (err) throw (err);
-                })
-
-            }
-            res.end();
-        })
-});
-
+    });
 
 router.get('/logout', (req, res) => {
     if (req.session) {
@@ -321,7 +274,9 @@ router.get('/logout', (req, res) => {
         const res_array = {
             error: "user",
             errorText: "Utilisateur non connecté"
-        }
+        };
         res.status(400).end(JSON.stringify(res_array));
     }
 });
+
+module.exports = router;
