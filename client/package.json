@@ -3,9 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-scripts": "1.0.17"
+    "axios": "^0.18.0",
+    "faker": "^4.1.0",
+    "get-average-color": "0.0.6",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^5.1.1",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "^1.1.5",
+    "react-spring": "^8.0.19",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
