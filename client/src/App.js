@@ -1,17 +1,33 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Customers from './components/customers';
-import { Spring } from 'react-spring/renderprops';
+import React, {Component} from 'react';
+import {Provider} from 'react-redux';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+
+import store from './store';
+import Root from './components/Root';
+import Home from './components/Home';
+import Error from './components/Error';
+import Profile from './components/UserProfile/Profile';
+
+import './css/normalize.css';
+import './css/global.css';
+import './css/index.css';
 
 class App extends Component {
   render() {
     return (
-        <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
-      {props => <div style={props}>hello</div>}
-          </Spring>
-      );
+      <Provider store={store}>
+        <BrowserRouter>
+          <Root>
+            <Switch>
+              <Route path={'/'} exact component={Home}/>
+              <Route path={'/profile'} component={Profile}/>
+              <Route component={Error}/>
+            </Switch>
+          </Root>
+        </BrowserRouter>
+      </Provider>
+    )
   }
 }
 
-export default App;
+export default App

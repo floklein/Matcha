@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,700');
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+/*GLOBAL CSS*/
+
+* {
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+::selection {
+    background-color: black;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+}
+
+/*CLASSES*/
+
+.vr {
+    border-left: 1px solid #d8d8d8;
+    height: 2rem;
+    margin-left: -1px;
+}
+
+.centered {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+
+.centered > div {
+    width: 100vw;
+    max-width: 70rem;
+}
+
+/*BUTTONS*/
+
+button {
+    height: 2.5rem;
+    margin: 0.6rem 0 1.2rem 0;
+    padding: 0.4rem 0;
+    border: none;
+    border-radius: 1.75rem;
+    background: #a5abb6 linear-gradient(to right, #d6dde7, rgba(0, 0, 0, 0));
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: whitesmoke;
+    outline: none;
+    transition: background-color 0.4s;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #cbd1db;
+}
+
+button:active {
+    background-color: #8e949d;
+}
+
+button.blue {
+    background: #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0));
+}
+
+button.blue:hover {
+    background-color: #00bcd4;
+}
+
+button.blue:active {
+    background-color: #008ba2;
+}
+
+button.purple {
+    background: #d043ca linear-gradient(to right, #8579e0, rgba(0, 0, 0, 0));
+}
+
+button.purple:hover {
+    background-color: #8579e0;
+}
+
+button.purple:active {
+    background-color: #5858ae;
+}
+
+button.pink {
+    background: #f75799 linear-gradient(90deg, #fd6687, rgba(0, 0, 0, 0));
+}
+
+button.pink:hover {
+    background-color: #fd6687;
+}
+
+button.pink:active {
+    background-color: #c5516d;
+}
+
+button.green {
+    background: #3fb8af linear-gradient(90deg, #3fd39f, rgba(0, 0, 0, 0));
+}
+
+button.green:hover {
+    background-color: #3fd39f;
+}
+
+button.green:active {
+    background-color: #39a173;
+}
+
+button.back-btn {
+    width: 2.5rem !important;
+    margin-right: 0.5rem !important;
+    background: #d6dde7 url("../assets/img/arrow-left.svg") no-repeat center;
+    background-size: 1.2rem;
+}
+
+button.back-btn:hover {
+    background: #e2eaf4 url("../assets/img/arrow-left.svg") no-repeat center;
+    background-size: 1.2rem;
+}
+
+button.back-btn:active {
+    background: #bbc4d0 url("../assets/img/arrow-left.svg") no-repeat center;
+    background-size: 1.2rem;
+}
+
+/*FORMS*/
+
+input, select {
+    height: 2.5rem;
+    padding: 0.1rem 1rem;
+    border: 2px solid #ededed;
+    border-radius: 0.3rem;
+    outline: none;
+    background-color: #ededed;
+    transition: border 0.4s, background-color 0.4s;
+    color: #3c3c3c;
+    box-shadow: none;
+}
+
+select {
+    -webkit-appearance: none;
+    background: url("../assets/img/arrow-down.svg") no-repeat 96% #ededed;
+    background-size: 1rem;
+}
+
+input::placeholder, select::placeholder {
+    opacity: .5;
+}
+
+input:hover, select:hover {
+    border-color: lightgrey;
+}
+
+input:focus, select:focus {
+    border-color: #b5b5b5;
+}
+
+input.validation:valid, select.validation:valid {
+    border-color: #e0f5de;
+    background-color: #e0f5de;
+}
+
+input.validation:valid:hover, select.validation:valid:hover {
+    border-color: #c7e7c2;
+}
+
+input.validation:valid:focus, select.validation:valid:focus {
+    border-color: #b3d9af;
+}
+
+/*BODY CSS*/
+
+#wrapper {
+    position: relative;
+    padding: 5rem 0 9.5rem 0;
+    min-height: 100vh;
+    transition: filter 1s;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100vw;
+    background-color: white;
+}
