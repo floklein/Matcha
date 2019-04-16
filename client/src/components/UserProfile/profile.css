@@ -29,10 +29,9 @@
 
 .profile__side-panel {
     flex-shrink: 0;
-    margin: -10rem 1rem 0 1rem;
+    margin: -10rem 1rem auto 1rem;
     width: 100%;
     max-width: 20rem;
-    height: 32rem;
     border-radius: 10px;
     overflow: hidden;
     background-color: whitesmoke;
@@ -56,38 +55,72 @@
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), whitesmoke);
 }
 
-.profile__sp-button {
-    display: grid;
-    justify-items: center;
+/*SIDE PANEL CONTENT*/
+
+.profile__sp-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
     width: 100%;
     margin-top: -1.25rem;
 }
 
-.profile__sp-button button {
-    /*width: 8rem;*/
+.profile__sp-content button {
     margin: 0;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding: 0 2rem;
     background: whitesmoke none;
     color: black;
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
     transition: background-color 0.4s, opacity 0.4s;
 }
 
-.profile__sp-button .subtitle {
-    margin-top: 0.2rem;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.6rem;
-    color: black;
+.profile__sp-content button:hover {
+    background-color: white;
+}
+
+.profile__sp-content button:active {
+    opacity: 0.8;
+    background-color: white;
+}
+
+.profile__sp-content h1 {
+    margin-bottom: 0;
+    color: white;
+}
+
+.profile__sp-content p {
+    margin: 0;
+    color: whitesmoke;
     opacity: 0.6;
 }
 
-.profile__sp-button button:hover {
-    background-color: white;
+.profile__sp-infos {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    width: 100%;
+    margin: 1.75rem 0;
 }
 
-.profile__sp-button button:active {
-    opacity: 0.8;
-    background-color: white;
+.profile__sp-infos > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+}
+
+.profile__sp-infos > div > div:first-child {
+    margin-bottom: 0.2rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    opacity: 0.2;
+}
+
+.profile__sp-infos > div > div:last-child {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    opacity: 0.5;
 }
 
 /*MAIN PANEL*/
