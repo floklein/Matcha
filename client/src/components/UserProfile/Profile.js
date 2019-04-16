@@ -76,7 +76,10 @@ class Profile extends Component {
             </div>
             <div className="profile__right-panel">
               <div className="profile__middle-panel">
-
+                <div>{this.state.firstName} vous aime déjà</div>
+                <div className="connected">Connecté</div>
+                <div>Popularité : 90/100</div>
+                <div></div>
               </div>
               <div className="profile__center-panel">
                 <div className="profile__cp-title">
