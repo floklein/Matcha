@@ -7,7 +7,11 @@ import './edit.css';
 
 class Profile extends Component {
   state = {
-    url: Faker.fake('{{image.avatar}}')
+    url: Faker.fake('{{image.avatar}}'),
+    username: Faker.fake('{{internet.userName}}'),
+    firstName: Faker.fake('{{name.firstName}}'),
+    lastName: Faker.fake('{{name.lastName}}'),
+    bio: Faker.fake('{{lorem.sentences}}')
   };
 
   componentDidMount() {
@@ -44,10 +48,29 @@ class Profile extends Component {
                 <div className="profile__sp-gradient"
                      style={{background: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgb(${r}, ${g}, ${b}))`}}/>
               </div>
-              <div className="profile__sp-button">
-                <button>NE PLUS AIMER</button>
-                <div className="subtitle">
-                  Florent ne vous a pas encore aimé.
+              <div className="profile__sp-content">
+                <div>
+                  <button>AIMER</button>
+                </div>
+                <div>
+                  <h1>{`${this.state.firstName} ${this.state.lastName}`}</h1>
+                </div>
+                <div>
+                  <p>{this.state.username}</p>
+                </div>
+                <div className="profile__sp-infos">
+                  <div>
+                    <div>GENRE</div>
+                    <div>Homme</div>
+                  </div>
+                  <div>
+                    <div>ÂGE</div>
+                    <div>23</div>
+                  </div>
+                  <div>
+                    <div>SEXUALITÉ</div>
+                    <div>Hétéro</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -60,11 +83,7 @@ class Profile extends Component {
                   <h4>BIO</h4>
                 </div>
                 <div className="profile__cp-content bio">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto aspernatur at atque
-                    consectetur
-                    cupiditate dolorem dolores ea esse ex in ipsam modi odio quae quisquam ratione reiciendis
-                    repellendus
-                    sit, suscipit!</p>
+                  <p>{this.state.bio}</p>
                 </div>
                 <div className="profile__cp-title">
                   <h4>INTÉRÊTS</h4>
