@@ -288,4 +288,27 @@ router.get('/logout', (req, res) => {
     }
 });
 
+//GET ALL INFOS FROM USER BY ID
+router.get('/infos/:id', (req, res) => {
+    const sql = "SELECT u.username, u.email, i.firstName, i.lastName, i.age, i.gender, i.sexuality, i.bio, i.profile_pic, i.popularity" +
+        "FROM users u " +
+        "INNER JOIN infos i" +
+        "ON i.id = u.user_id" +
+        `WHERE u.user_id = ${req.params.id}`;
+        connection.query(sql, (err, result) => {
+            if (result.length == 0) {
+                const res_array = {
+                    error: "user",
+                    errorText: "Utilisateur non trouvé"
+                };
+                res.status(400);
+                res.end(JSON.stringify(res_array));
+            }
+            else {
+                res.end(JSON.stringify(result));
+            }
+        })
+}
+
+
 module.exports = router;
