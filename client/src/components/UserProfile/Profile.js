@@ -1,39 +1,23 @@
 import React, {Component} from 'react';
-import Faker from 'faker';
-import getAverageColor from 'get-average-color';
+import {connect} from 'react-redux';
+
+import {fetchProfile} from "../../store/actions/profileActions";
 
 import './profile.css';
 import './edit.css';
 
 class Profile extends Component {
-  state = {
-    url: Faker.fake('{{image.avatar}}'),
-    username: Faker.fake('{{internet.userName}}'),
-    firstName: Faker.fake('{{name.firstName}}'),
-    lastName: Faker.fake('{{name.lastName}}'),
-    bio: Faker.fake('{{lorem.sentences}}')
-  };
-
-  componentDidMount() {
-    getAverageColor(this.state.url)
-      .then(rgb =>
-        this.setState({
-          url: this.state.url,
-          r: rgb.r,
-          g: rgb.g,
-          b: rgb.b
-        })
-      )
-      .catch(err => {
-        console.log('LOADING ERROR: ' + err)
-      });
+  componentWillMount() {
+    this.props.fetchProfile();
   }
 
   render() {
-    const photoUrl = this.state.url;
-    const bgCss = `url("${photoUrl}") no-repeat center`;
+    if (!this.props.profile)
+      return (<div/>);
+    const profile = this.props.profile;
+    const bgCss = `url("${profile.url}") no-repeat center`;
     const bgPhoto = {background: bgCss, backgroundSize: 'cover'};
-    const {r, g, b} = this.state;
+    const {r, g, b} = profile.rgb;
     const bgColor = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
 
     return (
@@ -53,10 +37,10 @@ class Profile extends Component {
                   <button>AIMER</button>
                 </div>
                 <div>
-                  <h1>{`${this.state.firstName} ${this.state.lastName}`}</h1>
+                  <h1>{`${profile.firstName} ${profile.lastName}`}</h1>
                 </div>
                 <div>
-                  <p>{this.state.username}</p>
+                  <p>{profile.username}</p>
                 </div>
                 <div className="profile__sp-infos">
                   <div>
@@ -76,19 +60,21 @@ class Profile extends Component {
             </div>
             <div className="profile__right-panel">
               <div className="profile__middle-panel">
-                <div>{this.state.firstName} vous aime déjà</div>
+                <div>{profile.firstName} vous aime déjà</div>
                 <div className="connected">En ligne</div>
                 {/*<div className="popularity p1" >Nouveau<div>- 42</div></div>*/}
                 {/*<div className="popularity p2" >Connu<div>- 42</div></div>*/}
                 {/*<div className="popularity p3" >Populaire<div>- 42</div></div>*/}
-                <div className="popularity p4" >Célèbre<div>- 42</div></div>
+                <div className="popularity p4">Célèbre
+                  <div>- 42</div>
+                </div>
               </div>
               <div className="profile__center-panel">
                 <div className="profile__cp-title">
                   <h4>BIO</h4>
                 </div>
                 <div className="profile__cp-content bio">
-                  <p>{this.state.bio}</p>
+                  <p>{profile.bio}</p>
                 </div>
                 <div className="profile__cp-title">
                   <h4>INTÉRÊTS</h4>
@@ -121,7 +107,7 @@ class Profile extends Component {
                   <h4>POSITION</h4>
                 </div>
                 <div className="profile__cp-content map">
-                  <iframe title="map" width="150%" height="200%" frameBorder="0"
+                  <iframe title="map" width="150%" height="200%"
                           src="https://www.google.com/maps/d/embed?mid=1-57radknCCRjqVekxyooWmvh-jQdV0_w&z=6&ll=47.048454, 3.105408"/>
                 </div>
                 <div className="profile__cp-buttons">
@@ -137,4 +123,8 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+const mapStateToProps = state => ({
+  profile: state.profile.items
+});
+
+export default connect(mapStateToProps, {fetchProfile})(Profile);
