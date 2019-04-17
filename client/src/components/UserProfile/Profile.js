@@ -77,9 +77,11 @@ class Profile extends Component {
             <div className="profile__right-panel">
               <div className="profile__middle-panel">
                 <div>{this.state.firstName} vous aime déjà</div>
-                <div className="connected">Connecté</div>
-                <div>Popularité : 90/100</div>
-                <div></div>
+                <div className="connected">En ligne</div>
+                {/*<div className="popularity p1" >Nouveau<div>- 42</div></div>*/}
+                {/*<div className="popularity p2" >Connu<div>- 42</div></div>*/}
+                {/*<div className="popularity p3" >Populaire<div>- 42</div></div>*/}
+                <div className="popularity p4" >Célèbre<div>- 42</div></div>
               </div>
               <div className="profile__center-panel">
                 <div className="profile__cp-title">
@@ -121,6 +123,10 @@ class Profile extends Component {
                 <div className="profile__cp-content map">
                   <iframe title="map" width="150%" height="200%" frameBorder="0"
                           src="https://www.google.com/maps/d/embed?mid=1-57radknCCRjqVekxyooWmvh-jQdV0_w&z=6&ll=47.048454, 3.105408"/>
+                </div>
+                <div className="profile__cp-buttons">
+                  <button className="report" title="Signaler cet utilisateur"/>
+                  <button className="block" title="Bloquer cet utilisateur"/>
                 </div>
               </div>
             </div>
