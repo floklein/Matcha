@@ -43,7 +43,12 @@ connection.connect((err) => {
     "CREATE TABLE IF NOT EXISTS likes(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "liker_id INT NOT NULL, " +
-    "liked_id INT NOT NULL);"
+    "liked_id INT NOT NULL); " + 
+    " CREATE TABLE IF NOT EXISTS visit( " +
+    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+    "visiter_id INT NOT NULL, " + 
+    "visited_id INT NOT " +
+    "time date NOT NULL;";
   connection.query(sql, (err, result) => {
     if (err) throw err;
     console.log("Result: " + result);
