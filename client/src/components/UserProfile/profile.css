@@ -1,10 +1,12 @@
+/*TOP PHOTO*/
+
 .profile__top {
     display: grid;
     align-items: center;
     justify-items: center;
     width: 100vw;
     height: 15rem;
-    /*background-color: red;*/
+    background-color: whitesmoke;
     overflow: hidden;
 }
 
@@ -14,6 +16,8 @@
     filter: blur(40px);
 }
 
+/*PROFILE MAIN PART*/
+
 .profile__main {
     display: flex;
     flex-direction: row;
@@ -21,11 +25,13 @@
     z-index: 1;
 }
 
+/*SIDE PANEL*/
+
 .profile__side-panel {
-    margin: -10rem 1rem 0 1rem;
+    flex-shrink: 0;
+    margin: -10rem 1rem auto 1rem;
     width: 100%;
     max-width: 20rem;
-    height: 32rem;
     border-radius: 10px;
     overflow: hidden;
     background-color: whitesmoke;
@@ -39,21 +45,140 @@
 }
 
 .profile__sp-img {
-    position: relative;
     width: 100%;
     height: 20rem;
 }
 
 .profile__sp-gradient {
-    position: absolute;
     width: 100%;
     height: 20rem;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), whitesmoke);
 }
 
+/*SIDE PANEL CONTENT*/
+
+.profile__sp-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 100%;
+    margin-top: -1.25rem;
+}
+
+.profile__sp-content button {
+    margin: 0;
+    padding: 0 2rem;
+    background: whitesmoke none;
+    color: black;
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.4s, opacity 0.4s;
+}
+
+.profile__sp-content button:hover {
+    background-color: white;
+}
+
+.profile__sp-content button:active {
+    opacity: 0.8;
+    background-color: white;
+}
+
+.profile__sp-content h1 {
+    margin-bottom: 0;
+    color: white;
+}
+
+.profile__sp-content p {
+    margin: 0;
+    color: whitesmoke;
+    opacity: 0.6;
+}
+
+.profile__sp-infos {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    width: 100%;
+    margin: 1.75rem 0;
+}
+
+.profile__sp-infos > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+}
+
+.profile__sp-infos > div > div:first-child {
+    margin-bottom: 0.2rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    opacity: 0.2;
+}
+
+.profile__sp-infos > div > div:last-child {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    opacity: 0.5;
+}
+
+/*MAIN PANEL*/
+
+.profile__right-panel {
+    margin-top: -4rem;
+}
+
+/*TOP PANEL*/
+
+.profile__middle-panel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+    height: 2rem;
+    margin: 0 1rem 4rem 0.5rem;
+}
+
+.profile__middle-panel > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin-left: 0.5rem;
+    padding: 0 1.5rem;
+    border-radius: 2.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.profile__middle-panel > div.connected::before,
+.profile__middle-panel > div.disconnected::before {
+    content: "";
+    display: block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.profile__middle-panel > div.connected::before {
+    background-color: lightgreen;
+    box-shadow: 0 0 8px 0 rgba(144, 238, 144, 0.8);
+}
+
+.profile__middle-panel > div.disconnected::before {
+    background-color: lightcoral;
+    box-shadow: 0 0 8px 0 rgba(240, 128, 128, 0.8);
+}
+
+/*INFOS PANEL*/
+
 .profile__center-panel {
     flex-grow: 1;
-    height: 50rem;
     margin: 2rem 1rem;
     padding: 2rem;
     background-color: whitesmoke;
@@ -75,7 +200,7 @@
     padding: 1rem;
     border-radius: 1rem;
     background-color: white;
-    box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
 }
 
 .profile__cp-content.bio p {
@@ -84,23 +209,25 @@
     font-size: 0.9rem;
     line-height: 1.5rem;
     color: grey;
+    word-break: break-word;
 }
 
 .profile__cp-content.tags {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin: 0 -0.5rem 1rem -0.5rem;
+    margin-left: -0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .profile__cp-content.tags > div {
-    margin: 0 0.5rem 0.5rem 0.5rem;
+    margin: 0 0 0.5rem 0.5rem;
     padding: 0.3rem 0.7rem;
     background: grey;
     border-radius: 1rem;
     color: white;
     font-size: 0.9rem;
-    box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
     word-wrap: unset;
 }
 
@@ -110,13 +237,64 @@
     margin-right: 0.2rem;
 }
 
+.profile__cp-content.photos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: -1rem;
+    margin-bottom: 0;
+}
+
+.profile__cp-content.photos > div {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 6rem;
+    height: 6rem;
+    margin: 0 0 1rem 1rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 0 16px -5px rgba(0, 0, 0, 0.5);
+}
+
+.profile__cp-content.photos > div:not(.no-photo) {
+    cursor: pointer;
+}
+
+.profile__cp-content.photos > div.no-photo {
+    opacity: 0.5;
+    background: grey url("../../assets/img/no-photo.svg") no-repeat center;
+    background-size: 2.4rem;
+}
+
+.profile__cp-content.map {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    height: 8rem;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
+}
+
+/*MEDIA QUERY FOR MOBILE*/
+
 @media screen and (max-width: 44rem) {
     .profile__main {
         flex-direction: column;
-        /*justify-items: center;*/
         align-items: center;
     }
+
+    .profile__right-panel {
+        margin-top: 0;
+    }
+
+    .profile__middle-panel {
+        margin: 1rem 0 0 0;
+    }
+
     .profile__center-panel {
         width: 100%;
+        border-radius: 0;
+        margin: 1rem 0 0 0;
     }
 }
