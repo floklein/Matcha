@@ -87,11 +87,15 @@
 .profile__sp-content h1 {
     margin-bottom: 0;
     color: white;
+    text-align: center;
+    word-break: break-word;
 }
 
 .profile__sp-content p {
     margin: 0;
     color: whitesmoke;
+    text-align: center;
+    word-break: break-word;
     opacity: 0.6;
 }
 
