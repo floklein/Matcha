@@ -15,6 +15,7 @@ app.use('/api/user', require('./routes/api/user'));
 app.use('/api/like', require('./routes/api/like'));
 app.use('/api/block', require('./routes/api/block'));
 app.use('/api/upload', require('./routes/api/upload'));
+app.use('/api/interests', require('./routes/api/interests'));
 
 const port = 5000;
 

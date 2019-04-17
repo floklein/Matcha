@@ -150,8 +150,6 @@ router.post('/register', jsonParser, (req, res) => {
 });
 
 
-
-
 //SIGN IN
 router.post('/signin', (req, res) => {
   let info = {
