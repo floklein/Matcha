@@ -175,7 +175,9 @@ router.post('/signin', (req, res) => {
   //If both fields are full, keep going with the connection
   if (!res_array.length) {
     //Check if username matches a user
-    let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}";`;
+    let sql = "SELECT u.username, u.password, u.id, u.email, v.status FROM users u" +
+                "INNER JOIN verified v ON u.id = v.user_id" +
+                ` WHERE username = "${info.username}";`;
     connection.query(sql, (err, result) => {
       if (err) throw err;
       if (result.length == 0) {
@@ -190,6 +192,12 @@ router.post('/signin', (req, res) => {
           error: "password",
           errorText: "Erreur de connection. Login et/ou mot de passe errones"
         })
+      }
+      if (!result.status) {
+          res_array.push({
+              error: "verification",
+              errorText: "Votre compte n'a pas été vérifié"
+          });
       }
       //if everything is good, connect the guy
       if (!res_array.length) {
