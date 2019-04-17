@@ -13,6 +13,7 @@ import EditProfile from './components/UserProfile/EditProfile';
 import './css/normalize.css';
 import './css/global.css';
 import './css/index.css';
+import './css/error.css';
 
 class App extends Component {
   render() {
