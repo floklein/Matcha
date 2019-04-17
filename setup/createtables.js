@@ -53,7 +53,7 @@ connection.connect((err) => {
     "CREATE TABLE IF NOT EXISTS interests(" +
     "id int NOT NULL AUTO_INCREMENT PRIMARY_KEY, " +
     "user_id int not NULL, " +
-    "tags VARCHAR(24);";
+    "tag VARCHAR(24);";
   connection.query(sql, (err, result) => {
     if (err) throw err;
     console.log("Result: " + result);
