@@ -48,7 +48,12 @@ connection.connect((err) => {
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "visiter_id INT NOT NULL, " + 
     "visited_id INT NOT " +
-    "time date NOT NULL;";
+    "time date NOT NULL;" +
+    "" +
+    "CREATE TABLE IF NOT EXISTS interests(" +
+    "id int NOT NULL AUTO_INCREMENT PRIMARY_KEY, " +
+    "user_id int not NULL, " +
+    "tags VARCHAR(24);";
   connection.query(sql, (err, result) => {
     if (err) throw err;
     console.log("Result: " + result);
