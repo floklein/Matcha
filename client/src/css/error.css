@@ -1,0 +1,36 @@
+.errorGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+    height: 100%;
+}
+
+.heartbroken {
+    grid-row-start: 1;
+    grid-row-end: 4;
+    width: 90%;
+}
+
+.errorGrid a {
+    grid-column: 2;
+}
+
+@media screen and (max-width: 800px) {
+    .errorGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 5fr 1fr 1fr 1fr;
+    }
+
+    .errorGrid a {
+        grid-column: 1;
+    }
+    .heartbroken {
+        grid-row-end: 1;
+        width: unset;
+        height: 250px;
+    
+    }
+}
