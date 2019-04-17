@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 
 const jsonParser = bodyParser.json();
 
+
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
   host: 'localhost',
@@ -20,6 +21,8 @@ let connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err
 });
+
+
 
 // REGISTER
 router.post('/register', jsonParser, (req, res) => {
@@ -146,6 +149,10 @@ router.post('/register', jsonParser, (req, res) => {
   })
 });
 
+
+
+
+//SIGN IN
 router.post('/signin', (req, res) => {
   let info = {
     username: req.query.username,
@@ -205,7 +212,7 @@ router.post('/signin', (req, res) => {
   }
 });
 
-//Set user infos
+//Set user additional infos
 router.post('/infos/:id', jsonParser, (req, res) => {
   let info = {
     bio: req.body.bio,
@@ -265,6 +272,8 @@ router.post('/infos/:id', jsonParser, (req, res) => {
       })
     });
 
+
+//LOGOUT user
 router.get('/logout', (req, res) => {
     if (req.session) {
         req.session.destroy();
