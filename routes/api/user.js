@@ -153,8 +153,8 @@ router.post('/register', jsonParser, (req, res) => {
 //SIGN IN
 router.post('/signin', (req, res) => {
   let info = {
-    username: req.query.username,
-    password: req.query.password,
+    username: req.body.username,
+    password: req.body.password,
   };
   let res_array = [];
 
