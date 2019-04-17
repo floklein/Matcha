@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 
+
 //Connect to db
 let connection = mysql.createConnection({
     host: 'localhost',
@@ -9,6 +10,10 @@ let connection = mysql.createConnection({
     user: 'root',
     password: 'root',
     database: 'matcha'
+});
+
+connection.connect(function (err) {
+    if (err) throw err;
 });
 
 
