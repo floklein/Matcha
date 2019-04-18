@@ -122,7 +122,7 @@ router.post('/register', jsonParser, (req, res) => {
     }
 
     //Check if gender is either Male or female
-    if (typeof info.gender === 'undefined' || info.gender !== 'male' && info.gender !== 'female') {
+    if (typeof info.gender === 'undefined' || info.gender !== 'male' && info.gender !== 'female' && info.gender !== 'other') {
       response = {
         ...response,
         gender: "Genre invalide."
