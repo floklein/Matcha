@@ -21,6 +21,53 @@ connection.connect(function (err) {
   if (err) throw err
 });
 
+// PRE-REGISTER
+router.post('/preregister', jsonParser, (req, res) => {
+  let info = {
+    email: req.body.email,
+    password: req.body.password,
+    confirm: req.body.confirm
+  };
+  let response = {};
+  let error = false;
+
+  //Check is password is long and good enough
+  if (typeof info.password === 'undefined' || !info.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
+    response = {
+      ...response,
+      password: "8 caractères min. (dont 1 maj. et 1 chiffre)"
+    };
+    error = true;
+  }
+
+  //Check if passwords are both equal
+  else if (typeof info.password === 'undefined' || typeof info.password === 'undefined' || info.password !== info.confirm) {
+    response = {
+      ...response,
+      confirm: "Mots de passe différents."
+    };
+    error = true;
+  }
+
+  //Check if email has right format
+  if (typeof info.email === 'undefined' || !info.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+    response = {
+      ...response,
+      email: "Adresse email invalide."
+    };
+    error = true;
+  }
+
+  //Send json if there is an error and quit
+  if (error === true) {
+    res.status(400);
+    res.end(JSON.stringify(response));
+  } else {
+    res.end();
+  }
+});
+
+
 // REGISTER
 router.post('/register', jsonParser, (req, res) => {
   let info = {
@@ -32,87 +79,97 @@ router.post('/register', jsonParser, (req, res) => {
     password: req.body.password,
     confirm: req.body.confirm
   };
-  let res_array = [];
+  let response = {};
+  let error = false;
 
   //Check if username is unique (see how to do multiple queries)
   let sql = `SELECT username from users WHERE username = "${info.username}";`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
-    if (result.length != 0) {
-      res_array.push({
-        error: "username",
-        errorText: "Le username existe deja"
-      });
+    if (result.length !== 0) {
+      response = {
+        ...response,
+        username: "Nom d'utilisateur indisponible."
+      };
+      error = true;
     }
 
     //Check if username is long enough
-    if (typeof info.username == 'undefined' || !info.username.match('^[a-zA-Z0-9]{4,30}$')) {
-      res_array.push({
-        error: "username",
-        errorText: "Le username doit etre forme de 4 a 30 lettres"
-      });
+    if (typeof info.username === 'undefined' || !info.username.match('^[a-zA-Z0-9]{4,30}$')) {
+      response = {
+        ...response,
+        username: "Nom d'utilisateur de 4 à 30 lettres."
+      };
+      error = true;
     }
 
     //Check is password is long and good enough
-    if (typeof info.password == 'undefined' || !info.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
-      res_array.push({
-        error: "password",
-        errorText: "Le mot de passe doivent contenir au moins 8 caracteres (au moins une minuscule, une majuscule et un chiffre)"
-      });
+    if (typeof info.password === 'undefined' || !info.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
+      response = {
+        ...response,
+        password: "8 caractères min. (dont 1 maj. et 1 chiffre)"
+      };
+      error = true;
     }
 
     //Check if passwords are both equal
-    else if (typeof info.password == 'undefined' || typeof info.password == 'undefined' || info.password != info.confirm) {
-      res_array.push({
-        error: "password",
-        errorText: "Les mots de passe ne correspondent pas"
-      });
+    else if (typeof info.password === 'undefined' || typeof info.password === 'undefined' || info.password != info.confirm) {
+      response = {
+        ...response,
+        confirm: "Mots de passe différents."
+      };
+      error = true;
     }
 
     //Check if gender is either Male or female
-    if (typeof info.gender == 'undefined' || info.gender != "male" && info.gender != "female") {
-      res_array.push({
-        error: "gender",
-        errorText: "Le genre est errone"
-      });
+    if (typeof info.gender === 'undefined' || info.gender !== 'male' && info.gender !== 'female') {
+      response = {
+        ...response,
+        gender: "Genre invalide."
+      };
+      error = true;
     }
 
     //Check if both names are incorrect
-    if ((typeof info.firstName == 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof info.lastName == 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$'))) {
-      res_array.push({
-        error: "name",
-        errorText: "Le prenom et le nom sont invalides"
-      });
+    if ((typeof info.firstName === 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof info.lastName === 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$'))) {
+      response = {
+        ...response,
+        name: "Prénom et nom invalides."
+      };
+      error = true;
     }
 
     //Check if firstname is correct
-    else if (typeof info.firstName == 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
-      res_array.push({
-        error: "name",
-        errorText: "Le prenom est invalide"
-      });
+    else if (typeof info.firstName === 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+      response = {
+        ...response,
+        firstName: "Prénom invalide."
+      };
+      error = true;
     }
 
     //Check if lastname is correct
-    else if (typeof info.lastName == 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
-      res_array.push({
-        error: "name",
-        errorText: "Le nom est invalide"
-      });
+    else if (typeof info.lastName === 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+      response = {
+        ...response,
+        lastName: "Nom invalide."
+      };
+      error = true;
     }
 
     //Check if email has right format
-    if (typeof info.email == 'undefined' || !info.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
-      res_array.push({
-        error: "email",
-        errorText: "L'email est invalide"
-      });
+    if (typeof info.email === 'undefined' || !info.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+      response = {
+        ...response,
+        email: "Adresse email invalide."
+      };
+      error = true;
     }
 
     //Send json if there is an error and quit
-    if (res_array.length) {
+    if (error === true) {
       res.status(400);
-      res.end(JSON.stringify(res_array));
+      res.end(JSON.stringify(response));
       return;
     }
 

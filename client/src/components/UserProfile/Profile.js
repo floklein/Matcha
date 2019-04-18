@@ -126,7 +126,7 @@ class Profile extends Component {
 
 Profile.propTypes = {
   fetchProfile: PropTypes.func.isRequired,
- posts: PropTypes.object.isRequired
+  posts: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
