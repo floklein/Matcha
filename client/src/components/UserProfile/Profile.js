@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {fetchProfile} from "../../store/actions/profileActions";
@@ -7,7 +8,7 @@ import './profile.css';
 import './edit.css';
 
 class Profile extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchProfile();
   }
 
@@ -122,6 +123,11 @@ class Profile extends Component {
     );
   }
 }
+
+Profile.propTypes = {
+  fetchProfile: PropTypes.func.isRequired,
+ posts: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => ({
   profile: state.profile.items
