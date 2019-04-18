@@ -224,6 +224,8 @@ router.post('/infos/:id', jsonParser, (req, res) => {
     bio: req.body.bio,
     sexuality: req.body.sexuality,
     age: req.body.age,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude
   };
 
   const sql = `SELECT id from users WHERE id = ${req.params.id}`;
@@ -263,16 +265,21 @@ router.post('/infos/:id', jsonParser, (req, res) => {
               errorText: "l'age est incorrect"
           })
       }
+      if (typeof info.latitude == 'undefined' || info.latitude == "" || typeof info.longitude == "undefined" || info.longitude == "") {
+          res_array.push({
+              error:"coord",
+              errorText: "Les coordonnées de localisation sont erronées"
+          });
+      }
       if (res_array.length) {
           res.status(400);
           res.end(JSON.stringify(res_array));
       }
           else {
-              const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = "${info.age}"` +
+              const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = "${info.age}", latitude=${info.latitude}, longitude=${info.longitude}` +
                   `WHERE user_id = ${req.params.id}`;
               connection.query(sql2, (err) => {
               })
-
           }
           res.end();
       })

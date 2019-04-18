@@ -28,7 +28,9 @@ connection.connect((err) => {
     "sexuality VARCHAR(20), " +
     "bio VARCHAR(460), " +
     "profile_pic VARCHAR(24), " +
-    "popularity INT NOT NULL);" +
+    "popularity INT NOT NULL," +
+    "latitude FLOAT(12,8), " +
+    "longitude FLOAT(12,8));" +
     "" +
     "CREATE TABLE IF NOT EXISTS verified(" +
     "user_id INT NOT NULL," +
@@ -61,5 +63,3 @@ connection.connect((err) => {
   });
   connection.end();
 });
-
-
