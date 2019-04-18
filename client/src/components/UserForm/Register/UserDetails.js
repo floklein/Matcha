@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Spring, config} from 'react-spring/renderprops';
-import Axios from "axios";
+import axios from "axios";
 import classnames from 'classnames';
 
 export class UserDetails extends Component {
@@ -12,17 +12,14 @@ export class UserDetails extends Component {
     e.preventDefault();
     const {values} = this.props;
 
-    Axios.post('/api/user/preregister', values)
-      .then(res => {
-        console.log(res.data);
+    axios.post('/api/user/preregister', values)
+      .then(() => {
         this.props.nextStep();
       })
       .catch(err => {
-        console.log(err.response.data);
         this.setState({errors: err.response.data});
       });
   };
-
 
   render() {
     const {values, handleChange} = this.props;

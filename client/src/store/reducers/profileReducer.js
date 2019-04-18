@@ -7,7 +7,7 @@ export default function (state = initialState, action) {
     case FETCH_PROFILE:
       return {
         ...state,
-        items: action.payload
+        user: action.payload
       };
     default:
       return state;

@@ -7,6 +7,7 @@
     "classnames": "^2.2.6",
     "faker": "^4.1.0",
     "get-average-color": "0.0.6",
+    "jwt-decode": "^2.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
