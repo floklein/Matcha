@@ -22,6 +22,7 @@ function fill_db() {
     const bio = faker.lorem.sentences();
     const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
     const age = Math.floor(Math.random() * 40) + 18;
+    const image_url = faker.image.avatar();
 
     axios.post('http://localhost:5000/api/user/register', {
       email,

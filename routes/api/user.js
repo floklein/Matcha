@@ -314,7 +314,7 @@ router.get('/infos/:id', (req, res) => {
                 res.end(JSON.stringify(result));
             }
         })
-}
+});
 
 
 module.exports = router;
