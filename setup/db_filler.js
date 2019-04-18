@@ -22,6 +22,8 @@ function fill_db() {
     const bio = faker.lorem.sentences();
     const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
     const age = Math.floor(Math.random() * 40) + 18;
+    const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 10;
+    const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 20;
     const image_url = faker.image.avatar();
 
     axios.post('http://localhost:5000/api/user/register', {
@@ -38,7 +40,9 @@ function fill_db() {
         axios.post(newurl, {
           bio,
           sexuality,
-          age
+          age,
+          latitude,
+          longitude
         })
           .then(resp => {
             connection.query("UPDATE verified SET status = 1 WHERE user_id > 0", err => {

@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
             errorText: "L'id de l'utilisateur est requis"
         });
     }
-    if (typeof response.code == "undefined" || response.id == null) {
+    if (typeof response.code == "undefined" || response.code == null) {
         res_array.push({
             error: "code",
             errorText: "Le code de vérification est requis"
@@ -45,7 +45,6 @@ router.post('/', (req, res) => {
         `WHERE user_id = ${response.id}`;
         connection.query(sql, (err, resp) => {
             if (err) throw err;
-
 
             //if both infos are valid, verify account
             if (resp.code === response.code && resp.id === response.id) {
