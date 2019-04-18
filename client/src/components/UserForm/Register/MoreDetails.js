@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Spring, config} from 'react-spring/renderprops';
-import Axios from 'axios';
 import classnames from "classnames";
+import axios from "axios";
 
 export class MoreDetails extends Component {
   state = {
@@ -10,9 +10,10 @@ export class MoreDetails extends Component {
 
   continue = e => {
     e.preventDefault();
+
     const {values} = this.props;
 
-    Axios.post('/api/user/register', values)
+    axios.post('/api/user/register', values)
       .then(res => {
         console.log(res.data);
         this.props.nextStep();
@@ -76,4 +77,4 @@ export class MoreDetails extends Component {
   }
 }
 
-export default MoreDetails;
+export default (MoreDetails);

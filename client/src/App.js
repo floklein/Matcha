@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
+
+import {setCurrentUser} from "./store/actions/authActions";
+import setAuthToken from './utils/setAuthToken';
 
 import store from './store';
 import Root from './components/Root';
@@ -13,6 +17,13 @@ import EditProfile from './components/UserProfile/EditProfile';
 import './css/normalize.css';
 import './css/global.css';
 import './css/index.css';
+
+if (localStorage.jwtToken !== 'undefined') {
+  setAuthToken(localStorage.jwtToken);
+  // const decoded = jwt_decode(localStorage.jwtToken);
+  const decoded = localStorage.jwtToken;
+  store.dispatch(setCurrentUser(decoded));
+}
 
 class App extends Component {
   render() {

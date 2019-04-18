@@ -130,7 +130,7 @@ Profile.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile.items
+  profile: state.profile.user
 });
 
 export default connect(mapStateToProps, {fetchProfile})(Profile);

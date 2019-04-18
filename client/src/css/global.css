@@ -180,16 +180,16 @@ input.validation:valid:focus, select.validation:valid:focus {
     border-color: #b3d9af;
 }
 
-input.validation.invalid, select.validation.invalid {
+input.invalid, select.invalid {
     border-color: #ffe1e1;
     background-color: #ffe1e1;
 }
 
-input.validation.invalid:hover, select.validation.invalid:hover {
+input.invalid:hover, select.invalid:hover {
     border-color: #f5c4bf;
 }
 
-input.validation.invalid:focus, select.validation.invalid:focus {
+input.invalid:focus, select.invalid:focus {
     border-color: #f5aea9;
 }
 

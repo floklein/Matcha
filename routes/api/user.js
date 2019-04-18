@@ -21,6 +21,21 @@ connection.connect(function (err) {
   if (err) throw err
 });
 
+// TEST FOR LOGIN !!
+router.post('/login', jsonParser, (req, res) => {
+    let worked = true;
+
+    if (worked) {
+      res.end(JSON.stringify({token: 'ceciestuntoken'}));
+    } else {
+      let response = {
+        login: "Nom d'utilisateur et/ou mot de passe invalides."
+      };
+      res.status(400);
+      res.end(JSON.stringify(response));
+    }
+  });
+
 // PRE-REGISTER
 router.post('/preregister', jsonParser, (req, res) => {
   let info = {
