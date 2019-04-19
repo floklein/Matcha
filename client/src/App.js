@@ -19,7 +19,7 @@ import './css/global.css';
 import './css/index.css';
 import './css/error.css';
 
-if (localStorage.jwtToken !== 'undefined') {
+if (localStorage.jwtToken && localStorage.jwtToken !== 'undefined') {
   setAuthToken(localStorage.jwtToken);
   const decoded = jwt_decode(localStorage.jwtToken);
   // const decoded = localStorage.jwtToken;
