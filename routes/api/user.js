@@ -277,8 +277,6 @@ router.post('/login', (req, res) => {
 
 
 
-
-
 //Set user infos
 router.post('/infos/:id', passport.authenticate('jwt', { session: false}), (req, res) => {
   let info = {

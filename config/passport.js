@@ -24,9 +24,13 @@ module.exports = passport => {
     passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
         const sql = "SELECT id, username, email from users " +
             `WHERE id = ${jwt_payload.id}`;
-        connection.query(sql, (err, res) => {
-            if (res) {
-                done(null, res);
+        connection.query(sql, (err, result) => {
+            if (result) {
+                let user = {};
+                user.id = result[0].id;
+                user.email = result[0].email;
+                user.username = result[0].username;
+                done(null, user);
             }
             else {
                 done(null, false);
