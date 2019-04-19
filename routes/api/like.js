@@ -21,37 +21,34 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
   let response = {
     liked: req.body.liked
   };
-  let res_array = [];
+  let res_err = {};
 
   if (typeof response.liked == 'undefined' || response.liked == "") {
-    res_array.push({
-      error: "liked",
-      errorText: "le compte liked est requis"
-    });
-    res.status(400);
-    res.end(JSON.stringify(res_array));
+    res_err = {
+        ...res_err,
+        liked: "Le compte à liker est requs"
+    };
+    return res.status(400).json(res_err);
   }
   else {
     //Check if 2 users are the same
     if (req.user.id === response.liked) {
-      res_array.push({
-        error: "id",
-        errorText: "Les deux utilisateurs ne peuvent etre identiques"
-      });
-      res.status(400);
-      res.end(JSON.stringify(res_array));
+        res_err = {
+            ...res_err,
+            liked: "Un utilisateur ne peut se liker lui-même"
+        };
+        return res.status(400).json(res_err);
     }
     else {
           //Check if liked exists
           sql = `SELECT id from users WHERE id = ${response.liked}`;
           connection.query(sql, (err, result) => {
             if (result && result.length == 0) {
-              res_array.push({
-                error: "id",
-                errorText: "Utilisateur like non trouve"
-              });
-              res.status(400);
-              res.end(JSON.stringify(res_array));
+                res_err = {
+                    ...res_err,
+                    liked: "Le compte à liker non trouvé"
+                };
+                return res.status(400).json(res_err);
             }
             else {
               //Check if already liked
@@ -61,13 +58,13 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                   //Delete like
                   sql = `DELETE FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
                   connection.query(sql, (err, result) => {
-                    res.end("dislike");
+                    res.end("");
                   })
                 }
                 else {  //Else, like
                   sql = `INSERT INTO likes(liker_id, liked_id) VALUES(${req.user.id}, ${response.liked})`;
                   connection.query(sql, (err, result) => {
-                    res.end("like");
+                    res.end("");
                   })
                 }
               })
