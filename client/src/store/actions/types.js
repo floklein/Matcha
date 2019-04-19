@@ -1,0 +1,6 @@
+// PROFILE
+export const FETCH_PROFILE = 'FETCH_PROFILE';
+// AUTH
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+// ERRORS
+export const GET_ERRORS = 'GET_ERRORS';
