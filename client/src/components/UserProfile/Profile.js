@@ -39,7 +39,7 @@ class Profile extends Component {
 
   render() {
     if (this.props.error)
-      return (<Error/>);
+      return (<Error errTitle="Profil inexistant." errText="la page de profil à laquelle vous tentez d'accéder ne semble pas exister."/>);
     if (!this.props.profile)
       return (<Loading/>);
     const profile = this.props.profile;
