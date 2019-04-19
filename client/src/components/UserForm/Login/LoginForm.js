@@ -15,8 +15,7 @@ export class LoginForm extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      // this.props.history.push('/profile/log');
-      alert('loggé !');
+      window.location.href = '/soulmatcher';
     }
 
     if (nextProps.errors) {
