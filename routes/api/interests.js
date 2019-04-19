@@ -35,18 +35,17 @@ router.post('/new', passport.authenticate('jwt', { session: false}), (req, res) 
        tag: req.body.tag
    };
    if (typeof response.tag == "undefined" || response.tag == "") {
-       const res_array = {
-           error: "tag",
-           errorText: "Le tag est nécessaire"
+       const res_err = {
+           tag: "Le tag est nécessaire"
        };
-       res.status(400).end(JSON.stringify(res_array));
+       return res.status(400).json(res_err);
    }
    else {
        sql = "INSERT INTO interests(user_id, tag)" +
            `VALUES(${req.user.id}, "${response.tag}")`;
        connection.query(sql, (err, result) => {
            if (err) throw err;
-           res.end(JSON.stringify(result));
+           res.end();
        })
    }
 });
