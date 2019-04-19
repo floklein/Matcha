@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 
 const jsonParser = bodyParser.json();
 
+const jwt = require('jsonwebtoken');
+
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
   host: 'localhost',
@@ -20,21 +22,6 @@ let connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err
 });
-
-// TEST FOR LOGIN !!
-router.post('/login', jsonParser, (req, res) => {
-    let worked = true;
-
-    if (worked) {
-      res.end(JSON.stringify({token: 'ceciestuntoken'}));
-    } else {
-      let response = {
-        login: "Nom d'utilisateur et/ou mot de passe invalides."
-      };
-      res.status(400);
-      res.end(JSON.stringify(response));
-    }
-  });
 
 // PRE-REGISTER
 router.post('/preregister', jsonParser, (req, res) => {
@@ -215,64 +202,85 @@ router.post('/register', jsonParser, (req, res) => {
   })
 });
 
-router.post('/signin', (req, res) => {
+
+
+router.post('/login', (req, res) => {
   let info = {
     username: req.query.username,
     password: req.query.password,
   };
-  let res_array = [];
+  let response = {};
+  let error = false;
 
   //Check if password and username are not empty and defined
-  if (typeof info.username == 'undefined' || info.username == "") {
-    res_array.push({
-      error: "username",
-      errorText: "le username est requis"
-    })
-  }
-  if (typeof info.password == 'undefined' || info.password == "") {
-    res_array.push({
-      error: "password",
-      errorText: "le mot de passe est requis"
-    })
-  }
+    if (typeof info.username == 'undefined' || info.username == "") {
+        response = {
+            ...response,
+            username: "le login est requis"
+        };
+        error = true;
+    }
+    if (typeof info.password == 'undefined' || info.password == "") {
+        response = {
+            ...response,
+            password: "le mot de passe est requis"
+        };
+        error = true;
+    }
 
-  //If both fields are full, keep going with the connection
-  if (!res_array.length) {
-    //Check if username matches a user
-    let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}";`;
-    connection.query(sql, (err, result) => {
-      if (err) throw err;
-      if (result.length == 0) {
-        res_array.push({
-          error: "password",
-          errorText: "Erreur de connection. Login et/ou mot de passe errones"
-        })
-      }
-      //Check if password is wrong
-      else if (!pw_hash.verify(info.password, result[0].pwd)) {
-        res_array.push({
-          error: "password",
-          errorText: "Erreur de connection. Login et/ou mot de passe errones"
-        })
-      }
-      //if everything is good, connect the guy (don't know how to do it yet)
-      if (!res_array.length) {
-        req.session.username = result[0].username;
-        req.session.user_id = result[0].id;
-        req.session.email = result[0].email;
-        res.json(req.session);
+    //If both fields are full, keep going with the connection
+    if (!error) {
+        //Check if username matches a user
+        let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}";`;
+        connection.query(sql, (err, result) => {
+            if (err) throw err;
+            if (result.length == 0) {
+                response = {
+                    ...response,
+                    password: "Login et/ou mot de passe invalides"
+                };
+                error = true;
+            }
+            //Check if password is wrong
+            else if (!pw_hash.verify(info.password, result[0].password)) {
+                response = {
+                    ...response,
+                    password: "Login et/ou mot de passe invalides"
+                };
+                error = true;
+            }
+      //if everything is good, connect the guy by creating token
+      if (!error) {
+
+        const payload = {
+          id: result[0].id,
+          email: result[0].email,
+          username: result[0].username
+        };
+
+        jwt.sign(payload, 'Mortparequipe', { expiresIn: 3600 }, (err, token) => {
+          res.json({
+              success: true,
+              token: 'Bearer ' + token
+          })
+        });
+
       }
       else {
         res.status(400);
-        res.end(JSON.stringify(res_array));
+        return res.json(response);
       }
     })
   }
   else {
     res.status(400);
-    res.end(JSON.stringify(res_array));
+    return res.json(response);
   }
 });
+
+
+
+
 
 //Set user infos
 router.post('/infos/:id', jsonParser, (req, res) => {
