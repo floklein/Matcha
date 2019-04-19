@@ -4,10 +4,6 @@ const router = express.Router();
 const pw_hash = require('password-hash');
 const mysql = require('mysql');
 const uuid = require('uuid');
-const bodyParser = require('body-parser');
-
-const jsonParser = bodyParser.json();
-
 const jwt = require('jsonwebtoken');
 
 // CONNECT TO DATABASE
@@ -24,7 +20,7 @@ connection.connect(function (err) {
 });
 
 // PRE-REGISTER
-router.post('/preregister', jsonParser, (req, res) => {
+router.post('/preregister', (req, res) => {
   let info = {
     email: req.body.email,
     password: req.body.password,
@@ -71,7 +67,7 @@ router.post('/preregister', jsonParser, (req, res) => {
 
 
 // REGISTER
-router.post('/register', jsonParser, (req, res) => {
+router.post('/register', (req, res) => {
   let info = {
     email: req.body.email,
     username: req.body.username,
@@ -204,7 +200,7 @@ router.post('/register', jsonParser, (req, res) => {
 
 
 
-router.post('/login', jsonParser, (req, res) => {
+router.post('/login', (req, res) => {
   let info = {
     username: req.body.username,
     password: req.body.password,
@@ -283,7 +279,7 @@ router.post('/login', jsonParser, (req, res) => {
 
 
 //Set user infos
-router.post('/infos/:id', jsonParser, (req, res) => {
+router.post('/infos/:id', (req, res) => {
   let info = {
     bio: req.body.bio,
     sexuality: req.body.sexuality,

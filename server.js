@@ -5,11 +5,9 @@ const app = express();
 
 const bodyParser = require('body-parser');
 
-const session =  require('express-session') ;
 
-app.use(session({ secret: 'mortparequipe', resave: false, saveUninitialized: true, }));
-
-bodyParser.json();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use('/api/user', require('./routes/api/user'));
 app.use('/api/like', require('./routes/api/like'));
