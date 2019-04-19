@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 
 const jsonParser = bodyParser.json();
 
+const jwt = require('jsonwebtoken');
+
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
   host: 'localhost',
@@ -20,21 +22,6 @@ let connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err
 });
-
-// TEST FOR LOGIN !!
-router.post('/login', jsonParser, (req, res) => {
-    let worked = true;
-
-    if (worked) {
-      res.end(JSON.stringify({token: 'ceciestuntoken'}));
-    } else {
-      let response = {
-        login: "Nom d'utilisateur et/ou mot de passe invalides."
-      };
-      res.status(400);
-      res.end(JSON.stringify(response));
-    }
-  });
 
 // PRE-REGISTER
 router.post('/preregister', jsonParser, (req, res) => {
@@ -215,7 +202,9 @@ router.post('/register', jsonParser, (req, res) => {
   })
 });
 
-router.post('/signin', (req, res) => {
+
+
+router.post('/login', (req, res) => {
   let info = {
     username: req.query.username,
     password: req.query.password,
@@ -245,22 +234,32 @@ router.post('/signin', (req, res) => {
       if (result.length == 0) {
         res_array.push({
           error: "password",
-          errorText: "Erreur de connection. Login et/ou mot de passe errones"
+          errorText: "Erreur 1"
         })
       }
       //Check if password is wrong
-      else if (!pw_hash.verify(info.password, result[0].pwd)) {
+      else if (!pw_hash.verify(info.password, result[0].password)) {
         res_array.push({
           error: "password",
-          errorText: "Erreur de connection. Login et/ou mot de passe errones"
+          errorText: "Erreur 2"
         })
       }
-      //if everything is good, connect the guy (don't know how to do it yet)
+      //if everything is good, connect the guy by creating token
       if (!res_array.length) {
-        req.session.username = result[0].username;
-        req.session.user_id = result[0].id;
-        req.session.email = result[0].email;
-        res.json(req.session);
+
+        const payload = {
+          id: result[0].id,
+          email: result[0].email,
+          username: result[0].username
+        };
+
+        jwt.sign(payload, 'Mortparequipe', { expiresIn: 3600 }, (err, token) => {
+          res.json({
+              success: true,
+              token: 'Bearer ' + token
+          })
+        });
+
       }
       else {
         res.status(400);
@@ -273,6 +272,10 @@ router.post('/signin', (req, res) => {
     res.end(JSON.stringify(res_array));
   }
 });
+
+
+
+
 
 //Set user infos
 router.post('/infos/:id', jsonParser, (req, res) => {
