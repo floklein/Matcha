@@ -47,6 +47,10 @@
 .profile__sp-img {
     width: 100%;
     height: 20rem;
+    /*do not shorten!*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .profile__sp-gradient {
