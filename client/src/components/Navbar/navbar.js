@@ -1,12 +1,61 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+
+import {logoutUser} from "../../store/actions/authActions";
 
 import './navbar.css'
 
 import logo from '../../assets/img/logo.svg'
 
 class Navbar extends Component {
+  onLogoutClick = () => {
+    this.props.logoutUser();
+    window.location.href = '/';
+  };
+
   render() {
+    const {isAuthenticated, user} = this.props.auth;
+    const guestLinks = (
+      <div><NavLink to="/">Accueil</NavLink></div>
+    );
+    const authLinks = (
+      <React.Fragment>
+        <div><NavLink to="/soulmatcher">Soulmatcher</NavLink></div>
+        <div className="vr"/>
+        <div><NavLink to="/search">Recherche</NavLink></div>
+      </React.Fragment>
+    );
+    const guestButtons = (
+      <div/>
+    );
+    const authButtons = (
+      <React.Fragment>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+               stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </div>
+        <div>
+          <NavLink to="/profile/username">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+                 stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </NavLink>
+        </div>
+        <div onClick={this.onLogoutClick}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
+               stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 3H6a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h4M16 17l5-5-5-5M19.8 12H9"/>
+          </svg>
+        </div>
+      </React.Fragment>
+    );
+
     return (
       <div id="navbar">
         <div className="nav-items">
@@ -21,35 +70,13 @@ class Navbar extends Component {
             </div>
           </div>
           <div className="defaultLinks">
-            <div><NavLink to="/">Accueil</NavLink></div>
-            <div className="vr"/>
-            <div><NavLink to="/soulmatcher">Soulmatcher</NavLink></div>
-            <div className="vr"/>
-            <div><NavLink to="/search">Recherche</NavLink></div>
+            {isAuthenticated ? authLinks : guestLinks}
           </div>
           <div className="logo">
             <NavLink to="/"><img src={logo} alt="logo"/></NavLink>
           </div>
           <div className="rightButtons">
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
-                   stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/>
-              </svg>
-            </div>
-            <div>
-              <NavLink to="/profile/username"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
-                   stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg></NavLink>
-            </div>
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
-                   stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10 3H6a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h4M16 17l5-5-5-5M19.8 12H9"/>
-              </svg>
-            </div>
+            {isAuthenticated ? authButtons : guestButtons}
           </div>
         </div>
       </div>
@@ -57,4 +84,13 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  logoutUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, {logoutUser})(Navbar);

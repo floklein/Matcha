@@ -5,19 +5,46 @@ import {connect} from 'react-redux';
 import {fetchProfile} from "../../store/actions/profileActions";
 
 import Loading from '../Loading';
+import Error from '../Error';
 
 import './profile.css';
 import './edit.css';
 
 class Profile extends Component {
   componentDidMount() {
-    this.props.fetchProfile();
+    this.props.fetchProfile(this.props.match.params.username);
   }
 
+  getGender = (gender) => {
+    switch (gender) {
+      case 'male':
+        return 'Homme';
+      case 'female':
+        return 'Femme';
+      default:
+        return 'Non binaire';
+    }
+  };
+
+  getSexuality = (sexuality) => {
+    switch (sexuality) {
+      case 'heterosexual':
+        return 'Hétéro';
+      case 'homosexual':
+        return 'Homo';
+      default:
+        return 'Bi';
+    }
+  };
+
   render() {
+    if (this.props.error)
+      return (<Error/>);
     if (!this.props.profile)
       return (<Loading/>);
     const profile = this.props.profile;
+    const gender = this.getGender(profile.gender);
+    const sexuality = this.getSexuality(profile.sexuality);
     const bgPhoto = {backgroundImage: `url('${profile.url}')`};
     const {r, g, b} = profile.rgb;
     const bgColor = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
@@ -47,15 +74,15 @@ class Profile extends Component {
                 <div className="profile__sp-infos">
                   <div>
                     <div>GENRE</div>
-                    <div>Homme</div>
+                    <div>{gender}</div>
                   </div>
                   <div>
                     <div>ÂGE</div>
-                    <div>23</div>
+                    <div>{profile.age ? profile.age : '?'}</div>
                   </div>
                   <div>
                     <div>SEXUALITÉ</div>
-                    <div>Hétéro</div>
+                    <div>{sexuality}</div>
                   </div>
                 </div>
               </div>
@@ -76,7 +103,7 @@ class Profile extends Component {
                   <h4>BIO</h4>
                 </div>
                 <div className="profile__cp-content bio">
-                  <p>{profile.bio}</p>
+                  <p>{profile.bio ? profile.bio : `${profile.firstName} n'a pas écrit de bio.`}</p>
                 </div>
                 <div className="profile__cp-title">
                   <h4>INTÉRÊTS</h4>
@@ -131,7 +158,8 @@ Profile.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile.user
+  profile: state.profile.user,
+  error: state.errors.profile
 });
 
 export default connect(mapStateToProps, {fetchProfile})(Profile);

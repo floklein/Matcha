@@ -3,7 +3,7 @@ import {Provider} from 'react-redux';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
-import {setCurrentUser} from "./store/actions/authActions";
+import {logoutUser, setCurrentUser} from "./store/actions/authActions";
 import setAuthToken from './utils/setAuthToken';
 
 import store from './store';
@@ -22,8 +22,13 @@ import './css/error.css';
 if (localStorage.jwtToken && localStorage.jwtToken !== 'undefined') {
   setAuthToken(localStorage.jwtToken);
   const decoded = jwt_decode(localStorage.jwtToken);
-  // const decoded = localStorage.jwtToken;
   store.dispatch(setCurrentUser(decoded));
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    store.dispatch(logoutUser());
+    //TODO: Clear current profile
+    window.location.href = '/';
+  }
 }
 
 class App extends Component {
