@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 
 import {fetchProfile} from "../../store/actions/profileActions";
 
+import Loading from '../Loading';
+
 import './profile.css';
 import './edit.css';
 
@@ -14,10 +16,9 @@ class Profile extends Component {
 
   render() {
     if (!this.props.profile)
-      return (<div/>);
+      return (<Loading/>);
     const profile = this.props.profile;
-    const bgCss = `url("${profile.url}") no-repeat center`;
-    const bgPhoto = {background: bgCss, backgroundSize: 'cover'};
+    const bgPhoto = {backgroundImage: `url('${profile.url}')`};
     const {r, g, b} = profile.rgb;
     const bgColor = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
 
