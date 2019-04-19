@@ -6,7 +6,7 @@ const multer = require('multer');
 const upload = multer({dest: __dirname + '/uploads/pics'});
 const uuid = require('uuid');
 
-router.post('/:id', upload.single('picture'), (req, res) =>{
+router.post('/', upload.single('picture'), (req, res) =>{
     if(req.file) {
         res.json(req.file);
         fs.rename(__dirname + '/uploads/pics/' + req.file.filename, __dirname + '/uploads/pics/' + req.params.id + '_' + uuid.v4(), (error) => {
