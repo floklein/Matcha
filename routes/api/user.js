@@ -284,47 +284,51 @@ router.post('/infos/:id', passport.authenticate('jwt', { session: false}), (req,
     sexuality: req.body.sexuality,
     age: req.body.age
   };
-  let res_array = [];
+  let res_err = {};
+  let error = false;
 
   const sql = `SELECT id from users WHERE id = ${req.params.id}`;
   connection.query(sql, (err, result) => {
     if (result && result.length == 0) {
-      res_array.push({
-        error: "id",
-        errorText: "Utilisateur non trouve"
-      });
-      res.status(400);
-      res.end(JSON.stringify(res_array));
+        res_err = {
+            ...res_err,
+            id: "Utilisateur non trouvé"
+        };
+        return res.status(400).json(res_err);
     }
     else {
       if (typeof info.bio == 'undefined' || info.bio == "") {
-        res_array.push({
-          error: "bio",
-          errorText: "la biographie est requise"
-        })
+          res_err = {
+              ...res_err,
+              bio: "La bio est requise"
+          };
+          error = true
       }
       else if (info.bio.length > 420) {
-        res_array.push({
-          error: "bio",
-          errorText: "la biographie doit faire moins de 420 characteres"
-        })
+          res_err = {
+              ...res_err,
+              bio: "La bio doit faire moins de 420 caractères"
+          };
+          error = true
       }
     }
     if (typeof info.sexuality == 'undefined' || (info.sexuality != "bisexual" && info.sexuality != "heterosexual" && info.sexuality != "homosexual")) {
-      res_array.push({
-        error: "sexualite",
-        errorText: "La sexualite est incorrecte"
-      })
+        res_err = {
+            ...res_err,
+            sexuality: "La sexualité est incorrecte"
+        };
+        error = true
     }
     if (typeof info.age == 'undefined' || info.age == "" || isNaN(info.age)) {
-      res_array.push({
-        error: "age",
-        errorText: "l'age est incorrect"
-      })
+        res_err = {
+            ...res_err,
+            age: "L'age est incorrect"
+        };
+        error = true
     }
-    if (res_array.length) {
+    if (error) {
       res.status(400);
-      res.end(JSON.stringify(res_array));
+      res.status(400).json(res_err);
     }
     else {
       const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} ` +

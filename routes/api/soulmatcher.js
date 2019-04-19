@@ -20,7 +20,7 @@ connection.connect(function(err) {
 
 
 router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
-    let res_array = [];
+    let res_err = {};
 
 
             //get sexuality infos from user

@@ -22,25 +22,28 @@ router.post('/', (req, res) => {
         id: req.body.id,
         code: req.body.code
     };
-    let res_array = [];
+    let res_err = {};
+    let error = false;
 
 
     //Check if both fields are filled
     if (typeof response.id == "undefined" || response.id == null) {
-        res_array.push({
-            error: "id",
-            errorText: "L'id de l'utilisateur est requis"
-        });
+        res_err = {
+            ...res_err,
+            id: "L'id de l'utilisateur est requis"
+        };
+        error = true;
     }
     if (typeof response.code == "undefined" || response.code == null) {
-        res_array.push({
-            error: "code",
-            errorText: "Le code de vérification est requis"
-        });
+        res_err = {
+            ...res_err,
+            code: "Le code de vérification est requis"
+        };
+        error = true;
     }
 
     //If both fields are good, keep going
-    if (!res_array.length) {
+    if (!error) {
         let sql = "SELECT user_id, code FROM verified" +
         `WHERE user_id = ${response.id}`;
         connection.query(sql, (err, resp) => {
@@ -55,19 +58,18 @@ router.post('/', (req, res) => {
                     if (err) throw err;
                 })
             }
-
             else {
-                res_array.push({
-                    error: "match",
-                    errorText: "Veuillez verifier le lien reçu par mail"
-                });
-                res.status(400).end(JSON.stringify(res_array));
+                res_err = {
+                    ...res_err,
+                    match: "Veuillez vérifier le lien reçu par mail"
+                };
+                res.status(400).json(res_err);
             }
         })
     }
     // if previous error
     else {
-        res.status(400).end(JSON.stringify(res_array));
+        res.status(400).json(res_err);
     }
 });
 
