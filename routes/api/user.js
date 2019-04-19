@@ -209,43 +209,48 @@ router.post('/login', (req, res) => {
     username: req.query.username,
     password: req.query.password,
   };
-  let res_array = [];
+  let response = {};
+  let error = false;
 
   //Check if password and username are not empty and defined
-  if (typeof info.username == 'undefined' || info.username == "") {
-    res_array.push({
-      error: "username",
-      errorText: "le username est requis"
-    })
-  }
-  if (typeof info.password == 'undefined' || info.password == "") {
-    res_array.push({
-      error: "password",
-      errorText: "le mot de passe est requis"
-    })
-  }
+    if (typeof info.username == 'undefined' || info.username == "") {
+        response = {
+            ...response,
+            username: "le login est requis"
+        };
+        error = true;
+    }
+    if (typeof info.password == 'undefined' || info.password == "") {
+        response = {
+            ...response,
+            password: "le mot de passe est requis"
+        };
+        error = true;
+    }
 
-  //If both fields are full, keep going with the connection
-  if (!res_array.length) {
-    //Check if username matches a user
-    let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}";`;
-    connection.query(sql, (err, result) => {
-      if (err) throw err;
-      if (result.length == 0) {
-        res_array.push({
-          error: "password",
-          errorText: "Erreur 1"
-        })
-      }
-      //Check if password is wrong
-      else if (!pw_hash.verify(info.password, result[0].password)) {
-        res_array.push({
-          error: "password",
-          errorText: "Erreur 2"
-        })
-      }
+    //If both fields are full, keep going with the connection
+    if (!error) {
+        //Check if username matches a user
+        let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}";`;
+        connection.query(sql, (err, result) => {
+            if (err) throw err;
+            if (result.length == 0) {
+                response = {
+                    ...response,
+                    password: "Login et/ou mot de passe invalides"
+                };
+                error = true;
+            }
+            //Check if password is wrong
+            else if (!pw_hash.verify(info.password, result[0].password)) {
+                response = {
+                    ...response,
+                    password: "Login et/ou mot de passe invalides"
+                };
+                error = true;
+            }
       //if everything is good, connect the guy by creating token
-      if (!res_array.length) {
+      if (!error) {
 
         const payload = {
           id: result[0].id,
@@ -263,13 +268,13 @@ router.post('/login', (req, res) => {
       }
       else {
         res.status(400);
-        res.end(JSON.stringify(res_array));
+        return res.json(response);
       }
     })
   }
   else {
     res.status(400);
-    res.end(JSON.stringify(res_array));
+    return res.json(response);
   }
 });
 
