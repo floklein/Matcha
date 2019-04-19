@@ -180,6 +180,20 @@ input.validation:valid:focus, select.validation:valid:focus {
     border-color: #b3d9af;
 }
 
+input.invalid, select.invalid {
+    border-color: #ffe1e1;
+    background-color: #ffe1e1;
+}
+
+input.invalid:hover, select.invalid:hover {
+    border-color: #f5c4bf;
+}
+
+input.invalid:focus, select.invalid:focus {
+    border-color: #f5aea9;
+}
+
+
 /*BODY CSS*/
 
 #wrapper {

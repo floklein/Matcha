@@ -87,11 +87,15 @@
 .profile__sp-content h1 {
     margin-bottom: 0;
     color: white;
+    text-align: center;
+    word-break: break-word;
 }
 
 .profile__sp-content p {
     margin: 0;
     color: whitesmoke;
+    text-align: center;
+    word-break: break-word;
     opacity: 0.6;
 }
 
@@ -134,7 +138,7 @@
 .profile__middle-panel {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap-reverse;
     flex-grow: 1;
     height: 2rem;
     margin: 0 1rem 4rem 0.5rem;
@@ -145,14 +149,14 @@
     align-items: center;
     justify-content: space-between;
     height: 100%;
-    margin-left: 0.5rem;
+    margin: 0.5rem 0 0 0.5rem;
     padding: 0 1.5rem;
     border-radius: 2.5rem;
     background-color: rgba(0, 0, 0, 0.5);
     color: rgba(255, 255, 255, 0.9);
     font-family: 'Poppins', sans-serif;
     font-size: 0.8rem;
-    font-weight: 500;
+    white-space: nowrap;
 }
 
 .profile__middle-panel > div.connected::before,
@@ -173,6 +177,56 @@
 .profile__middle-panel > div.disconnected::before {
     background-color: lightcoral;
     box-shadow: 0 0 8px 0 rgba(240, 128, 128, 0.8);
+}
+
+.profile__middle-panel > div.popularity::before {
+    content: "";
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.profile__middle-panel > div.popularity.p1::before {
+    background-color: lightgrey;
+    box-shadow: 0 0 8px 0 rgba(211, 211, 211, 0.8);
+    background-image: url("../../assets/img/pop1.svg");
+}
+
+.profile__middle-panel > div.popularity.p2::before {
+    background-color: dodgerblue;
+    box-shadow: 0 0 8px 0 rgba(30, 144, 255, 0.8);
+    background-image: url("../../assets/img/pop2.svg");
+}
+
+.profile__middle-panel > div.popularity.p3::before {
+    background-color: orangered;
+    box-shadow: 0 0 8px 0 rgba(255, 69, 0, 0.8);
+    background-image: url("../../assets/img/pop3.svg");
+    background-size: 0.625rem;
+}
+
+.profile__middle-panel > div.popularity.p4::before {
+    background-color: orange;
+    box-shadow: 0 0 8px 0 rgba(255, 165, 0, 0.8);
+    background-image: url("../../assets/img/pop4.svg");
+    background-size: 0.625rem;
+}
+
+.profile__middle-panel > div.popularity > div {
+    display: none;
+    margin-left: 0.5rem;
+    font-family: inherit;
+    font-size: inherit;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.profile__middle-panel > div.popularity:hover > div {
+    display: block;
 }
 
 /*INFOS PANEL*/
@@ -276,6 +330,38 @@
     box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
 }
 
+.profile__cp-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    margin: 2rem 0 -0.5rem 0;
+}
+
+.profile__cp-buttons button {
+    width: 2.5rem;
+    height: 1.5rem;
+    margin: 0 0 0 0.5rem;
+    background-color: white !important;
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.4s, opacity 0.4s;
+    background-size: 1rem;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.profile__cp-buttons button:active {
+    opacity: 0.7;
+}
+
+.profile__cp-buttons button.report {
+    background-image: url("../../assets/img/profile-report.svg");
+}
+
+.profile__cp-buttons button.block {
+    background-image: url("../../assets/img/profile-block.svg");
+}
+
 /*MEDIA QUERY FOR MOBILE*/
 
 @media screen and (max-width: 44rem) {
@@ -296,5 +382,17 @@
         width: 100%;
         border-radius: 0;
         margin: 1rem 0 0 0;
+    }
+
+    .profile__middle-panel {
+        width: 100vw;
+        padding-right: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .profile__middle-panel > div {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
     }
 }

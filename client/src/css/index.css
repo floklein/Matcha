@@ -80,6 +80,10 @@
     cursor: pointer;
 }
 
+#carousel .login p:not(.subtitle) {
+    color: #d69893;
+}
+
 #carousel .login input, #carousel .login select {
     width: 80%;
 }
