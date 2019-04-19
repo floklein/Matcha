@@ -5,6 +5,7 @@ const pw_hash = require('password-hash');
 const mysql = require('mysql');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
@@ -279,7 +280,7 @@ router.post('/login', (req, res) => {
 
 
 //Set user infos
-router.post('/infos/:id', (req, res) => {
+router.post('/infos/:id', passport.authenticate('jwt', { session: false}), (req, res) => {
   let info = {
     bio: req.body.bio,
     sexuality: req.body.sexuality,
