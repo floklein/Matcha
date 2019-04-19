@@ -204,10 +204,10 @@ router.post('/register', jsonParser, (req, res) => {
 
 
 
-router.post('/login', (req, res) => {
+router.post('/login', jsonParser, (req, res) => {
   let info = {
-    username: req.query.username,
-    password: req.query.password,
+    username: req.body.username,
+    password: req.body.password,
   };
   let response = {};
   let error = false;
@@ -237,7 +237,7 @@ router.post('/login', (req, res) => {
             if (result.length == 0) {
                 response = {
                     ...response,
-                    password: "Login et/ou mot de passe invalides"
+                    login: "Login et/ou mot de passe invalides"
                 };
                 error = true;
             }
@@ -245,7 +245,7 @@ router.post('/login', (req, res) => {
             else if (!pw_hash.verify(info.password, result[0].password)) {
                 response = {
                     ...response,
-                    password: "Login et/ou mot de passe invalides"
+                    login: "Login et/ou mot de passe invalides"
                 };
                 error = true;
             }

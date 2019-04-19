@@ -55,16 +55,16 @@ export class LoginForm extends Component {
               <h2>Se connecter.</h2>
               <p className="subtitle">Pas de compte ? <span onClick={this.props.gotoRegister}>Inscrivez-vous !</span>
               </p>
-              <input className={classnames('', {'invalid': errors.login})}
+              <input className={classnames('', {'invalid': errors.username || errors.login})}
                      type="text" name="username" placeholder="Votre pseudo ou votre email"
                      title="Votre pseudo ou votre email" required minLength="1" maxLength="64"
                      value={this.state.username} onChange={this.onChange}/>
-              <p>&nbsp;</p>
-              <input className={classnames('', {'invalid': errors.login})}
+              <p>{errors.username}&nbsp;</p>
+              <input className={classnames('', {'invalid': errors.password || errors.login})}
                      type="password" name="password" placeholder="Votre mot de passe"
                      title="Votre mot de passe" required minLength="8" maxLength="64"
                      value={this.state.password} onChange={this.onChange}/>
-              <p>{errors.login}&nbsp;</p>
+              <p>{errors.password}{errors.login}&nbsp;</p>
               <button className="green" type="submit">Connexion</button>
             </form>
           </div>}

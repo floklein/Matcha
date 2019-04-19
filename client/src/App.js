@@ -21,8 +21,8 @@ import './css/error.css';
 
 if (localStorage.jwtToken !== 'undefined') {
   setAuthToken(localStorage.jwtToken);
-  // const decoded = jwt_decode(localStorage.jwtToken);
-  const decoded = localStorage.jwtToken;
+  const decoded = jwt_decode(localStorage.jwtToken);
+  // const decoded = localStorage.jwtToken;
   store.dispatch(setCurrentUser(decoded));
 }
 
