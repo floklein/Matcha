@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
+const passport = require('passport');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -19,18 +20,18 @@ connection.connect(function(err) {
 
 
 
-router.post('/:id', (req, res) => {
+router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let response = {
-        blockee: req.query.blockee
+        blocked: req.body.blocked
     }
 
     let error = false;
     let res_array = [];
 
-    if (typeof response.blockee == 'undefined' || response.blockee == "") {
+    if (typeof response.blocked == 'undefined' || response.blocked == "") {
         error = true;
         res_array.push({
-            error: "blockee",
+            error: "blocked",
             errorText: "le compte blocké est requis"
         })
         res.status(400);
@@ -38,33 +39,21 @@ router.post('/:id', (req, res) => {
     }
     else {
         //Check if 2 users are the same
-        if (req.params.id === response.blockee) {
+        if (req.user.id === response.blocked) {
             res_array.push({
-                error: "blockee",
+                error: "blocked",
                 errorText: "Les deux utilisateurs ne peuvent etre identiques"
             });
             res.status(400);
             res.end(JSON.stringify(res_array));
         }
         else {
-            //Check if blocker exists
-            let sql = `SELECT id from users WHERE id = ${req.params.id}`;
-            connection.query(sql, (err, result) => {
-                if (result && result.length == 0) {
-                    res_array.push({
-                        error: "blocker",
-                        errorText: "blocker non trouve"
-                    });
-                    res.status(400);
-                    res.end(JSON.stringify(res_array));
-                }
-                else {
-                    //Check if blockee exists
-                    sql = `SELECT id from users WHERE id = ${response.blockee}`;
+                    //Check if blocked exists
+                    sql = `SELECT id from users WHERE id = ${response.blocked}`;
                     connection.query(sql, (err, result) => {
                         if (result && result.length == 0) {
                             res_array.push({
-                                error: "blockee",
+                                error: "blocked",
                                 errorText: "Utilisateur blocké non trouve"
                             });
                             res.status(400);
@@ -72,17 +61,17 @@ router.post('/:id', (req, res) => {
                         }
                         else {
                             //Check if already liked
-                            sql = `SELECT * FROM blocks WHERE blocker_id = ${req.params.id} AND blockee_id = ${response.blockee}`;
+                            sql = `SELECT * FROM blocks WHERE blocker_id = ${req.user.id} AND blocked_id = ${response.blocked}`;
                             connection.query(sql, (err, result) => {
                                 if (result && result.length != 0) { //If already liked, unlike
                                     //Check if already liked
-                                    sql = `DELETE FROM blocks WHERE blocker_id = ${req.params.id} AND blockee_id = ${response.blockee}`;
+                                    sql = `DELETE FROM blocks WHERE blocker_id = ${req.user.id} AND blocked_id = ${response.blocked}`;
                                     connection.query(sql, (err, result) => {
                                         res.end("unblock");
                                     })
                                 }
                                 else {  //Else, like
-                                    sql = `INSERT INTO blocks(blocker_id, blockee_id) VALUES(${req.params.id}, ${response.blockee})`;
+                                    sql = `INSERT INTO blocks(blocker_id, blocked_id) VALUES(${req.user.id}, ${response.blocked})`;
                                     connection.query(sql, (err, result) => {
                                         res.end("block");
                                     })
@@ -90,8 +79,6 @@ router.post('/:id', (req, res) => {
                             })
                         }
                     })
-                }
-            })
         }
     }
 });
