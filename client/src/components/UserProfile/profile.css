@@ -135,6 +135,7 @@
 
 .profile__right-panel {
     margin-top: -4rem;
+    width: 100%;
 }
 
 /*TOP PANEL*/
@@ -287,6 +288,7 @@
     font-size: 0.9rem;
     box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
     word-wrap: unset;
+    text-transform: lowercase;
 }
 
 .profile__cp-content.tags > div::before {

@@ -22,11 +22,12 @@ export const fetchProfile = (username) => dispatch => {
               sexuality: res.data.sexuality,
               bio: res.data.bio,
               profile_pic: res.data.profile_pic,
+              rgb: rgb,
               photos: res.data.photos,
               popularity: res.data.popularity,
               latitude: res.data.latitude,
               longitude: res.data.longitude,
-              rgb: rgb
+              interests: res.data.interests
             }
           });
         })
