@@ -51,6 +51,6 @@ connection.connect((err) => {
                 connection.end();
             })
             .catch((err) => {
-            )
+            })
     });
 });

@@ -25,9 +25,9 @@ connection.connect((err) => {
     "age INT, " +
     "firstName VARCHAR(30), " +
     "lastName VARCHAR(30), " +
-    "sexuality VARCHAR(20), " +
+    "sexuality VARCHAR(20) DEFAULT 'bisexual', " +
     "bio VARCHAR(460), " +
-    "profile_pic VARCHAR(256), " +
+    "profile_pic VARCHAR(256) DEFAULT '/photos/default.png', " +
     "popularity INT NOT NULL," +
     "latitude FLOAT(12,8), " +
     "longitude FLOAT(12,8));" +
