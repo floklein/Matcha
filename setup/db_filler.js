@@ -52,7 +52,7 @@ function fill_db() {
           profilePic
         })
           .then(resp => {
-            const sql = "INSERT INTO photos(user_id, pic1, pic2, pic3, pic4, pic5)" +
+            let sql = "INSERT INTO photos(user_id, pic1, pic2, pic3, pic4, pic5)" +
                 `VALUES(${response.data}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
             connection.query(sql, (err, response) => {
               if (err) throw err;
