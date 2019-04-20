@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {fetchProfile} from "../../store/actions/profileActions";
-import {likeUser} from "../../store/actions/userActions";
+import {likeUser} from "../../store/actions/profileActions";
 
 import Loading from '../Loading';
 import Error from '../Error';
@@ -212,7 +212,6 @@ Profile.propTypes = {
 const mapStateToProps = state => ({
   profile: state.profile.user,
   error: state.errors.profile,
-  like: state.like
 });
 
 export default connect(mapStateToProps, {fetchProfile, likeUser})(Profile);
