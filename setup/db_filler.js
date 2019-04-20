@@ -24,8 +24,12 @@ function fill_db() {
     const age = Math.floor(Math.random() * 40) + 18;
     const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 10;
     const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 20;
-    const image_url = faker.image.avatar();
     const popularity = Math.random() * 100;
+    const profilePic = faker.image.avatar();
+    const pic2 = faker.image.avatar();
+    const pic3 = faker.image.avatar();
+    const pic4 = faker.image.avatar();
+    const pic5 = faker.image.avatar();
 
     axios.post('http://localhost:5000/api/user/register', {
       email,
@@ -44,12 +48,18 @@ function fill_db() {
           age,
           latitude,
           longitude,
-          popularity
+          popularity,
+          profilePic
         })
           .then(resp => {
-            connection.query("UPDATE verified SET status = 1 WHERE user_id > 0", err => {
-              resolve(resp);
-            });
+            const sql = "INSERT INTO photos(user_id, pic1, pic2, pic3, pic4, pic5)" +
+                `VALUES(${response.data}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
+            connection.query(sql, (err, response) => {
+              if (err) throw err;
+                connection.query("UPDATE verified SET status = 1 WHERE user_id > 0", err => {
+                    resolve(resp);
+                });
+            })
           })
           .catch((error) => {
             resolve(error);
