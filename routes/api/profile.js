@@ -66,7 +66,7 @@ router.get('/:username', (req, res) => {
         ...result[0],
         photos: photos,
         popularity: {
-          score: Math.floor(Math.random() * 100),
+          score: result[0].popularity,
           rank: Math.round(Math.random() * 3 + 1)
         }
       };
