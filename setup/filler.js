@@ -41,6 +41,7 @@ function fill_db() {
       gender
     })
       .then(response => {
+        const id = response.data;
         const newurl = "http://localhost:5000/api/user/infos/" + response.data;
         axios.post(newurl, {
           bio,
@@ -56,7 +57,7 @@ function fill_db() {
                 `VALUES(${response.data}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
             connection.query(sql, (err, response) => {
               if (err) throw err;
-                connection.query("UPDATE verified SET status = 1 WHERE user_id > 0", err => {
+                connection.query("UPDATE verified SET status = 1 WHERE user_id = " + id, err => {
                     resolve(resp);
                 });
             })
