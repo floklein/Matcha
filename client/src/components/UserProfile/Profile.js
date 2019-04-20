@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {fetchProfile} from "../../store/actions/profileActions";
+import {likeUser} from "../../store/actions/userActions";
 
 import Loading from '../Loading';
 import Error from '../Error';
@@ -72,6 +73,31 @@ class Profile extends Component {
     }
   };
 
+  likeThisUser = () => {
+    this.props.likeUser(this.props.profile.id);
+  };
+
+  getLikeStatus = (like) => {
+    switch (like) {
+      case 'both':
+        return 'Vous vous aimez mutuellement';
+      case 'no':
+        return 'Faites le premier pas !';
+      case 'me':
+        return `Vous aimez déjà ${this.props.profile.firstName}`;
+      case 'you':
+        return `${this.props.profile.firstName} vous aime déjà`;
+    }
+  };
+
+  getLikeButton = (like) => {
+    if (like === 'me' || like === 'both') {
+      return 'NE PLUS AIMER';
+    } else {
+      return 'AIMER';
+    }
+  };
+
   render() {
     if (this.props.error)
       return (<Error errTitle="Profil inexistant."
@@ -82,6 +108,8 @@ class Profile extends Component {
     const gender = this.getGender(profile.gender);
     const sexuality = this.getSexuality(profile.sexuality);
     const popularity = this.getPopularity(profile.popularity);
+    const likeStatus = this.getLikeStatus(profile.like);
+    const likeButton = this.getLikeButton(profile.like);
     const {r, g, b} = profile.rgb;
     const bgPhoto = {backgroundImage: `url('${profile.profile_pic}')`};
     const bgColor = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
@@ -100,7 +128,7 @@ class Profile extends Component {
               </div>
               <div className="profile__sp-content">
                 <div>
-                  <button>AIMER</button>
+                  <button onClick={this.likeThisUser}>{likeButton}</button>
                 </div>
                 <div>
                   <h1>{`${profile.firstName} ${profile.lastName}`}</h1>
@@ -126,7 +154,7 @@ class Profile extends Component {
             </div>
             <div className="profile__right-panel">
               <div className="profile__middle-panel">
-                <div>{profile.firstName} vous aime déjà</div>
+                <div>{likeStatus}</div>
                 <div className="connected">En ligne</div>
                 {popularity}
               </div>
@@ -177,12 +205,14 @@ class Profile extends Component {
 
 Profile.propTypes = {
   fetchProfile: PropTypes.func.isRequired,
-  posts: PropTypes.object.isRequired
+  posts: PropTypes.object.isRequired,
+  likeUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   profile: state.profile.user,
-  error: state.errors.profile
+  error: state.errors.profile,
+  like: state.like
 });
 
-export default connect(mapStateToProps, {fetchProfile})(Profile);
+export default connect(mapStateToProps, {fetchProfile, likeUser})(Profile);
