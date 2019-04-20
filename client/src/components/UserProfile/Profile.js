@@ -40,24 +40,34 @@ class Profile extends Component {
   getPopularity = (popularity) => {
     switch (popularity.rank) {
       case 1:
-        return (<div className="popularity p1" >Nouveau<div>- {popularity.score}</div></div>);
+        return (<div className="popularity p1">Nouveau
+          <div>- {popularity.score}</div>
+        </div>);
       case 2:
-        return (<div className="popularity p2" >Connu<div>- {popularity.score}</div></div>);
+        return (<div className="popularity p2">Connu
+          <div>- {popularity.score}</div>
+        </div>);
       case 3:
-        return (<div className="popularity p3" >Populaire<div>- {popularity.score}</div></div>);
+        return (<div className="popularity p3">Populaire
+          <div>- {popularity.score}</div>
+        </div>);
       case 4:
-        return (<div className="popularity p4">Célèbre<div>- {popularity.score}</div></div>);
+        return (<div className="popularity p4">Célèbre
+          <div>- {popularity.score}</div>
+        </div>);
       default:
-        return (<div className="popularity p1" >Nouveau<div>- {popularity.score}</div></div>);
+        return (<div className="popularity p1">Nouveau
+          <div>- {popularity.score}</div>
+        </div>);
     }
   };
 
-  deletePhoto = (e) => {
+  photoAction = (e) => {
     const position = e.clientY - e.target.offsetTop + window.scrollY;
     console.log(position);
-    if (position < 25) {
+    if (position < 20) {
       console.log('delete');
-    } else if (position > 70) {
+    } else if (position > 75) {
       console.log('profile');
     }
   };
@@ -72,8 +82,8 @@ class Profile extends Component {
     const gender = this.getGender(profile.gender);
     const sexuality = this.getSexuality(profile.sexuality);
     const popularity = this.getPopularity(profile.popularity);
-    const bgPhoto = {backgroundImage: `url('${profile.url}')`};
     const {r, g, b} = profile.rgb;
+    const bgPhoto = {backgroundImage: `url('${profile.profile_pic}')`};
     const bgColor = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
 
     return (
@@ -147,10 +157,9 @@ class Profile extends Component {
                   <h4>PHOTOS</h4>
                 </div>
                 <div className="profile__cp-content photos">
-                  <div style={bgPhoto} onClick={this.deletePhoto}/>
-                  <div style={bgPhoto} onClick={this.deletePhoto}/>
-                  <div style={bgPhoto} onClick={this.deletePhoto}/>
-                  <div style={bgPhoto} onClick={this.deletePhoto}/>
+                  {profile.photos.map((photo, i) =>
+                    (<div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>)
+                  )}
                   <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>
                   <div className="add-photo" style={bgColor}/>
                 </div>
