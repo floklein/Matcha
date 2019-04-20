@@ -1,16 +1,35 @@
 import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
-import heartbroken from "../assets/img/heartbroken.png";
+import {NavLink} from "react-router-dom";
+
+import brokenHeart from "../assets/img/heartbroken.png";
 
 class Error extends Component {
+  getError = () => {
+    return {
+      errTitle: this.props.errTitle ? this.props.errTitle : 'Erreur 404.',
+      errText: this.props.errText ? this.props.errText : 'il semblerait que la page que vous recherchez n\'existe pas.'
+    }
+  };
+
   render() {
+    const {errTitle, errText} = this.getError();
+
     return (
       <div className="centered">
-        <div className="errorGrid">
-        <img className="heartbroken" src={heartbroken} alt="coeur brisé"></img>
-          <h1>Erreur 404</h1>
-          <h2>La page que vous recherchez n'existe pas</h2>
-          <NavLink to="/search">Cliquez ici pour effectuer une nouvelle recherche</NavLink>
+        <div className="centered-window">
+          <div className="error__window">
+            <div>
+              <img src={brokenHeart} alt=""/>
+            </div>
+            <div>
+              <h1>Oups !</h1>
+              <h4>{errTitle}</h4>
+              <p>Ça nous brise le cœur mais, {errText}</p>
+              <NavLink to='/'>
+                <button>Retour</button>
+              </NavLink>
+            </div>
+          </div>
         </div>
       </div>
     );

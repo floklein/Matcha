@@ -310,6 +310,8 @@
     height: 6rem;
     margin: 0 0 1rem 1rem;
     background-color: white;
+    background-size: cover;
+    background-position: center;
     border-radius: 1rem;
     box-shadow: 0 0 16px -5px rgba(0, 0, 0, 0.5);
 }
@@ -328,7 +330,7 @@
     display: grid;
     align-items: center;
     justify-items: center;
-    height: 8rem;
+    height: 12rem;
     overflow: hidden;
     border-radius: 1rem;
     box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
