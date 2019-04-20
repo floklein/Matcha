@@ -29,13 +29,11 @@ export class UserForm extends Component {
       default:
       case 0:
         return (
-          <RegisterForm
-            gotoLogin={this.gotoLogin}/>
+          <RegisterForm gotoLogin={this.gotoLogin}/>
         );
       case 1:
         return (
-          <LoginForm
-            gotoRegister={this.gotoRegister}/>
+          <LoginForm gotoRegister={this.gotoRegister}/>
         );
     }
   }

@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
 import UserForm from "./UserForm/UserForm";
 
@@ -7,6 +9,12 @@ import triMap from "../assets/img/tri-map.svg";
 import triChat from "../assets/img/tri-chat.svg";
 
 class Home extends Component {
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/soulmatcher');
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -55,4 +63,12 @@ class Home extends Component {
   }
 }
 
-export default Home;
+Home.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Home);
