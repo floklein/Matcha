@@ -52,15 +52,26 @@ router.get('/:username', (req, res) => {
       return res.json(response);
     }
 
-    //TODO: Needs queries for popularity, "liked" status, etc
-    result[0] = {
-      ...result[0],
-      popularity: {
-        score: Math.floor(Math.random() * 100),
-        rank: Math.round(Math.random() * 3 + 1)
+    let sql = `SELECT pic1, pic2, pic3, pic4, pic5 FROM photos JOIN users ON users.id = photos.user_id WHERE users.username = "${username}";`;
+    connection.query(sql, (err, result2) => {
+      if (err) throw err;
+
+      let photos = [];
+      if (result2.length !== 0) {
+        photos = [result2[0].pic1, result2[0].pic2, result2[0].pic3, result2[0].pic4, result2[0].pic5].filter((photo) => photo);
       }
-    };
-    return res.json(result[0]);
+
+      //TODO: Needs queries for popularity, "liked" status, etc
+      result[0] = {
+        ...result[0],
+        photos: photos,
+        popularity: {
+          score: Math.floor(Math.random() * 100),
+          rank: Math.round(Math.random() * 3 + 1)
+        }
+      };
+      return res.json(result[0]);
+    });
   });
 });
 
