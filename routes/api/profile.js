@@ -52,6 +52,14 @@ router.get('/:username', (req, res) => {
       return res.json(response);
     }
 
+    //TODO: Needs queries for popularity, "liked" status, etc
+    result[0] = {
+      ...result[0],
+      popularity: {
+        score: Math.floor(Math.random() * 100),
+        rank: Math.round(Math.random() * 3 + 1)
+      }
+    };
     return res.json(result[0]);
   });
 });
