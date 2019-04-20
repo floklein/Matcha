@@ -278,11 +278,14 @@ router.post('/login', (req, res) => {
 
 
 //Set user infos
-router.post('/infos/:id', passport.authenticate('jwt', { session: false}), (req, res) => {
+router.post('/infos/:id', (req, res) => {
   let info = {
     bio: req.body.bio,
     sexuality: req.body.sexuality,
-    age: req.body.age
+    age: req.body.age,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
+    popularity: req.body.popularity
   };
   let res_err = {};
   let error = false;
@@ -326,12 +329,33 @@ router.post('/infos/:id', passport.authenticate('jwt', { session: false}), (req,
         };
         error = true
     }
+      if (typeof info.latitude == 'undefined' || info.latitude == "") {
+          res_err = {
+              ...res_err,
+              latitude: "La latitude est incorrecte"
+          };
+          error = true
+      }
+      if (typeof info.longitude == 'undefined' || info.longitude == "") {
+          res_err = {
+              ...res_err,
+              longitude: "La longitude est incorrecte"
+          };
+          error = true
+      }
+      if (typeof info.popularity == 'undefined' || info.popularity == "") {
+          res_err = {
+              ...res_err,
+              popularity: "La popularité est incorrecte"
+          };
+          error = true
+      }
     if (error) {
       res.status(400);
       res.status(400).json(res_err);
     }
     else {
-      const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} ` +
+      const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}` +
         `WHERE user_id = ${req.params.id}`;
       connection.query(sql2, (err) => {
         if (err) throw (err);

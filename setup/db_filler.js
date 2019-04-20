@@ -25,6 +25,7 @@ function fill_db() {
     const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 10;
     const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 20;
     const image_url = faker.image.avatar();
+    const popularity = Math.random() * 100;
 
     axios.post('http://localhost:5000/api/user/register', {
       email,
@@ -42,7 +43,8 @@ function fill_db() {
           sexuality,
           age,
           latitude,
-          longitude
+          longitude,
+          popularity
         })
           .then(resp => {
             connection.query("UPDATE verified SET status = 1 WHERE user_id > 0", err => {
