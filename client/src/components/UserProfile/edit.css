@@ -1,9 +1,9 @@
 .profile__cp-content.photos > div:not(.add-photo):not(.no-photo):hover::before {
-    content: "Supprimer ?";
+    content: "Supprimer";
     box-sizing: border-box;
     display: block;
-    width: 4.2rem;
-    margin: 0.5rem;
+    width: 3.8rem;
+    margin: 0.5rem 1.1rem 0.5rem 1.1rem;
     padding: 0.15rem 0.4rem;
     border-radius: 0.5rem;
     background-color: black;
@@ -13,11 +13,11 @@
 }
 
 .profile__cp-content.photos > div:not(.add-photo):not(.no-photo):hover::after {
-    content: "Supprimer ?";
+    content: "Photo de profil";
     box-sizing: border-box;
     display: block;
-    width: 4.2rem;
-    margin: 2rem 0.5rem 0.5rem 0.5rem;
+    width: 5rem;
+    margin: 3rem 0.5rem 0.5rem 0.5rem;
     padding: 0.15rem 0.4rem;
     border-radius: 0.5rem;
     background-color: black;

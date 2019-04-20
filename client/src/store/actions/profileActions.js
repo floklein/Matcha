@@ -6,7 +6,7 @@ import getAverageColor from "get-average-color";
 export const fetchProfile = (username) => dispatch => {
   axios.get(`/api/profile/${username}`)
     .then(res => {
-      const url = Faker.fake('{{image.avatar}}');
+      const url = res.data.profile_pic ? res.data.profile_pic : Faker.fake('{{image.avatar}}');
       getAverageColor(url)
         .then(rgb => {
           dispatch({
@@ -22,10 +22,10 @@ export const fetchProfile = (username) => dispatch => {
               sexuality: res.data.sexuality,
               bio: res.data.bio,
               profile_pic: res.data.profile_pic,
+              photos: res.data.photos,
               popularity: res.data.popularity,
               latitude: res.data.latitude,
               longitude: res.data.longitude,
-              url: url,
               rgb: rgb
             }
           });
