@@ -27,7 +27,8 @@ export const fetchProfile = (username) => dispatch => {
               popularity: res.data.popularity,
               latitude: res.data.latitude,
               longitude: res.data.longitude,
-              interests: res.data.interests
+              interests: res.data.interests,
+              like: res.data.like
             }
           });
         })
