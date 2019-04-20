@@ -164,6 +164,43 @@
     white-space: nowrap;
 }
 
+.profile__middle-panel > div.like::before {
+    content: "";
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background-position: center;
+    background-size: 0.65rem;
+    background-repeat: no-repeat;
+}
+
+.profile__middle-panel > div.like.both::before {
+    background-color: red;
+    box-shadow: 0 0 8px 0 rgba(255, 0, 0, 0.8);
+    background-image: url("../../assets/img/like-both.svg");
+}
+
+.profile__middle-panel > div.like.no::before {
+    background-color: dodgerblue;
+    box-shadow: 0 0 8px 0 rgba(30, 144, 255, 0.8);
+    background-image: url("../../assets/img/like-no.svg");
+}
+
+.profile__middle-panel > div.like.you::before {
+    background-color: hotpink;
+    box-shadow: 0 0 8px 0 rgba(255, 105, 180, 0.8);
+    background-image: url("../../assets/img/like-half.svg");
+    transform: scale(-1, 1);
+}
+
+.profile__middle-panel > div.like.me::before {
+    background-color: hotpink;
+    box-shadow: 0 0 8px 0 rgba(255, 105, 180, 0.8);
+    background-image: url("../../assets/img/like-half.svg");
+}
+
 .profile__middle-panel > div.connected::before,
 .profile__middle-panel > div.disconnected::before {
     content: "";

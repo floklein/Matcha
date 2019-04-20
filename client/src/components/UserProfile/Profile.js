@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import classnames from 'classnames';
 
 import {fetchProfile} from "../../store/actions/profileActions";
 import {likeUser} from "../../store/actions/profileActions";
@@ -154,7 +155,12 @@ class Profile extends Component {
             </div>
             <div className="profile__right-panel">
               <div className="profile__middle-panel">
-                <div>{likeStatus}</div>
+                <div className={classnames('like', {
+                  'no': profile.like === 'no',
+                  'both': profile.like === 'both',
+                  'you': profile.like === 'you',
+                  'me': profile.like === 'me'
+                })}>{likeStatus}</div>
                 <div className="connected">En ligne</div>
                 {popularity}
               </div>
