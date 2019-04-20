@@ -37,14 +37,41 @@ class Profile extends Component {
     }
   };
 
+  getPopularity = (popularity) => {
+    switch (popularity.rank) {
+      case 1:
+        return (<div className="popularity p1" >Nouveau<div>- {popularity.score}</div></div>);
+      case 2:
+        return (<div className="popularity p2" >Connu<div>- {popularity.score}</div></div>);
+      case 3:
+        return (<div className="popularity p3" >Populaire<div>- {popularity.score}</div></div>);
+      case 4:
+        return (<div className="popularity p4">Célèbre<div>- {popularity.score}</div></div>);
+      default:
+        return (<div className="popularity p1" >Nouveau<div>- {popularity.score}</div></div>);
+    }
+  };
+
+  deletePhoto = (e) => {
+    const position = e.clientY - e.target.offsetTop + window.scrollY;
+    console.log(position);
+    if (position < 25) {
+      console.log('delete');
+    } else if (position > 70) {
+      console.log('profile');
+    }
+  };
+
   render() {
     if (this.props.error)
-      return (<Error errTitle="Profil inexistant." errText="la page de profil à laquelle vous tentez d'accéder ne semble pas exister."/>);
+      return (<Error errTitle="Profil inexistant."
+                     errText="la page de profil à laquelle vous tentez d'accéder ne semble pas exister."/>);
     if (!this.props.profile)
       return (<Loading/>);
     const profile = this.props.profile;
     const gender = this.getGender(profile.gender);
     const sexuality = this.getSexuality(profile.sexuality);
+    const popularity = this.getPopularity(profile.popularity);
     const bgPhoto = {backgroundImage: `url('${profile.url}')`};
     const {r, g, b} = profile.rgb;
     const bgColor = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
@@ -91,12 +118,7 @@ class Profile extends Component {
               <div className="profile__middle-panel">
                 <div>{profile.firstName} vous aime déjà</div>
                 <div className="connected">En ligne</div>
-                {/*<div className="popularity p1" >Nouveau<div>- 42</div></div>*/}
-                {/*<div className="popularity p2" >Connu<div>- 42</div></div>*/}
-                {/*<div className="popularity p3" >Populaire<div>- 42</div></div>*/}
-                <div className="popularity p4">Célèbre
-                  <div>- 42</div>
-                </div>
+                {popularity}
               </div>
               <div className="profile__center-panel">
                 <div className="profile__cp-title">
@@ -125,10 +147,10 @@ class Profile extends Component {
                   <h4>PHOTOS</h4>
                 </div>
                 <div className="profile__cp-content photos">
-                  <div style={bgPhoto}/>
-                  <div style={bgPhoto}/>
-                  <div style={bgPhoto}/>
-                  <div style={bgPhoto}/>
+                  <div style={bgPhoto} onClick={this.deletePhoto}/>
+                  <div style={bgPhoto} onClick={this.deletePhoto}/>
+                  <div style={bgPhoto} onClick={this.deletePhoto}/>
+                  <div style={bgPhoto} onClick={this.deletePhoto}/>
                   <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>
                   <div className="add-photo" style={bgColor}/>
                 </div>
