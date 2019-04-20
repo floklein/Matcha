@@ -16,6 +16,14 @@ connection.connect(function (err) {
   if (err) throw err
 });
 
+function get_pos(user_id, result) {
+  for (let i = 0; i < result.length; i++) {
+    if (result[i].user_id === user_id)
+      return (i);
+  }
+  return(-1);
+}
+
 // FETCH PROFILE INFOS
 router.get('/:username', (req, res) => {
   let username = req.params.username;
@@ -64,18 +72,25 @@ router.get('/:username', (req, res) => {
       let sql = `SELECT tag FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}";`;
       connection.query(sql, (err, result3) => {
         if (err) throw err;
+        sql = "SELECT popularity, user_id FROM infos ORDER BY popularity";
+        connection.query(sql, (err, result4) => {
+            if (err) throw err;
+            const pos = get_pos(result[0].id, result4);
+            const nb_user = result4.length;
+            let quart = Math.floor(4 * pos / nb_user) + 1;
 
-        //TODO: Needs queries for popularity, "liked" status, etc
-        result[0] = {
-          ...result[0],
-          photos: photos,
-          popularity: {
-            score: result[0].popularity,
-            rank: Math.round(Math.random() * 3 + 1)
-          },
-          interests: result3
-        };
-        return res.json(result[0]);
+            //TODO: Needs queries for popularity, "liked" status, etc
+            result[0] = {
+                ...result[0],
+                photos: photos,
+                popularity: {
+                    score: result[0].popularity,
+                    rank: quart
+                },
+                interests: result3
+            };
+            return res.json(result[0]);
+        })
       });
     });
   });
