@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
+const passport = require('passport');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -18,29 +19,15 @@ connection.connect(function(err) {
 })
 
 
+router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
+    let res_err = {};
 
-router.get('/:id', (req, res) => {
-    let res_array = [];
 
-
-    //Check if user exists
-    let sql = `SELECT id from users WHERE id = ${req.params.id}`;
-    connection.query(sql, (err, result) => {
-        if (err) throw err;
-        if (result && result.length == 0) {
-            res_array.push({
-                error: "id",
-                errorText: "Utilisateur non trouvé"
-            });
-            res.status(400);
-            res.end(JSON.stringify(res_array));
-        }
-        else {
             //get sexuality infos from user
             const sql_user_info = "SELECT sexuality, gender FROM infos " +
-                `WHERE user_id = ${req.params.id}`;
+                `WHERE user_id = ${req.user.id}`;
             connection.query(sql_user_info, (err, result) => {
-                res.write(JSON.stringify(result));
+                res.json(result);
                 if (err) throw err;
                 //if user is found, chose next query depending on sexuality and gender;
            let sql_main_query = "SELECT u.id, i.latitude, i.longitude, i.popularity " +
@@ -53,11 +40,9 @@ router.get('/:id', (req, res) => {
                 sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual");`;
             connection.query(sql_main_query, (err, result) => {
                     if (err) throw err;
-                    res.end(JSON.stringify(result));
+                    res.json(result);
                 })
             })
-        }
     });
-});
 
 module.exports = router;

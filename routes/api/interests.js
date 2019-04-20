@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const mysql = require('mysql');
 
+const mysql = require('mysql');
+const passport = require('passport');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -29,37 +30,23 @@ router.get('/getAll', (req, res) => {
 
 
 //Create a new interest
-router.post('/:id', (req, res) => {
+router.post('/new', passport.authenticate('jwt', { session: false}), (req, res) => {
    let response = {
        tag: req.body.tag
    };
    if (typeof response.tag == "undefined" || response.tag == "") {
-       const res_array = {
-           error: "tag",
-           errorText: "Le tag est nécessaire"
+       const res_err = {
+           tag: "Le tag est nécessaire"
        };
-       res.status(400).end(JSON.stringify(res_array));
+       return res.status(400).json(res_err);
    }
    else {
-       //Check if user exists
-       let sql = `SELECT id from users WHERE id = ${req.params.id}`;
+       sql = "INSERT INTO interests(user_id, tag)" +
+           `VALUES(${req.user.id}, "${response.tag}")`;
        connection.query(sql, (err, result) => {
-           if (result && result.length == 0) {
-               const res_array = {
-                   error: "id",
-                   errorText: "Utilisateur non trouvé"
-               };
-               res.status(400).end(JSON.stringify(res_array));
-           }
-           else {
-               sql = "INSERT INTO interests(user_id, tag)" +
-                   `VALUES(${req.params.id}, "${response.tag}")`;
-               connection.query(sql, (err, res) => {
-                   if (err) throw err;
-                   res.end(JSON.stringify(res));
-               })
-           }
-       });
+           if (err) throw err;
+           res.end();
+       })
    }
 });
 

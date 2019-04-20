@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
+const passport = require('passport');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -19,74 +20,57 @@ connection.connect(function(err) {
 
 
 
-router.post('/:id', (req, res) => {
-    let response = {
-        blockee: req.query.blockee
+router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
+    let infos = {
+        blocked: req.body.blocked
     }
 
-    let error = false;
-    let res_array = [];
+    let response = {};
 
-    if (typeof response.blockee == 'undefined' || response.blockee == "") {
-        error = true;
-        res_array.push({
-            error: "blockee",
-            errorText: "le compte blocké est requis"
-        })
-        res.status(400);
-        res.end(JSON.stringify(res_array));
+    if (typeof infos.blocked == 'undefined' || infos.blocked == "") {
+        response = {
+            ...response,
+            blocked: "Le compte bloqué est requis"
+        };
+        return res.status(400).json(response);
     }
     else {
         //Check if 2 users are the same
-        if (req.params.id === response.blockee) {
-            res_array.push({
-                error: "blockee",
-                errorText: "Les deux utilisateurs ne peuvent etre identiques"
-            });
-            res.status(400);
-            res.end(JSON.stringify(res_array));
+        if (req.user.id === infos.blocked) {
+            response = {
+                ...response,
+                blocked: "L'utilisateur ne peut se bloquer lui-même"
+            };
+            return res.status(400).json(response);
         }
         else {
-            //Check if blocker exists
-            let sql = `SELECT id from users WHERE id = ${req.params.id}`;
+            //Check if blocked exists
+            sql = `SELECT id from users WHERE id = ${infos.blocked}`;
             connection.query(sql, (err, result) => {
                 if (result && result.length == 0) {
-                    res_array.push({
-                        error: "blocker",
-                        errorText: "blocker non trouve"
-                    });
-                    res.status(400);
-                    res.end(JSON.stringify(res_array));
+                    if (req.user.id === infos.blocked) {
+                        response = {
+                            ...response,
+                            blocked: "Utilisateur bloqué non trouvé"
+                        };
+                        return res.status(400).json(response);
+                    }
                 }
                 else {
-                    //Check if blockee exists
-                    sql = `SELECT id from users WHERE id = ${response.blockee}`;
+                    //Check if already liked
+                    sql = `SELECT * FROM blocks WHERE blocker_id = ${req.user.id} AND blocked_id = ${infos.blocked}`;
                     connection.query(sql, (err, result) => {
-                        if (result && result.length == 0) {
-                            res_array.push({
-                                error: "blockee",
-                                errorText: "Utilisateur blocké non trouve"
-                            });
-                            res.status(400);
-                            res.end(JSON.stringify(res_array));
-                        }
-                        else {
+                        if (result && result.length != 0) { //If already liked, unlike
                             //Check if already liked
-                            sql = `SELECT * FROM blocks WHERE blocker_id = ${req.params.id} AND blockee_id = ${response.blockee}`;
+                            sql = `DELETE FROM blocks WHERE blocker_id = ${req.user.id} AND blocked_id = ${infos.blocked}`;
                             connection.query(sql, (err, result) => {
-                                if (result && result.length != 0) { //If already liked, unlike
-                                    //Check if already liked
-                                    sql = `DELETE FROM blocks WHERE blocker_id = ${req.params.id} AND blockee_id = ${response.blockee}`;
-                                    connection.query(sql, (err, result) => {
-                                        res.end("unblock");
-                                    })
-                                }
-                                else {  //Else, like
-                                    sql = `INSERT INTO blocks(blocker_id, blockee_id) VALUES(${req.params.id}, ${response.blockee})`;
-                                    connection.query(sql, (err, result) => {
-                                        res.end("block");
-                                    })
-                                }
+                                res.end("");
+                            })
+                        }
+                        else {  //Else, like
+                            sql = `INSERT INTO blocks(blocker_id, blocked_id) VALUES(${req.user.id}, ${infos.blocked})`;
+                            connection.query(sql, (err, result) => {
+                                res.end("");
                             })
                         }
                     })
