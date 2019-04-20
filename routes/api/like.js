@@ -51,23 +51,28 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                 return res.status(400).json(res_err);
             }
             else {
-              //Check if already liked
-              sql = `SELECT * FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
-              connection.query(sql, (err, result) => {
-                if (result && result.length != 0) { //If already liked, unlike
-                  //Delete like
-                  sql = `DELETE FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
-                  connection.query(sql, (err, result) => {
-                    res.end("");
-                  })
-                }
-                else {  //Else, like
-                  sql = `INSERT INTO likes(liker_id, liked_id) VALUES(${req.user.id}, ${response.liked})`;
-                  connection.query(sql, (err, result) => {
-                    res.end("");
-                  })
-                }
-              })
+                sql = `SELECT * FROM likes WHERE liked_id = ${req.user.id} AND liker_id = ${response.liked}`;
+                connection.query(sql, (err, result) => {
+                    if (err) throw err;
+                    const is_liked = (result.length ? true : false);
+                    //Check if already liked
+                    sql = `SELECT * FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
+                    connection.query(sql, (err, result) => {
+                        if (result && result.length != 0) { //If already liked, unlike
+                            //Delete like
+                            sql = `DELETE FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
+                            connection.query(sql, (err, result) => {
+                                return res.json({like: (is_liked ? "you" : "no")});
+                            })
+                        }
+                        else {  //Else, like
+                            sql = `INSERT INTO likes(liker_id, liked_id) VALUES(${req.user.id}, ${response.liked})`;
+                            connection.query(sql, (err, result) => {
+                                return res.json({like: (is_liked ? "both" : "me")});
+                            })
+                        }
+                    })
+                });
             }
           })
     }

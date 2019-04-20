@@ -1,4 +1,4 @@
-import {FETCH_PROFILE, GET_ERRORS} from "./types";
+import {FETCH_PROFILE, GET_ERRORS, LIKE_USER} from "./types";
 import axios from 'axios';
 import Faker from "faker";
 import getAverageColor from "get-average-color";
@@ -42,4 +42,18 @@ export const fetchProfile = (username) => dispatch => {
         payload: err.response.data
       });
     });
+};
+
+export const likeUser = (userId) => dispatch => {
+    axios.post('/api/like', {liked: userId})
+        .then(res => {
+            console.log(res.data.like);
+            dispatch({
+                type: LIKE_USER,
+                payload: res.data.like
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        });
 };

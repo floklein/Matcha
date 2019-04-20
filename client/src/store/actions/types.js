@@ -1,6 +1,5 @@
 // PROFILE
 export const FETCH_PROFILE = 'FETCH_PROFILE';
-// USERS
 export const LIKE_USER = 'LIKE_USER';
 // AUTH
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
