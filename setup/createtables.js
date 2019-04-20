@@ -27,7 +27,7 @@ connection.connect((err) => {
     "lastName VARCHAR(30), " +
     "sexuality VARCHAR(20), " +
     "bio VARCHAR(460), " +
-    "profile_pic VARCHAR(24), " +
+    "profile_pic VARCHAR(256), " +
     "popularity INT NOT NULL," +
     "latitude FLOAT(12,8), " +
     "longitude FLOAT(12,8));" +
@@ -52,6 +52,14 @@ connection.connect((err) => {
     "visiter_id INT NOT NULL, " +
     "visited_id INT NOT NULL, " +
     "`time` DATE NOT NULL);" +
+    "" +
+    "CREATE TABLE IF NOT EXISTS photos(" +
+    "user_id INT NOT NULL, " +
+    "pic1 VARCHAR(256), " +
+    "pic2 VARCHAR(256), " +
+    "pic3 VARCHAR(256), " +
+    "pic4 VARCHAR(256), " +
+    "pic5 VARCHAR(256));"+
     "" +
     "CREATE TABLE IF NOT EXISTS interests(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +

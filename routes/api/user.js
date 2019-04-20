@@ -191,7 +191,6 @@ router.post('/register', (req, res) => {
         connection.query(sql4, (err, result) => {
           if (err) throw err;
           //end if everything went fine
-          console.log(`${info.firstName}'s fake account create`);
           res.end(String(id));
         });
       })
@@ -285,7 +284,8 @@ router.post('/infos/:id', (req, res) => {
     age: req.body.age,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
-    popularity: req.body.popularity
+    popularity: req.body.popularity,
+    profilePic: req.body.profilePic
   };
   let res_err = {};
   let error = false;
@@ -350,18 +350,25 @@ router.post('/infos/:id', (req, res) => {
           };
           error = true
       }
+      if (typeof info.profilePic == 'undefined' || info.profilePic == "") {
+          res_err = {
+              ...res_err,
+              profilePic: "La photo de profil est requise"
+          };
+          error = true
+      }
     if (error) {
       res.status(400);
       res.status(400).json(res_err);
     }
     else {
-      const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}` +
+      const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}, profile_pic = "${info.profilePic}"` +
         `WHERE user_id = ${req.params.id}`;
       connection.query(sql2, (err) => {
         if (err) throw (err);
       })
     }
-    res.end();
+    res.end(req.params.id);
   })
 });
 
