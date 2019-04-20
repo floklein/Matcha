@@ -55,9 +55,9 @@ class Profile extends Component {
   deletePhoto = (e) => {
     const position = e.clientY - e.target.offsetTop + window.scrollY;
     console.log(position);
-    if (position < 25) {
+    if (position < 20) {
       console.log('delete');
-    } else if (position > 70) {
+    } else if (position > 75) {
       console.log('profile');
     }
   };
