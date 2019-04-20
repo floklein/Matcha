@@ -141,26 +141,18 @@ class Profile extends Component {
                   <h4>INTÉRÊTS</h4>
                 </div>
                 <div className="profile__cp-content tags">
-                  <div style={bgColor}>cinema</div>
-                  <div style={bgColor}>musique</div>
-                  <div style={bgColor}>sortir</div>
-                  <div style={bgColor}>voyage</div>
-                  <div style={bgColor}>rihanna</div>
-                  <div style={bgColor}>brad_pitt</div>
-                  <div style={bgColor}>paris</div>
-                  <div style={bgColor}>new_york</div>
-                  <div style={bgColor}>fashion</div>
-                  <div style={bgColor}>party</div>
-                  <div style={bgColor}>books</div>
+                  {profile.interests.map((interest, i) => (
+                    <div key={i} style={bgColor}>{interest.tag}</div>
+                  ))}
                 </div>
                 <div className="profile__cp-title">
                   <h4>PHOTOS</h4>
                 </div>
                 <div className="profile__cp-content photos">
-                  {profile.photos.map((photo, i) =>
-                    (<div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>)
-                  )}
-                  <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>
+                  {profile.photos.map((photo, i) => (
+                    <div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>
+                  ))}
+                  {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
                   <div className="add-photo" style={bgColor}/>
                 </div>
                 <div className="profile__cp-title">

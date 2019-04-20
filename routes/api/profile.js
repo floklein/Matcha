@@ -61,16 +61,22 @@ router.get('/:username', (req, res) => {
         photos = [result2[0].pic1, result2[0].pic2, result2[0].pic3, result2[0].pic4, result2[0].pic5].filter((photo) => photo);
       }
 
-      //TODO: Needs queries for popularity, "liked" status, etc
-      result[0] = {
-        ...result[0],
-        photos: photos,
-        popularity: {
-          score: result[0].popularity,
-          rank: Math.round(Math.random() * 3 + 1)
-        }
-      };
-      return res.json(result[0]);
+      let sql = `SELECT tag FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}";`;
+      connection.query(sql, (err, result3) => {
+        if (err) throw err;
+
+        //TODO: Needs queries for popularity, "liked" status, etc
+        result[0] = {
+          ...result[0],
+          photos: photos,
+          popularity: {
+            score: result[0].popularity,
+            rank: Math.round(Math.random() * 3 + 1)
+          },
+          interests: result3
+        };
+        return res.json(result[0]);
+      });
     });
   });
 });
