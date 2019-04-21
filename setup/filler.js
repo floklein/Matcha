@@ -22,8 +22,8 @@ function fill_db() {
     const bio = faker.lorem.sentences();
     const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
     const age = Math.floor(Math.random() * 40) + 18;
-    const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 10;
-    const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 20;
+    const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 5;
+    const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 8;
     const popularity = Math.random() * 100;
     const profilePic = faker.image.avatar();
     const pic2 = faker.image.avatar();

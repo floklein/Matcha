@@ -212,7 +212,7 @@ router.post('/login', (req, res) => {
     if (typeof info.username == 'undefined' || info.username == "") {
         response = {
             ...response,
-            username: "le login est requis"
+            username: "le login/l'email est requis"
         };
         error = true;
     }
@@ -227,7 +227,7 @@ router.post('/login', (req, res) => {
     //If both fields are full, keep going with the connection
     if (!error) {
         //Check if username matches a user
-        let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}";`;
+        let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}" OR email = "${info.username}";`;
         connection.query(sql, (err, result) => {
             if (err) throw err;
             if (result.length == 0) {
