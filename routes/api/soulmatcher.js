@@ -53,6 +53,8 @@ function getMatchScore(id, infos, tag_res, pos_res) {
     });
 }
 
+//TO DO: Add filters before calculating points
+//FILTER MANDATORY: blocked
 
 router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let res_err = {};
