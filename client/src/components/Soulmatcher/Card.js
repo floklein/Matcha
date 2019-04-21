@@ -16,19 +16,25 @@ class Card extends Component {
       Oy = event.pageY;
     };
     // Removes the transform transition
-    e.target.style.transition = 'box-shadow 0.4s';
+    e.target.style.transition = 'box-shadow 0.4s, background-color 1s';
     this.timeout = setInterval(() => {
       // Translates the div to mouse current position
       this.dx = Ox - e.pageX;
       this.dy = Oy - e.pageY;
       e.target.style.transform = `translate(${this.dx}px, ${this.dy}px)`;
       // Toggles styles depending of position
-      if (this.dx < -100) {
-        e.target.style.backgroundColor = 'red';
-      } else if (this.dx > 100) {
-        e.target.style.backgroundColor = 'green';
+      if (this.dx < -150) {
+        e.target.style.transition = 'box-shadow 0.4s, background-color 1s';
+        e.target.classList.add('disliking');
+        // e.target.style.backgroundColor = 'red';
+      } else if (this.dx > 150) {
+        e.target.style.transition = 'box-shadow 0.4s, background-color 1s';
+        e.target.classList.add('liking');
+        // e.target.style.backgroundColor = 'green';
       } else {
-        e.target.style.backgroundColor = 'white';
+        e.target.style.transition = 'background-color 1s';
+        e.target.classList.remove('disliking', 'liking');
+        // e.target.style.backgroundColor = 'white';
       }
     }, 10);
   };
@@ -36,9 +42,9 @@ class Card extends Component {
   onDrop = (e) => {
     e.persist();
     // Brings back the transform transition
-    e.target.style.transition = 'box-shadow 0.4s, transform 1s';
+    e.target.style.transition = 'box-shadow 0.4s, transform 1s, background-color 1s';
     // Toggles actions depending of mouse position on drop
-    if (this.dx < -100) {
+    if (this.dx < -150) {
       //TODO: Dislike the user
       e.target.style.transform = 'translateX(-200vw)';
       // Deletes the div after moving it to left
@@ -47,7 +53,7 @@ class Card extends Component {
           e.target.parentElement.removeChild(e.target);
         }
       }, 1000);
-    } else if (this.dx > 100) {
+    } else if (this.dx > 150) {
       //TODO: Like the user
       e.target.style.transform = 'translateX(200vw)';
       // Deletes the div after moving it to right
@@ -55,7 +61,7 @@ class Card extends Component {
         if (e.target && e.target.parentElement) {
           e.target.parentElement.removeChild(e.target);
         }
-      }, 1000);
+      }, 500);
     } else {
       // Takes div back to original position
       e.target.style.transform = '';
