@@ -25,7 +25,6 @@ router.post('/', (req, res) => {
     let res_err = {};
     let error = false;
 
-
     //Check if both fields are filled
     if (typeof response.id == "undefined" || response.id == null) {
         res_err = {

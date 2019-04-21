@@ -3,6 +3,7 @@ const router = express.Router();
 
 const mysql = require('mysql');
 const passport = require('passport');
+const geolib = require('geolib');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -18,14 +19,14 @@ connection.connect(function(err) {
     console.log('You are now connected...')
 })
 
-function getMatchScore(id, infos, tag_res) { //To do: add distance
+function getMatchScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
         let matchingScore = 0;
 
         const sql = "SELECT tag from interests " +
             `WHERE user_id = ${infos.id}`;
         connection.query(sql, (err, res) => {
-            if (err) throw err;
+           // if (err) throw err;
 
             //Filter one array of tags with the other one to get nb of common tags
             const filtered_array = tag_res.filter((tag) => {
@@ -35,10 +36,18 @@ function getMatchScore(id, infos, tag_res) { //To do: add distance
                 }
                 return false;
             });
-            matchingScore += 20 * filtered_array.length;
+            matchingScore += 50 * filtered_array.length;
 
             //Add 0.1 matchingScore per Pop point
-            matchingScore += 0.1 * infos.popularity;
+            matchingScore +=  infos.popularity;
+
+            if (infos.latitude && infos.longitude && pos_res[0].latitude && pos_res[0].longitude) {
+                const dist = geolib.getDistance(
+                    {latitude: infos.latitude, longitude: infos.longitude},
+                    {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
+                );
+                matchingScore -= dist / 10000;
+            }
             resolve(matchingScore);
         })
     });
@@ -67,16 +76,29 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
                     const tag_sql = "SELECT tag from interests " +
                         `WHERE user_id = ${req.user.id}`;
                     connection.query(tag_sql, (err, tag_res) => {
-                        for (let i = 0; i < result.length; i++) {
-                            const matchScore = getMatchScore(req.user.id, result[i], tag_res)
-                                .then((score) => {
-                                    result[i] = {
-                                        ...result[i],
-                                        matchScore: score}
-                                    console.log(result);
-                                }
-                            );
-                        }
+                        let sql_pos = "SELECT latitude, longitude FROM infos " +
+                            `WHERE user_id = ${req.user.id}`;
+                        connection.query(sql_pos, (err, pos_res) => {
+                            for (let i = 0; i < result.length; i++) {
+                                const matchScore = getMatchScore(req.user.id, result[i], tag_res, pos_res)
+                                    .then((score) => {
+                                            result[i] = {
+                                                ...result[i],
+                                                matchScore: score
+                                            };
+                                            if (i === result.length - 1) {
+                                                result.sort((first, second) => {
+                                                    return(second.matchScore - first.matchScore);
+                                                });
+                                                return res.json(result.map((item) => {return({
+                                                    id: item.id,
+                                                    matchScore: item.matchScore
+                                                })}));
+                                            }
+                                        }
+                                    );
+                            }
+                        });
                     });
                 })
             })
