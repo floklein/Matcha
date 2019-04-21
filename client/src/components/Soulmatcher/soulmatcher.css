@@ -11,7 +11,6 @@ body {
     grid-template-columns: 15rem auto;
     grid-template-rows: auto;
     grid-template-areas: "sidebar cards";
-    height: 100%;
     background-color: whitesmoke;
 }
 
@@ -70,10 +69,27 @@ button.like:active {
 
 .cards {
     position: relative;
+    display: grid;
+    align-items: center;
+    justify-items: center;
     margin: 1rem;
     height: 35rem;
     width: 100%;
     max-width: 25rem;
+}
+
+.no-cards {
+    padding: 0 2rem;
+    color: lightgrey;
+    text-align: center;
+}
+
+.no-cards h1 {
+    color: grey;
+}
+
+.no-cards p {
+    line-height: 1.5rem;
 }
 
 .card {
@@ -82,9 +98,14 @@ button.like:active {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: white;
     border-radius: 1rem;
-    transition: box-shadow 0.4s, transform 1s;
+    background-color: white;
+    transition: box-shadow 0.4s, background-color 1s, transform 1s;
+    overflow: hidden;
+}
+
+.card:not(:last-child) {
+    transform: scale(0.9);
 }
 
 .card:last-child, .card:nth-last-child(2) {
@@ -93,4 +114,58 @@ button.like:active {
 
 .card:hover {
     box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3);
+}
+
+.card.liking {
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3),
+    0 0 0 0.4rem white inset,
+    0 0 0 0.8rem #3fd39f inset;
+}
+
+.card.disliking {
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3),
+    0 0 0 0.4rem white inset,
+    0 0 0 0.8rem #8579e0 inset;
+}
+
+.card.liking::before,
+.card.disliking::before {
+    display: block;
+    position: absolute;
+    margin: 0.45rem;
+    padding: 0.1rem 0.5rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: white;
+    border-radius: 0.5rem;
+}
+
+.card.liking::before {
+    content: "J'aime !";
+    background-color: #3fd39f;
+}
+
+.card.disliking::before {
+    content: "Bof...";
+    right: 0;
+    background-color: #8579e0;
+}
+
+.card.liking::after,
+.card.disliking::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+}
+
+.card.liking::after {
+    background: linear-gradient(to top left, white, white, white, rgba(0, 0, 0, 0));
+}
+
+.card.disliking::after {
+    background: linear-gradient(to top right, white, white, white, rgba(0, 0, 0, 0));
 }

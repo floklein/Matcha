@@ -17,7 +17,7 @@ class Soulmatcher extends Component {
     }, 1000);
   };
 
-  onDisike = () => {
+  onDislike = () => {
     const card = document.querySelector('div.card:last-child');
     if (!card) return;
     card.style.transform = 'translateX(-200vw)';
@@ -37,8 +37,12 @@ class Soulmatcher extends Component {
 
             </div>
             <div className="main-panel">
-              <button className="dislike purple" onClick={this.onDisike}/>
+              <button className="dislike purple" onClick={this.onDislike}/>
               <div className="cards">
+                <div className="no-cards">
+                  <h1>Pas de profils</h1>
+                  <p>Ça nous brise le cœur, mais aucun autre profil ne correspond à vos préférences et vos filtres.</p>
+                </div>
                 <Card/>
                 <Card/>
                 <Card/>

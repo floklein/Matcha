@@ -24,7 +24,7 @@ class Error extends Component {
             <div>
               <h1>Oups !</h1>
               <h4>{errTitle}</h4>
-              <p>Ça nous brise le cœur mais, {errText}</p>
+              <p>Ça nous brise le cœur, mais {errText}</p>
               <NavLink to='/'>
                 <button>Retour</button>
               </NavLink>
