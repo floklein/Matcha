@@ -47,11 +47,11 @@ connection.connect((err) => {
     "liker_id INT NOT NULL, " +
     "liked_id INT NOT NULL); " +
     "" +
-    "CREATE TABLE IF NOT EXISTS visit( " +
+    "CREATE TABLE IF NOT EXISTS visits( " +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "visiter_id INT NOT NULL, " +
     "visited_id INT NOT NULL, " +
-    "`time` DATE NOT NULL);" +
+    "`time` DATETIME NOT NULL);" +
     "" +
     "CREATE TABLE IF NOT EXISTS photos(" +
     "user_id INT NOT NULL, " +
