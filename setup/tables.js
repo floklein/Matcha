@@ -42,6 +42,11 @@ connection.connect((err) => {
     "blocker_id INT NOT NULL, " +
     "blocked_id INT NOT NULL);" +
     "" +
+    "CREATE TABLE IF NOT EXISTS reports(" +
+    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+    "reported_id INT NOT NULL, " +
+    "reporter_id INT NOT NULL)" +
+    "" +
     "CREATE TABLE IF NOT EXISTS likes(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "liker_id INT NOT NULL, " +
