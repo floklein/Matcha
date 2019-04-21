@@ -23,7 +23,7 @@ connection.connect(function(err) {
 router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let infos = {
         reported: req.body.reported
-    };
+    }
 
     let response = {};
 
@@ -43,10 +43,42 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
             };
             return res.status(400).json(response);
         }
-        else { //send report
-
+        else {
+            //Check if reported exists
+            sql = `SELECT id from users WHERE id = ${infos.reported}`;
+            connection.query(sql, (err, result) => {
+                if (result && result.length == 0) {
+                    if (req.user.id === infos.reported) {
+                        response = {
+                            ...response,
+                            reported: "Utilisateur bloqué non trouvé"
+                        };
+                        return res.status(400).json(response);
+                    }
+                }
+                else {
+                    //Check if already liked
+                    sql = `SELECT * FROM blocks WHERE reporter_id = ${req.user.id} AND reported_id = ${infos.reported}`;
+                    connection.query(sql, (err, result) => {
+                        if (result && result.length != 0) { //If already liked, unlike
+                            //Check if already liked
+                            sql = `DELETE FROM blocks WHERE reporter_id = ${req.user.id} AND reported_id = ${infos.reported}`;
+                            connection.query(sql, (err, result) => {
+                                res.end("");
+                            })
+                        }
+                        else {  //Else, like
+                            sql = `INSERT INTO blocks(reporter_id, reported_id) VALUES(${req.user.id}, ${infos.reported})`;
+                            connection.query(sql, (err, result) => {
+                                res.end("");
+                            })
+                        }
+                    })
+                }
+            })
         }
     }
 });
 
 module.exports = router;
+
