@@ -23,6 +23,7 @@ app.use('/api/verify', require('./routes/api/verify'));
 app.use('/api/soulmatcher', require('./routes/api/soulmatcher'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/visit', require('./routes/api/visit'));
+app.use('/api/report', require('./routes/api/report'));
 
 
 const port = 5000;
