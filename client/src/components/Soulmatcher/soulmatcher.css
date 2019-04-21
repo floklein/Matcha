@@ -1,0 +1,96 @@
+body {
+    background-color: whitesmoke;
+}
+
+.this.centered {
+    background-color: whitesmoke;
+}
+
+#soulmatcher {
+    display: grid;
+    grid-template-columns: 15rem auto;
+    grid-template-rows: auto;
+    grid-template-areas: "sidebar cards";
+    height: 100%;
+    background-color: whitesmoke;
+}
+
+#soulmatcher .sidebar {
+    height: 40rem;
+    margin: 1rem;
+    border-radius: 0.5rem;
+    background-color: white;
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.2);
+}
+
+#soulmatcher .main-panel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+}
+
+button.dislike, button.like {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+}
+
+button.dislike {
+    margin-left: 1rem;
+    background: url("../../assets/img/sm-dislike.svg") no-repeat center, #d043ca linear-gradient(to right, #8579e0, rgba(0, 0, 0, 0)) !important;
+    background-size: 1.1rem, auto !important;
+}
+
+button.dislike:hover {
+    background-color: #8579e0 !important;
+}
+
+button.dislike:active {
+    background-color: #5858ae !important;
+}
+
+button.like {
+    margin-right: 1rem;
+    background: url("../../assets/img/sm-like.svg") no-repeat center, #3fb8af linear-gradient(90deg, #3fd39f, rgba(0, 0, 0, 0)) !important;
+    background-size: 1rem, auto !important;
+}
+
+button.like:hover {
+    background-color: #3fd39f !important;
+}
+
+button.like:active {
+    background-color: #39a173 !important;
+}
+
+.cards {
+    position: relative;
+    margin: 1rem;
+    height: 35rem;
+    width: 100%;
+    max-width: 25rem;
+}
+
+.card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 1rem;
+    transition: box-shadow 0.4s, transform 1s;
+}
+
+.card:last-child, .card:nth-last-child(2) {
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover {
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3);
+}
