@@ -25,7 +25,6 @@ body {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    height: 40rem;
     margin: 1rem;
     border-radius: 0.5rem;
     background-color: white;
@@ -44,21 +43,35 @@ body {
     margin: 1rem auto 0 auto;
 }
 
+.sidebar__filter > *:not(.sidebar__title-box) {
+    margin-bottom: 2rem;
+}
+
 @media screen and (max-width: 800px) {
     .sidebar__sort,
     .sidebar__filter {
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
+        justify-content: center;
     }
 
     .sidebar__sort > *,
     .sidebar__filter > * {
         margin: 1rem 0 0 1rem;
     }
+
+    .sidebar__filter > div {
+        margin-left: 1.5rem !important;
+        margin-right: 1.5rem !important;
+    }
 }
 
 /*SIDEBAR CONTENT*/
+.sidebar__title-box {
+    padding: 0.5rem 1rem;
+}
+
 .sidebar__title {
     font-family: 'Raleway', sans-serif;
     font-weight: 700;
@@ -66,14 +79,44 @@ body {
     text-transform: uppercase;
 }
 
+.sidebar__subtitle {
+    margin-bottom: 1rem;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: grey;
+    text-transform: uppercase;
+}
+
 .sidebar input, .sidebar select {
     width: 13rem;
 }
 
-#age {
-    height: 2rem;
+#age, #distance, #popularity {
     width: 13rem;
-    margin: 0 auto 1rem;
+    margin-bottom: .5rem;
+}
+
+.noUi-connect {
+    background: #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0)) !important;
+}
+
+.noUi-handle {
+    outline: none !important;
+}
+
+.noUi-tooltip {
+    opacity: 0 !important;
+}
+
+.noUi-handle:hover .noUi-tooltip {
+    opacity: 1 !important;
+}
+
+.noUi-value {
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
 }
 
 /*MAIN PANEL*/
@@ -121,6 +164,18 @@ button.like:hover {
 
 button.like:active {
     background-color: #39a173 !important;
+}
+
+@media screen and (max-width: 800px) {
+    button.dislike {
+        margin-right: -2.5rem;
+        z-index: 10;
+    }
+
+    button.like {
+        margin-left: -2.5rem;
+        z-index: 10;
+    }
 }
 
 /*PILE OF CARDS*/
