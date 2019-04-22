@@ -11,12 +11,12 @@ import '../../css/nouislider.css';
 
 class Soulmatcher extends Component {
   state = {
-    ageMin: '',
-    ageMax: '',
-    distanceMin: '',
-    distanceMax: '',
-    popularityMin: '',
-    popularityMax: '',
+    ageMin: 0,
+    ageMax: 0,
+    distanceMin: 0,
+    distanceMax: 0,
+    popularityMin: 0,
+    popularityMax: 0,
     interests: ''
   };
 
@@ -75,20 +75,20 @@ class Soulmatcher extends Component {
 
     sliderAge.noUiSlider.on('update', (values, handle) => {
       this.setState({
-        ageMin: values[0],
-        ageMax: values[1]
+        ageMin: parseInt(values[0]),
+        ageMax: parseInt(values[1])
       });
     });
     sliderDistance.noUiSlider.on('update', (values, handle) => {
       this.setState({
-        distanceMin: values[0],
-        distanceMax: values[1]
+        distanceMin: parseFloat(values[0]),
+        distanceMax: parseFloat(values[1])
       });
     });
     sliderPopularity.noUiSlider.on('update', (values, handle) => {
       this.setState({
-        popularityMin: values[0],
-        popularityMax: values[1]
+        popularityMin: parseInt(values[0]),
+        popularityMax: parseInt(values[1])
       });
     });
   }
