@@ -119,6 +119,83 @@ body {
     margin-top: 0.6rem;
 }
 
+.react-tags {
+    width: 13rem;
+}
+
+.react-tags input {
+    width: 13rem !important;
+}
+
+.react-tags button {
+    all: unset;
+    margin: 0 0.5rem 0.5rem 0;
+    padding: 0.3rem 0.7rem;
+    border-radius: 1rem;
+    color: white;
+    font-size: 0.9rem;
+    box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
+    word-wrap: unset;
+    text-transform: lowercase;
+    background: #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0));
+    transition: background-color 0.4s;
+    cursor: pointer;
+}
+
+.react-tags button::before {
+    content: "#";
+    opacity: 0.5;
+    margin-right: 0.2rem;
+}
+
+.react-tags button:hover {
+    background-color: #00bcd4;
+}
+
+.react-tags button:active {
+    background-color: #008ba2;
+}
+
+.react-tags ul {
+    max-height: 10rem;
+    list-style: none;
+    margin: -0.3rem 0 0 0;
+    padding: 0;
+    border: 2px solid lightgrey;
+    border-radius: 0.3rem;
+    outline: none;
+    transition: border 0.4s, background-color 0.4s;
+    color: #3c3c3c;
+    overflow-y: auto;
+}
+
+.react-tags li {
+    border-top: 2px solid lightgrey;
+    font-size: 1rem;
+    height: 2.5rem;
+    padding: 0.7rem 1rem 0.8rem 1rem;
+    background-color: white;
+    transition: border 0.4s, background-color 0.4s;
+    cursor: pointer;
+    text-transform: lowercase;
+}
+
+.react-tags li:hover {
+    background-color: whitesmoke;
+}
+
+.react-tags li::before {
+    content: "#";
+}
+
+.react-tags li :not(span) {
+    background-color: orange;
+    color: white;
+    border-radius: 0.2rem;
+    padding: 0 0.2rem;
+    margin-right: 0.1rem;
+}
+
 /*MAIN PANEL*/
 #soulmatcher .main-panel {
     display: flex;

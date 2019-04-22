@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import classnames from "classnames";
 import noUiSlider from 'nouislider';
 import wNumb from 'wnumb';
+import ReactTags from 'react-tag-autocomplete';
 
 import Card from "./Card";
 
@@ -17,8 +18,30 @@ class Soulmatcher extends Component {
     distanceMax: 0,
     popularityMin: 0,
     popularityMax: 0,
-    interests: ''
+    interests: []
   };
+  suggestions = [
+    {id: 1, name: 'Paris'},
+    {id: 2, name: 'lecture'},
+    {id: 3, name: '42'},
+    {id: 4, name: 'Kubrick'},
+    {id: 5, name: 'Manger'},
+    {id: 6, name: 'Party'},
+    {id: 7, name: '420'},
+    {id: 8, name: 'KuKluxKlan'},
+    {id: 9, name: 'Cinéma'},
+    {id: 10, name: 'Plage'},
+    {id: 11, name: 'Londres'},
+    {id: 12, name: 'USA'},
+    {id: 13, name: 'politique'},
+    {id: 14, name: 'lol'},
+    {id: 15, name: 'YouTube'},
+    {id: 16, name: 'Facebook'},
+    {id: 17, name: 'Fangio'},
+    {id: 18, name: 'YouPorn'},
+    {id: 19, name: 'test1'},
+    {id: 20, name: 'Test2'}
+  ];
 
   componentDidMount() {
     let sliderAge = document.getElementById('age');
@@ -94,7 +117,7 @@ class Soulmatcher extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   handleChange = (input) => e => {
@@ -102,6 +125,17 @@ class Soulmatcher extends Component {
       [input]: e.target.value
     });
   };
+
+  handleDelete(i) {
+    const interests = this.state.interests.slice(0);
+    interests.splice(i, 1);
+    this.setState({interests});
+  }
+
+  handleAdd(interest) {
+    const interests = [].concat(this.state.interests, interest);
+    this.setState({interests});
+  }
 
   onLike = () => {
     const card = document.querySelector('div.card:last-child');
@@ -169,8 +203,9 @@ class Soulmatcher extends Component {
                 </div>
                 <div>
                   <div className="sidebar__subtitle">Intérêts</div>
-                  <input type="text" name="interest" title="interest" value={this.state.interests}
-                         onChange={this.handleChange('interests')} placeholder="ex: Paris, lecture, Kubrick"/>
+                  <ReactTags tags={this.state.interests} suggestions={this.suggestions}
+                             handleDelete={this.handleDelete.bind(this)} handleAddition={this.handleAdd.bind(this)}
+                             placeholder="ex: Paris, lecture, Kubrick"/>
                 </div>
               </div>
             </div>
