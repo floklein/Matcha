@@ -98,8 +98,8 @@ class Soulmatcher extends Component {
 
     sliderAge.noUiSlider.on('update', (values, handle) => {
       this.setState({
-        ageMin: parseInt(values[0]),
-        ageMax: parseInt(values[1])
+        ageMin: parseInt(values[0], 10),
+        ageMax: parseInt(values[1], 10)
       });
     });
     sliderDistance.noUiSlider.on('update', (values, handle) => {
@@ -110,8 +110,8 @@ class Soulmatcher extends Component {
     });
     sliderPopularity.noUiSlider.on('update', (values, handle) => {
       this.setState({
-        popularityMin: parseInt(values[0]),
-        popularityMax: parseInt(values[1])
+        popularityMin: parseInt(values[0], 10),
+        popularityMax: parseInt(values[1], 10)
       });
     });
   }
