@@ -98,6 +98,7 @@ body {
     margin-bottom: .5rem;
 }
 
+/*OVERWRITING NoUiSlider CLASSES*/
 .noUi-connect {
     background: #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0)) !important;
 }
@@ -119,6 +120,15 @@ body {
     margin-top: 0.6rem;
 }
 
+.noUi-touch-area {
+    cursor: grab;
+}
+
+.noUi-touch-area:active {
+    cursor: grabbing;
+}
+
+/*OVERWRITING ReactTagsAutocomplete CLASSES*/
 .react-tags {
     width: 13rem;
 }
