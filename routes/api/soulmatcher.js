@@ -134,7 +134,14 @@ function isBlocked_liked_or_disliked(id, user) { //need to add dislike
                `WHERE (liker_id = ${id} AND liked_id = ${user.id});`;
             connection.query(sql, (err, res) => {
                 if (err) throw err;
-                resolve(res.length);
+                if (res.length)
+                    resolve(res.length);
+                sql = "Select id from dislikes " +
+                    `WHERE (disliker_id = ${id} AND disliked_id = ${user.id});`;
+                connection.query(sql, (err, res) => {
+                    if (err) throw err;
+                    resolve(res.length);
+                })
             })
         })
     })
@@ -160,7 +167,6 @@ async function  filters_past(id, result) {
     })
 }
 
-//FILTER MANDATORY: blocked, liked and disliked
 
 router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let request = {
@@ -175,6 +181,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
     };
     //Protect against empty or wrong values
 
+    console.log(req.user.id);
     let res_err = {};
     let sort_function;
             //get sexuality infos from user
