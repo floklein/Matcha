@@ -1,0 +1,378 @@
+/*GLOBAL CHANGES*/
+body {
+    background-color: whitesmoke;
+}
+
+.this.centered {
+    background-color: whitesmoke;
+}
+
+/*MAIN GRID*/
+#soulmatcher {
+    display: grid;
+    grid-template-columns: 18rem auto;
+    background-color: whitesmoke;
+}
+
+@media screen and (max-width: 800px) {
+    #soulmatcher {
+        grid-template-columns: 1fr;
+    }
+}
+
+/*SIDEBAR*/
+#soulmatcher .sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin: 1rem;
+    border-radius: 0.5rem;
+    background-color: white;
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar__sort,
+.sidebar__filter {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.sidebar__sort > *,
+.sidebar__filter > * {
+    margin: 1rem auto 0 auto;
+}
+
+.sidebar__filter > *:not(.sidebar__title-box) {
+    margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 800px) {
+    .sidebar__sort,
+    .sidebar__filter {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar__sort > *,
+    .sidebar__filter > * {
+        margin: 1rem 0 0 1rem;
+    }
+
+    .sidebar__filter > div {
+        margin-left: 1.5rem !important;
+        margin-right: 1.5rem !important;
+    }
+}
+
+/*SIDEBAR CONTENT*/
+.sidebar__title-box {
+    padding: 0.5rem 1rem;
+}
+
+.sidebar__title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.sidebar__subtitle {
+    margin-bottom: 1rem;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: grey;
+    text-transform: uppercase;
+}
+
+.sidebar input, .sidebar select {
+    width: 13rem;
+}
+
+#age, #distance, #popularity {
+    width: 13rem;
+    margin-bottom: .5rem;
+}
+
+/*OVERWRITING NoUiSlider CLASSES*/
+.noUi-connect {
+    background: #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0)) !important;
+}
+
+.noUi-handle {
+    outline: none !important;
+}
+
+.noUi-tooltip {
+    opacity: 0 !important;
+}
+
+.noUi-handle:hover .noUi-tooltip {
+    opacity: 1 !important;
+}
+
+.noUi-value {
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
+}
+
+.noUi-touch-area {
+    cursor: grab;
+}
+
+.noUi-touch-area:active {
+    cursor: grabbing;
+}
+
+/*OVERWRITING ReactTagsAutocomplete CLASSES*/
+.react-tags {
+    width: 13rem;
+}
+
+.react-tags input {
+    width: 13rem !important;
+}
+
+.react-tags button {
+    all: unset;
+    margin: 0 0.5rem 0.5rem 0;
+    padding: 0.3rem 0.7rem;
+    border-radius: 1rem;
+    color: white;
+    font-size: 0.9rem;
+    box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
+    word-wrap: unset;
+    text-transform: lowercase;
+    background: #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0));
+    transition: background-color 0.4s;
+    cursor: pointer;
+}
+
+.react-tags button::before {
+    content: "#";
+    opacity: 0.5;
+    margin-right: 0.2rem;
+}
+
+.react-tags button:hover {
+    background-color: #00bcd4;
+}
+
+.react-tags button:active {
+    background-color: #008ba2;
+}
+
+.react-tags ul {
+    max-height: 10rem;
+    list-style: none;
+    margin: -0.3rem 0 0 0;
+    padding: 0;
+    border: 2px solid lightgrey;
+    border-radius: 0.3rem;
+    outline: none;
+    transition: border 0.4s, background-color 0.4s;
+    color: #3c3c3c;
+    overflow-y: auto;
+}
+
+.react-tags li {
+    border-top: 2px solid lightgrey;
+    font-size: 1rem;
+    height: 2.5rem;
+    padding: 0.7rem 1rem 0.8rem 1rem;
+    background-color: white;
+    transition: border 0.4s, background-color 0.4s;
+    cursor: pointer;
+    text-transform: lowercase;
+}
+
+.react-tags li:hover {
+    background-color: whitesmoke;
+}
+
+.react-tags li::before {
+    content: "#";
+}
+
+.react-tags li :not(span) {
+    background-color: orange;
+    color: white;
+    border-radius: 0.2rem;
+    padding: 0 0.2rem;
+    margin-right: 0.1rem;
+}
+
+/*MAIN PANEL*/
+#soulmatcher .main-panel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+}
+
+/*LIKE AND DISLIKE BUTTONS*/
+button.dislike, button.like {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+}
+
+button.dislike {
+    margin-left: 1rem;
+    background: url("../../assets/img/sm-dislike.svg") no-repeat center, #d043ca linear-gradient(to right, #8579e0, rgba(0, 0, 0, 0)) !important;
+    background-size: 1.1rem, auto !important;
+}
+
+button.dislike:hover {
+    background-color: #8579e0 !important;
+}
+
+button.dislike:active {
+    background-color: #5858ae !important;
+}
+
+button.like {
+    margin-right: 1rem;
+    background: url("../../assets/img/sm-like.svg") no-repeat center, #3fb8af linear-gradient(90deg, #3fd39f, rgba(0, 0, 0, 0)) !important;
+    background-size: 1rem, auto !important;
+}
+
+button.like:hover {
+    background-color: #3fd39f !important;
+}
+
+button.like:active {
+    background-color: #39a173 !important;
+}
+
+@media screen and (max-width: 800px) {
+    button.dislike {
+        margin-right: -2.5rem;
+        z-index: 10;
+    }
+
+    button.like {
+        margin-left: -2.5rem;
+        z-index: 10;
+    }
+}
+
+/*PILE OF CARDS*/
+.cards {
+    position: relative;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    margin: 1rem;
+    height: 35rem;
+    width: 100%;
+    max-width: 25rem;
+}
+
+.no-cards {
+    padding: 0 2rem;
+    color: lightgrey;
+    text-align: center;
+}
+
+.no-cards h1 {
+    color: grey;
+}
+
+.no-cards p {
+    line-height: 1.5rem;
+}
+
+/*CARD LAYOUT*/
+.card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    background-color: white;
+    transition: box-shadow 0.4s, background-color 1s, transform 1s;
+    overflow: hidden;
+    cursor: grab;
+}
+
+.card:not(:last-child) {
+    transform: scale(0.9);
+}
+
+.card:last-child, .card:nth-last-child(2) {
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover {
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3);
+}
+
+.card:active {
+    cursor: grabbing;
+}
+
+/*CARD DURING DRAG'n'DROP*/
+.card.liking {
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3),
+    0 0 0 0.4rem white inset,
+    0 0 0 0.8rem #3fd39f inset;
+}
+
+.card.disliking {
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3),
+    0 0 0 0.4rem white inset,
+    0 0 0 0.8rem #8579e0 inset;
+}
+
+.card.liking::before,
+.card.disliking::before {
+    display: block;
+    position: absolute;
+    margin: 0.45rem;
+    padding: 0.1rem 0.5rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: white;
+    border-radius: 0.5rem;
+}
+
+.card.liking::before {
+    content: "J'aime !";
+    background-color: #3fd39f;
+}
+
+.card.disliking::before {
+    content: "Bof...";
+    right: 0;
+    background-color: #8579e0;
+}
+
+.card.liking::after,
+.card.disliking::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+}
+
+.card.liking::after {
+    background: linear-gradient(to top left, white, white, white, rgba(0, 0, 0, 0));
+}
+
+.card.disliking::after {
+    background: linear-gradient(to top right, white, white, white, rgba(0, 0, 0, 0));
+}

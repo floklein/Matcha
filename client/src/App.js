@@ -13,6 +13,7 @@ import Error from './components/Error';
 import Profile from './components/UserProfile/Profile';
 import MyProfile from './components/UserProfile/MyProfile';
 import EditProfile from './components/UserProfile/EditProfile';
+import Soulmatcher from './components/Soulmatcher/Soulmatcher';
 
 import './css/normalize.css';
 import './css/global.css';
@@ -39,6 +40,7 @@ class App extends Component {
           <Root>
             <Switch>
               <Route path={'/'} exact component={Home}/>
+              <Route path={'/soulmatcher'} exact component={Soulmatcher}/>
               <Route path={'/profile/:username'} exact component={Profile}/>
               <Route path={'/account/profile'} exact component={MyProfile}/>
               <Route path={'/account/profile/edit'} exact component={EditProfile}/>
