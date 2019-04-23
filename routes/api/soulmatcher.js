@@ -23,7 +23,7 @@ function getRelevanceScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
         let matchingScore = 0;
 
-        const sql = "SELECT tag from interests " +
+        let sql = "SELECT tag from interests " +
             `WHERE user_id = ${infos.id}`;
         connection.query(sql, (err, res) => {
            // if (err) throw err;
@@ -48,7 +48,15 @@ function getRelevanceScore(id, infos, tag_res, pos_res) {
                 );
                 matchingScore -= dist / 10000;
             }
-            resolve(matchingScore);
+
+            //Check if other user already liked me and give many extra points
+            sql = "Select id from likes " +
+                `WHERE liker_id = ${infos.id} and liked_id = ${id}`;
+            connection.query(sql, (err, res) => {
+                if (err) throw err;
+                else matchingScore += 200 * res.length;
+                resolve(matchingScore);
+            })
         })
     });
 }
