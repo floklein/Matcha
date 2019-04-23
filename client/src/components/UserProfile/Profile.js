@@ -88,6 +88,8 @@ class Profile extends Component {
         return `Vous aimez déjà ${this.props.profile.firstName}`;
       case 'you':
         return `${this.props.profile.firstName} vous aime déjà`;
+      default:
+        return 'Faites le premier pas !';
     }
   };
 
@@ -211,8 +213,7 @@ class Profile extends Component {
 
 Profile.propTypes = {
   fetchProfile: PropTypes.func.isRequired,
-  posts: PropTypes.object.isRequired,
-  likeUser: PropTypes.func.isRequired
+  likeUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -19,7 +19,7 @@ connection.connect(function(err) {
     console.log('You are now connected...')
 })
 
-function getMatchScore(id, infos, tag_res, pos_res) {
+function getRelevanceScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
         let matchingScore = 0;
 
@@ -53,11 +53,72 @@ function getMatchScore(id, infos, tag_res, pos_res) {
     });
 }
 
+function getAgeScore(id, infos, tag_res, pos_res) {
+    return new Promise(resolve => {
+
+       const sql = "Select age from infos " +
+           `WHERE user_id = ${infos.id};`;
+       connection.query(sql, (err, res) => {
+           if (err) throw err;
+           resolve (res[0].age);
+       })
+    });
+}
+
+function getDistanceScore(id, infos, tag_res, pos_res) {
+    return new Promise(resolve => {
+
+            if (infos.latitude && infos.longitude && pos_res[0].latitude && pos_res[0].longitude) {
+                const dist = geolib.getDistance(
+                    {latitude: infos.latitude, longitude: infos.longitude},
+                    {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
+                );
+                resolve (dist);
+            }
+        })
+}
+
+function getPopularityScore(id, infos, tag_res, pos_res) {
+    return new Promise(resolve => {
+
+    resolve(infos.popularity);
+    })
+}
+
+function getInterestsScore(id, infos, tag_res, pos_res) {
+    return new Promise(resolve => {
+
+        const sql = "SELECT tag from interests " +
+            `WHERE user_id = ${infos.id}`;
+        connection.query(sql, (err, res) => {
+            // if (err) throw err;
+
+            //Filter one array of tags with the other one to get nb of common tags
+            const filtered_array = tag_res.filter((tag) => {
+                for(let j = 0; j < res.length; j++) {
+                    if (tag.tag === res[j].tag)
+                        return true;
+                }
+                return false;
+            });
+            resolve(filtered_array.length);
+        })
+    });
+}
+
 //TO DO: Add filters before calculating points
 //FILTER MANDATORY: blocked
 
 router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
+    let request = {
+        sort: req.body.sort,
+        order: req.body.order
+    };
+    //Protect against empty or wrong values
+
+
     let res_err = {};
+    let sort_function;
 
             //get sexuality infos from user
             const sql_user_info = "SELECT sexuality, gender FROM infos " +
@@ -82,7 +143,24 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
                             `WHERE user_id = ${req.user.id}`;
                         connection.query(sql_pos, (err, pos_res) => {
                             for (let i = 0; i < result.length; i++) {
-                                const matchScore = getMatchScore(req.user.id, result[i], tag_res, pos_res)
+                                switch (request.sort) {
+                                    case "relevance":
+                                        sort_function = getRelevanceScore;
+                                        break;
+                                    case "age":
+                                        sort_function = getAgeScore;
+                                        break;
+                                    case "distance":
+                                        sort_function = getDistanceScore;
+                                        break;
+                                    case "popularity":
+                                        sort_function = getPopularityScore;
+                                        break;
+                                    case "interests":
+                                        sort_function = getInterestsScore;
+                                        break;
+                                }
+                                const matchScore = sort_function(req.user.id, result[i], tag_res, pos_res)
                                     .then((score) => {
                                             result[i] = {
                                                 ...result[i],
@@ -90,7 +168,10 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
                                             };
                                             if (i === result.length - 1) {
                                                 result.sort((first, second) => {
-                                                    return(second.matchScore - first.matchScore);
+                                                    if (request.order == "desc")
+                                                        return(second.matchScore - first.matchScore);
+                                                    else
+                                                        return(first.matchScore - second.matchScore)
                                                 });
                                                 return res.json(result.map((item) => {return({
                                                     id: item.id,
