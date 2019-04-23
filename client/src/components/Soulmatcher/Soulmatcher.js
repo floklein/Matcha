@@ -53,8 +53,6 @@ class Soulmatcher extends Component {
   ];
 
   componentDidMount() {
-    this.props.getUsers({});
-
     let sliderAge = document.getElementById('age');
     let sliderDistance = document.getElementById('distance');
     let sliderPopularity = document.getElementById('popularity');
@@ -171,6 +169,10 @@ class Soulmatcher extends Component {
     }, 1000);
   };
 
+  onGetUsers = () => {
+    this.props.getUsers(this.state);
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -218,6 +220,7 @@ class Soulmatcher extends Component {
                              placeholder="ex: Paris, lecture, Kubrick"/>
                 </div>
               </div>
+              <button onClick={this.onGetUsers}>MAJ</button>
             </div>
             <div className="main-panel">
               <button className="dislike purple" onClick={this.onDislike}/>

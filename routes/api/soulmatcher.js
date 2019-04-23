@@ -117,7 +117,7 @@ function getInterestsScore(id, infos, tag_res, pos_res) {
 
 //FILTER MANDATORY: blocked, liked and disliked
 
-router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
+router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let request = {
         sort: req.body.sort,
         order: req.body.order,
@@ -129,7 +129,6 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
         distanceMax: req.body.distanceMax
     };
     //Protect against empty or wrong values
-
 
     let res_err = {};
     let sort_function;
@@ -195,6 +194,7 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
                                                     else
                                                         return(first.matchScore - second.matchScore)
                                                 });
+                                                console.log(result);
                                                 return res.json(result.map((item) => {return({
                                                     id: item.id,
                                                     matchScore: item.matchScore
