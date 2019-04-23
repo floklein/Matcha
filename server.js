@@ -24,7 +24,7 @@ app.use('/api/soulmatcher', require('./routes/api/soulmatcher'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/visit', require('./routes/api/visit'));
 app.use('/api/report', require('./routes/api/report'));
-
+app.use('/api/dislike', require('./routes/api/dislike'));
 
 const port = 5000;
 
