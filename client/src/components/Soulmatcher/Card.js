@@ -172,7 +172,7 @@ class Card extends Component {
           <div className="card__infos">
             <div>
               <div>DISTANCE</div>
-              <div>{'1.5km'}</div>
+              <div>{this.props.distance}</div>
             </div>
             <div>
               <div>GENRE</div>
