@@ -58,12 +58,12 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                 }
                 else {
                     //Check if already liked
-                    sql = `SELECT * FROM blocks WHERE reporter_id = ${req.user.id} AND reported_id = ${infos.reported}`;
+                    sql = `SELECT * FROM reports WHERE reporter_id = ${req.user.id} AND reported_id = ${infos.reported}`;
                     connection.query(sql, (err, result) => {
                         if (result && result.length != 0) { //If already reported, do nothing
                         }
                         else {  //Else, report
-                            sql = `INSERT INTO blocks(reporter_id, reported_id) VALUES(${req.user.id}, ${infos.reported})`;
+                            sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${req.user.id}, ${infos.reported})`;
                             connection.query(sql, (err, result) => {
                                 res.end("");
                             })

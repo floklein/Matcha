@@ -23,7 +23,7 @@ function getRelevanceScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
         let matchingScore = 0;
 
-        const sql = "SELECT tag from interests " +
+        let sql = "SELECT tag from interests " +
             `WHERE user_id = ${infos.id}`;
         connection.query(sql, (err, res) => {
            // if (err) throw err;
@@ -48,7 +48,15 @@ function getRelevanceScore(id, infos, tag_res, pos_res) {
                 );
                 matchingScore -= dist / 10000;
             }
-            resolve(matchingScore);
+
+            //Check if other user already liked me and give many extra points
+            sql = "Select id from likes " +
+                `WHERE liker_id = ${infos.id} and liked_id = ${id}`;
+            connection.query(sql, (err, res) => {
+                if (err) throw err;
+                else matchingScore += 200 * res.length;
+                resolve(matchingScore);
+            })
         })
     });
 }
@@ -89,7 +97,6 @@ function syncDistanceScore(id, infos, tag_res, pos_res) {
 
 function getPopularityScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
-
     resolve(infos.popularity);
     })
 }
@@ -115,7 +122,84 @@ function getInterestsScore(id, infos, tag_res, pos_res) {
     });
 }
 
-//FILTER MANDATORY: blocked, liked and disliked
+function isBlocked_liked_or_disliked(id, user) { //need to add dislike
+    return new Promise(resolve => {
+        let sql = "SELECT id from blocks " +
+            `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
+        connection.query(sql, (err, res) => {
+            if (err) throw err;
+            if (res.length)
+                resolve(res.length);
+           sql = "SELECT id from likes " +
+               `WHERE (liker_id = ${id} AND liked_id = ${user.id});`;
+            connection.query(sql, (err, res) => {
+                if (err) throw err;
+                if (res.length)
+                    resolve(res.length);
+                sql = "Select id from dislikes " +
+                    `WHERE (disliker_id = ${id} AND disliked_id = ${user.id});`;
+                connection.query(sql, (err, res) => {
+                    if (err) throw err;
+                    resolve(res.length);
+                })
+            })
+        })
+    })
+}
+
+async function  filters_past(id, result) {
+    return new Promise (resolve => {
+        let to_remove = [];
+        for (let i = 0; i < result.length; i++) {
+            isBlocked_liked_or_disliked(id, result[i])
+                .then(res => {
+                    if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
+                        to_remove.push(i);
+                    }
+                    if (i == result.length - 1) {
+                        for (let j = to_remove.length - 1; j >= 0; j--) {
+                            result.splice(to_remove[j], 1);
+                        }
+                        resolve(result);
+                    }
+                });
+        }
+    })
+}
+
+async function filters_interests(tags_array, result) {
+    return new Promise((resolve => {
+        let to_remove = [];
+        let tags_array_filtered = [];
+        for (let i = 0; i < result.length; i++) {
+            const sql = "select tag from interests " +
+                `Where user_id = ${result[i].id}`;
+            connection.query(sql, (err, res) => {
+                if (err) throw err;
+                if (res.length == 0);
+                   // resolve(result);
+                else  {
+                    tags_array_filtered = tags_array.filter((tag) => {
+                        for(let j = 0; j < res.length; j++) {
+                            if (tag.name === res[j].tag)
+                                return true;
+                        }
+                        return false;
+                    });
+                    if (tags_array_filtered.length < tags_array.length) {
+                        to_remove.push(i);
+                    }
+                }
+                if (i == result.length - 1) {
+                    for (let j = to_remove.length - 1; j >= 0; j--) {
+                        result.splice(to_remove[j], 1);
+                    }
+                    resolve(result);
+                }
+            })
+        }
+    }))
+}
 
 router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let request = {
@@ -126,13 +210,14 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
         popularityMin: req.body.popularityMin,
         popularityMax: req.body.popularityMax,
         distanceMin: req.body.distanceMin,
-        distanceMax: req.body.distanceMax
+        distanceMax: req.body.distanceMax,
+        interests: req.body.interests
     };
     //Protect against empty or wrong values
-
     let res_err = {};
-    let sort_function;
 
+
+    let sort_function;
             //get sexuality infos from user
             const sql_user_info = "SELECT sexuality, gender FROM infos " +
                 `WHERE user_id = ${req.user.id}`;
@@ -161,48 +246,60 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                                 const score = syncDistanceScore(req.user.id, user, tag_res, pos_res);
                                 return (score / 1000 >= request.distanceMin && score / 1000 <= request.distanceMax);
                             });
-                            if (result.length === 0)
-                                return res.json({});
-                            for (let i = 0; i < result.length; i++) {
-                                switch (request.sort) {
-                                    case "relevance":
-                                        sort_function = getRelevanceScore;
-                                        break;
-                                    case "age":
-                                        sort_function = getAgeScore;
-                                        break;
-                                    case "distance":
-                                        sort_function = getDistanceScore;
-                                        break;
-                                    case "popularity":
-                                        sort_function = getPopularityScore;
-                                        break;
-                                    case "interests":
-                                        sort_function = getInterestsScore;
-                                        break;
-                                }
-                                const matchScore = sort_function(req.user.id, result[i], tag_res, pos_res)
-                                    .then((score) => {
-                                            result[i] = {
-                                                ...result[i],
-                                                matchScore: score
-                                            };
-                                            if (i === result.length - 1) {
-                                                result.sort((first, second) => {
-                                                    if (request.order == "desc")
-                                                        return(second.matchScore - first.matchScore);
-                                                    else
-                                                        return(first.matchScore - second.matchScore)
-                                                });
-                                                console.log(result);
-                                                return res.json(result.map((item) => {return({
-                                                    id: item.id,
-                                                    matchScore: item.matchScore
-                                                })}));
+
+                            filters_past(req.user.id, result)
+                                .then ((result) => {
+                                    filters_interests(request.interests, result)
+                                        .then((result) => {
+                                            if (result.length === 0)
+                                                return res.json({});
+                                            for (let i = 0; i < result.length; i++) {
+                                                switch (request.sort) {
+                                                    case "relevance":
+                                                        sort_function = getRelevanceScore;
+                                                        break;
+                                                    case "age":
+                                                        sort_function = getAgeScore;
+                                                        break;
+                                                    case "distance":
+                                                        sort_function = getDistanceScore;
+                                                        break;
+                                                    case "popularity":
+                                                        sort_function = getPopularityScore;
+                                                        break;
+                                                    case "interests":
+                                                        sort_function = getInterestsScore;
+                                                        break;
+                                                }
+                                                let matchScore;
+                                                if (result[i])
+                                                    matchScore = sort_function(req.user.id, result[i], tag_res, pos_res)
+                                                        .then((score) => {
+                                                                result[i] = {
+                                                                    ...result[i],
+                                                                    matchScore: score
+                                                                };
+                                                                if (i === result.length - 1) {
+                                                                    result.sort((first, second) => {
+                                                                        if (request.order == "desc")
+                                                                            return(second.matchScore - first.matchScore);
+                                                                        else
+                                                                            return(first.matchScore - second.matchScore)
+                                                                    });
+                                                                    return res.json(result.map((item) => {return({
+                                                                        id: item.id,
+                                                                        matchScore: item.matchScore
+                                                                    })}));
+                                                                }
+                                                            }
+                                                        );
                                             }
-                                        }
-                                    );
-                            }
+                                        })
+                                    }
+
+
+                                );
+
                         });
                     });
                 })

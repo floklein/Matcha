@@ -30,7 +30,7 @@ class Soulmatcher extends Component {
   };
   suggestions = [
     {id: 1, name: 'Paris'},
-    {id: 2, name: 'lecture'},
+    {id: 2, name: 'Italie'},
     {id: 3, name: '42'},
     {id: 4, name: 'Kubrick'},
     {id: 5, name: 'Manger'},
