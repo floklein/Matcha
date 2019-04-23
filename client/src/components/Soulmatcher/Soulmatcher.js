@@ -228,7 +228,7 @@ class Soulmatcher extends Component {
                 </div>
                 {(this.props.users && Array.isArray(this.props.users)) &&
                   this.props.users.reverse().map((user, i) => (
-                  <Card key={i} userId={user.id}/>
+                  <Card key={i} userId={user.id} distance={user.dist}/>
                   ))}
               </div>
               <button className="like green" onClick={this.onLike}/>
