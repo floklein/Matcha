@@ -140,7 +140,13 @@ function getInterestsScore(id, infos, tag_res, pos_res) {
                 }
                 return false;
             });
-            resolve(filtered_array.length);
+            resolve({
+                score: filtered_array.length,
+                dist: geolib.getDistance(
+                    {latitude: infos.latitude, longitude: infos.longitude},
+                    {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
+                )
+            });
         })
     });
 }
