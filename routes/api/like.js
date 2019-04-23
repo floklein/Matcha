@@ -41,7 +41,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
     }
     else {
           //Check if liked exists
-          sql = `SELECT id from users WHERE id = ${response.liked}`;
+          let sql = `SELECT id from users WHERE id = ${response.liked}`;
           connection.query(sql, (err, result) => {
             if (result && result.length == 0) {
                 res_err = {
@@ -62,13 +62,24 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                             //Delete like
                             sql = `DELETE FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
                             connection.query(sql, (err, result) => {
-                                return res.json({like: (is_liked ? "you" : "no")});
+                                sql = "UPDATE infos SET popularity = popularity - 5 " +
+                                    `WHERE user_id = ${response.liked};`;
+                                connection.query(sql, (err) => {
+                                    return res.json({like: (is_liked ? "you" : "no")});
+                                })
                             })
                         }
                         else {  //Else, like
                             sql = `INSERT INTO likes(liker_id, liked_id) VALUES(${req.user.id}, ${response.liked})`;
                             connection.query(sql, (err, result) => {
-                                return res.json({like: (is_liked ? "both" : "me")});
+                                //Give 5 popularity points when liked
+                                sql = "UPDATE infos SET popularity = popularity + 5 " +
+                                    `where user_id = ${response.liked};`;
+                                connection.query(sql, (err, resp) => {
+                                    if (err) throw err;
+                                    console.log(resp);
+                                    return res.json({like: (is_liked ? "both" : "me")});
+                                })
                             })
                         }
                     })
