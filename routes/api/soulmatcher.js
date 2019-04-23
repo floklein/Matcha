@@ -167,6 +167,39 @@ async function  filters_past(id, result) {
     })
 }
 
+async function filters_interests(tags_array, result) {
+    return new Promise((resolve => {
+        let to_remove = [];
+        let tags_array_filtered = [];
+        for (let i = 0; i < result.length; i++) {
+            const sql = "select tag from interests " +
+                `Where user_id = ${result[i].id}`;
+            connection.query(sql, (err, res) => {
+                if (err) throw err;
+                if (res.length == 0);
+                   // resolve(result);
+                else  {
+                    tags_array_filtered = tags_array.filter((tag) => {
+                        for(let j = 0; j < res.length; j++) {
+                            if (tag.name === res[j].tag)
+                                return true;
+                        }
+                        return false;
+                    });
+                    if (tags_array_filtered.length < tags_array.length) {
+                        to_remove.push(i);
+                    }
+                }
+                if (i == result.length - 1) {
+                    for (let j = to_remove.length - 1; j >= 0; j--) {
+                        result.splice(to_remove[j], 1);
+                    }
+                    resolve(result);
+                }
+            })
+        }
+    }))
+}
 
 router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let request = {
@@ -177,12 +210,13 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
         popularityMin: req.body.popularityMin,
         popularityMax: req.body.popularityMax,
         distanceMin: req.body.distanceMin,
-        distanceMax: req.body.distanceMax
+        distanceMax: req.body.distanceMax,
+        interests: req.body.interests
     };
     //Protect against empty or wrong values
-
-    console.log(req.user.id);
     let res_err = {};
+
+
     let sort_function;
             //get sexuality infos from user
             const sql_user_info = "SELECT sexuality, gender FROM infos " +
@@ -215,49 +249,52 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
 
                             filters_past(req.user.id, result)
                                 .then ((result) => {
-                                    if (result.length === 0)
-                                        return res.json({});
-                                    for (let i = 0; i < result.length; i++) {
-                                        switch (request.sort) {
-                                            case "relevance":
-                                                sort_function = getRelevanceScore;
-                                                break;
-                                            case "age":
-                                                sort_function = getAgeScore;
-                                                break;
-                                            case "distance":
-                                                sort_function = getDistanceScore;
-                                                break;
-                                            case "popularity":
-                                                sort_function = getPopularityScore;
-                                                break;
-                                            case "interests":
-                                                sort_function = getInterestsScore;
-                                                break;
-                                        }
-                                        let matchScore;
-                                        if (result[i])
-                                            matchScore = sort_function(req.user.id, result[i], tag_res, pos_res)
-                                                .then((score) => {
-                                                    result[i] = {
-                                                        ...result[i],
-                                                        matchScore: score
-                                                    };
-                                                    if (i === result.length - 1) {
-                                                        result.sort((first, second) => {
-                                                            if (request.order == "desc")
-                                                                return(second.matchScore - first.matchScore);
-                                                            else
-                                                                return(first.matchScore - second.matchScore)
-                                                        });
-                                                        return res.json(result.map((item) => {return({
-                                                            id: item.id,
-                                                            matchScore: item.matchScore
-                                                        })}));
-                                                    }
+                                    filters_interests(request.interests, result)
+                                        .then((result) => {
+                                            if (result.length === 0)
+                                                return res.json({});
+                                            for (let i = 0; i < result.length; i++) {
+                                                switch (request.sort) {
+                                                    case "relevance":
+                                                        sort_function = getRelevanceScore;
+                                                        break;
+                                                    case "age":
+                                                        sort_function = getAgeScore;
+                                                        break;
+                                                    case "distance":
+                                                        sort_function = getDistanceScore;
+                                                        break;
+                                                    case "popularity":
+                                                        sort_function = getPopularityScore;
+                                                        break;
+                                                    case "interests":
+                                                        sort_function = getInterestsScore;
+                                                        break;
                                                 }
-                                            );
-                                    }
+                                                let matchScore;
+                                                if (result[i])
+                                                    matchScore = sort_function(req.user.id, result[i], tag_res, pos_res)
+                                                        .then((score) => {
+                                                                result[i] = {
+                                                                    ...result[i],
+                                                                    matchScore: score
+                                                                };
+                                                                if (i === result.length - 1) {
+                                                                    result.sort((first, second) => {
+                                                                        if (request.order == "desc")
+                                                                            return(second.matchScore - first.matchScore);
+                                                                        else
+                                                                            return(first.matchScore - second.matchScore)
+                                                                    });
+                                                                    return res.json(result.map((item) => {return({
+                                                                        id: item.id,
+                                                                        matchScore: item.matchScore
+                                                                    })}));
+                                                                }
+                                                            }
+                                                        );
+                                            }
+                                        })
                                     }
 
 
