@@ -1,28 +1,22 @@
 import {GET_USERS, GET_ERRORS} from "./types";
 
-export const getUsers = (options) => dispatch => {
-  const worked = false;
+import axios from 'axios';
 
-  if (worked) {
-    dispatch({
-      type: GET_USERS,
-      payload: [
-        {
-          id: 1,
-          username: 'toto'
-        },
-        {
-          id: 2,
-          username: 'lol'
+export const getUsers = (options) => dispatch => {
+  console.log(options);
+  axios.post('/api/soulmatcher', options)
+    .then(res => {
+      dispatch({
+        type: GET_USERS,
+        payload: res.data
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: {
+          soulmatcher: err
         }
-      ]
+      });
     });
-  } else {
-    dispatch({
-      type: GET_ERRORS,
-      payload: {
-        soulmatcher: 'cassé'
-      }
-    });
-  }
 };

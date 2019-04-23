@@ -44,7 +44,7 @@ router.get('/:username', passport.authenticate('jwt', {session: false}), (req, r
     return res.json(response);
   }
 
-  let sql = `SELECT id, username, email, firstName, lastName, age, gender, sexuality, bio, profile_pic, popularity, latitude, longitude FROM users JOIN infos ON users.id = infos.user_id WHERE username = "${username}";`;
+  let sql = `SELECT id, username, email, firstName, lastName, age, gender, sexuality, bio, profile_pic, popularity, latitude, longitude FROM users JOIN infos ON users.id = infos.user_id WHERE username = "${username}" OR id = "${username}";`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
 
