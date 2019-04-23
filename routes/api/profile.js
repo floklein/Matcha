@@ -61,7 +61,7 @@ router.get('/:username', passport.authenticate('jwt', {session: false}), (req, r
       return res.json(response);
     }
 
-    let sql = `SELECT pic1, pic2, pic3, pic4, pic5 FROM photos JOIN users ON users.id = photos.user_id WHERE users.username = "${username}";`;
+    let sql = `SELECT pic1, pic2, pic3, pic4, pic5 FROM photos JOIN users ON users.id = photos.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;
     connection.query(sql, (err, result2) => {
       if (err) throw err;
 
@@ -70,7 +70,7 @@ router.get('/:username', passport.authenticate('jwt', {session: false}), (req, r
         photos = [result2[0].pic1, result2[0].pic2, result2[0].pic3, result2[0].pic4, result2[0].pic5].filter((photo) => photo);
       }
 
-      let sql = `SELECT tag FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}";`;
+      let sql = `SELECT tag FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;
       connection.query(sql, (err, result3) => {
         if (err) throw err;
 
