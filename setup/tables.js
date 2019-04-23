@@ -42,16 +42,21 @@ connection.connect((err) => {
     "blocker_id INT NOT NULL, " +
     "blocked_id INT NOT NULL);" +
     "" +
+    "CREATE TABLE IF NOT EXISTS reports(" +
+    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+    "reported_id INT NOT NULL, " +
+    "reporter_id INT NOT NULL)" +
+    "" +
     "CREATE TABLE IF NOT EXISTS likes(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "liker_id INT NOT NULL, " +
     "liked_id INT NOT NULL); " +
     "" +
-    "CREATE TABLE IF NOT EXISTS visit( " +
+    "CREATE TABLE IF NOT EXISTS visits( " +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "visiter_id INT NOT NULL, " +
     "visited_id INT NOT NULL, " +
-    "`time` DATE NOT NULL);" +
+    "`time` DATETIME NOT NULL);" +
     "" +
     "CREATE TABLE IF NOT EXISTS photos(" +
     "user_id INT NOT NULL, " +
