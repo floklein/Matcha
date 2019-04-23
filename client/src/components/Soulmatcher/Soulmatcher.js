@@ -45,7 +45,7 @@ class Soulmatcher extends Component {
     {id: 13, name: 'politique'},
     {id: 14, name: 'lol'},
     {id: 15, name: 'YouTube'},
-    {id: 16, name: 'Facebook'},
+    {id: '82da703f-f8e5-4d4f-9bc0-a1feadc44203', name: 'Facebook'},
     {id: 17, name: 'Fangio'},
     {id: 18, name: 'YouPorn'},
     {id: 19, name: 'test1'},
