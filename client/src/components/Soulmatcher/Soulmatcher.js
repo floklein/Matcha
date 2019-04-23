@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import classnames from "classnames";
 import noUiSlider from 'nouislider';
 import wNumb from 'wnumb';
@@ -7,11 +8,19 @@ import ReactTags from 'react-tag-autocomplete';
 
 import Card from "./Card";
 
+import {likeUser} from "../../store/actions/profileActions";
+
 import './soulmatcher.css';
 import '../../css/nouislider.css';
+import {getUsers} from "../../store/actions/soulmatcherActions";
 
 class Soulmatcher extends Component {
   state = {
+    soulmatcher: {
+      users: []
+    },
+    sort: 'relevance',
+    order: 'desc',
     ageMin: 0,
     ageMax: 0,
     distanceMin: 0,
@@ -44,6 +53,8 @@ class Soulmatcher extends Component {
   ];
 
   componentDidMount() {
+    this.props.getUsers({});
+
     let sliderAge = document.getElementById('age');
     let sliderDistance = document.getElementById('distance');
     let sliderPopularity = document.getElementById('popularity');
@@ -118,6 +129,7 @@ class Soulmatcher extends Component {
 
   componentDidUpdate() {
     // console.log(this.state);
+    // this.props.getUsers({});
   }
 
   handleChange = (input) => e => {
@@ -169,8 +181,7 @@ class Soulmatcher extends Component {
                 <div className="sidebar__title-box">
                   <div className="sidebar__title">Trier par</div>
                 </div>
-                <select name="sort" title="sort" required onChange={() => {
-                }} defaultValue="pertinence">
+                <select name="sort" title="sort" required onChange={this.handleChange('sort')} defaultValue="pertinence">
                   <option value="" disabled>Trier par...</option>
                   <option value="relevance">Pertinence</option>
                   <option value="age">Âge</option>
@@ -178,8 +189,7 @@ class Soulmatcher extends Component {
                   <option value="popularity">Popularité</option>
                   <option value="interests">Intérêts</option>
                 </select>
-                <select name="order" title="order" required onChange={() => {
-                }} defaultValue="asc">
+                <select name="order" title="order" required onChange={this.handleChange('order')} defaultValue="desc">
                   <option value="" disabled>En ordre...</option>
                   <option value="asc">Croissant</option>
                   <option value="desc">Décroissant</option>
@@ -231,8 +241,12 @@ class Soulmatcher extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {};
+Soulmatcher.propTypes = {
+  getUsers: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, null)(Soulmatcher);
+const mapStateToProps = state => ({
+  users: state.soulmatcher.users
+});
+
+export default connect(mapStateToProps, {getUsers})(Soulmatcher);
