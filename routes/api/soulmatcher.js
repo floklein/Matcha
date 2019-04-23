@@ -53,9 +53,16 @@ function getRelevanceScore(id, infos, tag_res, pos_res) {
             sql = "Select id from likes " +
                 `WHERE liker_id = ${infos.id} and liked_id = ${id}`;
             connection.query(sql, (err, res) => {
+                const dist = geolib.getDistance(
+                    {latitude: infos.latitude, longitude: infos.longitude},
+                    {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
+                );
                 if (err) throw err;
                 else matchingScore += 200 * res.length;
-                resolve(matchingScore);
+                resolve({
+                    score: matchingScore,
+                    dist
+                });
             })
         })
     });
@@ -63,12 +70,19 @@ function getRelevanceScore(id, infos, tag_res, pos_res) {
 
 function getAgeScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
+        const dist = geolib.getDistance(
+            {latitude: infos.latitude, longitude: infos.longitude},
+            {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
+        );
 
        const sql = "Select age from infos " +
            `WHERE user_id = ${infos.id};`;
        connection.query(sql, (err, res) => {
            if (err) throw err;
-           resolve (res[0].age);
+           resolve ({
+               score: res[0].age,
+               dist
+           });
        })
     });
 }
@@ -81,7 +95,10 @@ function getDistanceScore(id, infos, tag_res, pos_res) {
                     {latitude: infos.latitude, longitude: infos.longitude},
                     {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
                 );
-                resolve (dist);
+                resolve ({
+                    score: dist,
+                    dist
+                });
             }
         })
 }
@@ -97,7 +114,13 @@ function syncDistanceScore(id, infos, tag_res, pos_res) {
 
 function getPopularityScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
-    resolve(infos.popularity);
+    resolve({
+        score: infos.popularity,
+        dist: geolib.getDistance(
+            {latitude: infos.latitude, longitude: infos.longitude},
+            {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
+        )
+    });
     })
 }
 
@@ -176,9 +199,7 @@ async function filters_interests(tags_array, result) {
                 `Where user_id = ${result[i].id}`;
             connection.query(sql, (err, res) => {
                 if (err) throw err;
-                if (res.length == 0);
-                   // resolve(result);
-                else  {
+                if (res.length != 0) {
                     tags_array_filtered = tags_array.filter((tag) => {
                         for(let j = 0; j < res.length; j++) {
                             if (tag.name === res[j].tag)
@@ -282,13 +303,14 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                                                                 if (i === result.length - 1) {
                                                                     result.sort((first, second) => {
                                                                         if (request.order == "desc")
-                                                                            return(second.matchScore - first.matchScore);
+                                                                            return(second.matchScore.score - first.matchScore.score);
                                                                         else
-                                                                            return(first.matchScore - second.matchScore)
+                                                                            return(first.matchScore.score - second.matchScore.score)
                                                                     });
                                                                     return res.json(result.map((item) => {return({
                                                                         id: item.id,
-                                                                        matchScore: item.matchScore
+                                                                        matchScore: item.matchScore.score,
+                                                                        dist: item.matchScore.dist
                                                                     })}));
                                                                 }
                                                             }
