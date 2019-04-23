@@ -172,7 +172,7 @@ class Card extends Component {
           <div className="card__infos">
             <div>
               <div>DISTANCE</div>
-              <div>{this.props.distance}</div>
+              <div>{(Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')}</div>
             </div>
             <div>
               <div>GENRE</div>
