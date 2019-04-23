@@ -106,13 +106,16 @@ function getInterestsScore(id, infos, tag_res, pos_res) {
     });
 }
 
-//TO DO: Add filters before calculating points
-//FILTER MANDATORY: blocked
+//FILTER MANDATORY: blocked, liked and disliked
 
 router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
     let request = {
         sort: req.body.sort,
-        order: req.body.order
+        order: req.body.order,
+        ageMin: req.body.ageMin,
+        ageMax: req.body.ageMax,
+        popularityMin: req.body.popularityMin,
+        popularityMax: req.body.popularityMax
     };
     //Protect against empty or wrong values
 
@@ -129,11 +132,12 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
            let sql_main_query = "SELECT u.id, i.latitude, i.longitude, i.popularity " +
                 "FROM users u INNER JOIN infos i on i.user_id = u.id WHERE ";
             if (result[0].sexuality == "heterosexual")
-                sql_main_query += `i.gender != "${result[0].gender}" AND i.sexuality != "homosexual";`;
+                sql_main_query += `i.gender != "${result[0].gender}" AND i.sexuality != "homosexual" `;
             else if (result[0].sexuality == "homosexual")
-                sql_main_query += `i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual";`;
+                sql_main_query += `i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual" `;
             else
-                sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual");`;
+                sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual") `;
+            sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
             connection.query(sql_main_query, (err, result) => {
                     if (err) throw err;
                     const tag_sql = "SELECT tag from interests " +
@@ -142,6 +146,8 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
                         let sql_pos = "SELECT latitude, longitude FROM infos " +
                             `WHERE user_id = ${req.user.id}`;
                         connection.query(sql_pos, (err, pos_res) => {
+                            if (result.length === 0)
+                                return res.json({});
                             for (let i = 0; i < result.length; i++) {
                                 switch (request.sort) {
                                     case "relevance":
