@@ -78,6 +78,15 @@ function getDistanceScore(id, infos, tag_res, pos_res) {
         })
 }
 
+function syncDistanceScore(id, infos, tag_res, pos_res) {
+    if (infos.latitude && infos.longitude && pos_res[0].latitude && pos_res[0].longitude) {
+        return (geolib.getDistance(
+            {latitude: infos.latitude, longitude: infos.longitude},
+            {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
+        ));
+    }
+}
+
 function getPopularityScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
 
@@ -115,7 +124,9 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
         ageMin: req.body.ageMin,
         ageMax: req.body.ageMax,
         popularityMin: req.body.popularityMin,
-        popularityMax: req.body.popularityMax
+        popularityMax: req.body.popularityMax,
+        distanceMin: req.body.distanceMin,
+        distanceMax: req.body.distanceMax
     };
     //Protect against empty or wrong values
 
@@ -146,6 +157,11 @@ router.get('/', passport.authenticate('jwt', { session: false}), (req, res) => {
                         let sql_pos = "SELECT latitude, longitude FROM infos " +
                             `WHERE user_id = ${req.user.id}`;
                         connection.query(sql_pos, (err, pos_res) => {
+                            //Filter by distance
+                            result = result.filter((user) => {
+                                const score = syncDistanceScore(req.user.id, user, tag_res, pos_res);
+                                return (score / 1000 >= request.distanceMin && score / 1000 <= request.distanceMax);
+                            });
                             if (result.length === 0)
                                 return res.json({});
                             for (let i = 0; i < result.length; i++) {
