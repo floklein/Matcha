@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import classnames from "classnames";
 import noUiSlider from 'nouislider';
 import wNumb from 'wnumb';
 import ReactTags from 'react-tag-autocomplete';
@@ -21,12 +20,12 @@ class Soulmatcher extends Component {
     },
     sort: 'relevance',
     order: 'desc',
-    ageMin: 0,
-    ageMax: 0,
+    ageMin: 18,
+    ageMax: 50,
     distanceMin: 0,
-    distanceMax: 0,
-    popularityMin: 0,
-    popularityMax: 0,
+    distanceMax: 50,
+    popularityMin: 10,
+    popularityMax: 200,
     interests: []
   };
   suggestions = [
@@ -123,11 +122,8 @@ class Soulmatcher extends Component {
         popularityMax: parseInt(values[1], 10)
       });
     });
-  }
 
-  componentDidUpdate() {
-    // console.log(this.state);
-    // this.props.getUsers({});
+    this.props.getUsers(this.state);
   }
 
   handleChange = (input) => e => {
@@ -183,7 +179,8 @@ class Soulmatcher extends Component {
                 <div className="sidebar__title-box">
                   <div className="sidebar__title">Trier par</div>
                 </div>
-                <select name="sort" title="sort" required onChange={this.handleChange('sort')} defaultValue="pertinence">
+                <select name="sort" title="sort" required onChange={this.handleChange('sort')}
+                        defaultValue="pertinence">
                   <option value="" disabled>Trier par...</option>
                   <option value="relevance">Pertinence</option>
                   <option value="age">Âge</option>
@@ -219,8 +216,8 @@ class Soulmatcher extends Component {
                              handleDelete={this.handleDelete.bind(this)} handleAddition={this.handleAdd.bind(this)}
                              placeholder="ex: Paris, lecture, Kubrick"/>
                 </div>
+                <button className="sidebar__button blue" onClick={this.onGetUsers}>Modifier</button>
               </div>
-              <button onClick={this.onGetUsers}>MAJ</button>
             </div>
             <div className="main-panel">
               <button className="dislike purple" onClick={this.onDislike}/>
@@ -229,11 +226,10 @@ class Soulmatcher extends Component {
                   <h1>Pas de profils</h1>
                   <p>Ça nous brise le cœur, mais aucun autre profil ne correspond à vos préférences et vos filtres.</p>
                 </div>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
+                {(this.props.users && Array.isArray(this.props.users)) &&
+                  this.props.users.reverse().map((user, i) => (
+                  <Card key={i} userId={user.id} distance={user.dist}/>
+                  ))}
               </div>
               <button className="like green" onClick={this.onLike}/>
             </div>

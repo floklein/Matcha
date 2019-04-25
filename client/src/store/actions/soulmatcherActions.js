@@ -3,7 +3,6 @@ import {GET_USERS, GET_ERRORS} from "./types";
 import axios from 'axios';
 
 export const getUsers = (options) => dispatch => {
-  console.log(options);
   axios.post('/api/soulmatcher', options)
     .then(res => {
       dispatch({

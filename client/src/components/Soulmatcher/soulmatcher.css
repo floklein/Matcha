@@ -93,6 +93,10 @@ body {
     width: 13rem;
 }
 
+.sidebar__button {
+    width: 13rem;
+}
+
 #age, #distance, #popularity {
     width: 13rem;
     margin-bottom: .5rem;
@@ -272,7 +276,7 @@ button.like:active {
     align-items: center;
     justify-items: center;
     margin: 1rem;
-    height: 35rem;
+    height: 36rem;
     width: 100%;
     max-width: 25rem;
 }
@@ -289,90 +293,4 @@ button.like:active {
 
 .no-cards p {
     line-height: 1.5rem;
-}
-
-/*CARD LAYOUT*/
-.card {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    border-radius: 1rem;
-    background-color: white;
-    transition: box-shadow 0.4s, background-color 1s, transform 1s;
-    overflow: hidden;
-    cursor: grab;
-}
-
-.card:not(:last-child) {
-    transform: scale(0.9);
-}
-
-.card:last-child, .card:nth-last-child(2) {
-    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.2);
-}
-
-.card:hover {
-    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3);
-}
-
-.card:active {
-    cursor: grabbing;
-}
-
-/*CARD DURING DRAG'n'DROP*/
-.card.liking {
-    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3),
-    0 0 0 0.4rem white inset,
-    0 0 0 0.8rem #3fd39f inset;
-}
-
-.card.disliking {
-    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3),
-    0 0 0 0.4rem white inset,
-    0 0 0 0.8rem #8579e0 inset;
-}
-
-.card.liking::before,
-.card.disliking::before {
-    display: block;
-    position: absolute;
-    margin: 0.45rem;
-    padding: 0.1rem 0.5rem;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    font-size: 2rem;
-    color: white;
-    border-radius: 0.5rem;
-}
-
-.card.liking::before {
-    content: "J'aime !";
-    background-color: #3fd39f;
-}
-
-.card.disliking::before {
-    content: "Bof...";
-    right: 0;
-    background-color: #8579e0;
-}
-
-.card.liking::after,
-.card.disliking::after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-}
-
-.card.liking::after {
-    background: linear-gradient(to top left, white, white, white, rgba(0, 0, 0, 0));
-}
-
-.card.disliking::after {
-    background: linear-gradient(to top right, white, white, white, rgba(0, 0, 0, 0));
 }
