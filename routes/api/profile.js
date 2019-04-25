@@ -109,7 +109,7 @@ router.get('/:username', passport.authenticate('jwt', {session: false}), (req, r
             };
             return res.json(result[0]);
           });
-        })
+        });
       });
     });
   });
