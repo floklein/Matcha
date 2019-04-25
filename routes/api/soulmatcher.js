@@ -252,14 +252,15 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                 if (err) throw err;
                 //if user is found, chose next query depending on sexuality and gender;
            let sql_main_query = "SELECT u.id, i.latitude, i.longitude, i.popularity " +
-                "FROM users u INNER JOIN infos i on i.user_id = u.id WHERE ";
+                `FROM users u INNER JOIN infos i on i.user_id = u.id WHERE u.id != ${req.user.id} AND `;
             if (result[0].sexuality == "heterosexual")
-                sql_main_query += `i.gender != "${result[0].gender}" AND i.sexuality != "homosexual" `;
+                sql_main_query += `(i.gender != "${result[0].gender}" AND i.sexuality != "homosexual)" `;
             else if (result[0].sexuality == "homosexual")
-                sql_main_query += `i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual" `;
+                sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual)" `;
             else
-                sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual") `;
-            sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax} AND u.id != ${req.user.id} ;`;
+                sql_main_query += `((i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual")) `;
+            sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
+            console.log(sql_main_query);
             connection.query(sql_main_query, (err, result) => {
                     if (err) throw err;
                     const tag_sql = "SELECT tag from interests " +
