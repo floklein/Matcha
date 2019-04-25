@@ -205,7 +205,6 @@ async function filters_interests(tags_array, result) {
                 `Where user_id = ${result[i].id}`;
             connection.query(sql, (err, res) => {
                 if (err) throw err;
-                if (res.length != 0) {
                     tags_array_filtered = tags_array.filter((tag) => {
                         for(let j = 0; j < res.length; j++) {
                             if (tag.name === res[j].tag)
@@ -216,7 +215,6 @@ async function filters_interests(tags_array, result) {
                     if (tags_array_filtered.length < tags_array.length) {
                         to_remove.push(i);
                     }
-                }
                 if (i == result.length - 1) {
                     for (let j = to_remove.length - 1; j >= 0; j--) {
                         result.splice(to_remove[j], 1);
@@ -260,7 +258,6 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
             else
                 sql_main_query += `((i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual")) `;
             sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
-            console.log(sql_main_query);
             connection.query(sql_main_query, (err, result) => {
                     if (err) throw err;
                     const tag_sql = "SELECT tag from interests " +
