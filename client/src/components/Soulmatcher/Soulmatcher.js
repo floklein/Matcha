@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import noUiSlider from 'nouislider';
 import wNumb from 'wnumb';
 import ReactTags from 'react-tag-autocomplete';
+import axios from 'axios';
 
 import Card from "./Card";
 
@@ -26,30 +27,18 @@ class Soulmatcher extends Component {
     distanceMax: 50,
     popularityMin: 10,
     popularityMax: 200,
-    interests: []
+    interests: [],
+    suggestions: [],
   };
-  suggestions = [
-    {id: 1, name: 'Paris'},
-    {id: 2, name: 'Italie'},
-    {id: 3, name: '42'},
-    {id: 4, name: 'Kubrick'},
-    {id: 5, name: 'Manger'},
-    {id: 6, name: 'Party'},
-    {id: 7, name: '420'},
-    {id: 8, name: 'KuKluxKlan'},
-    {id: 9, name: 'Cinéma'},
-    {id: 10, name: 'Plage'},
-    {id: 11, name: 'Londres'},
-    {id: 12, name: 'USA'},
-    {id: 13, name: 'politique'},
-    {id: 14, name: 'lol'},
-    {id: 15, name: 'YouTube'},
-    {id: '82da703f-f8e5-4d4f-9bc0-a1feadc44203', name: 'Facebook'},
-    {id: 17, name: 'Fangio'},
-    {id: 18, name: 'YouPorn'},
-    {id: 19, name: 'test1'},
-    {id: 20, name: 'Test2'}
-  ];
+
+  componentWillMount() {
+      axios.get('/api/interests/getAll')
+          .then ((res) => {
+              this.setState({
+                  suggestions: res.data,
+              });
+          });
+  }
 
   componentDidMount() {
     let sliderAge = document.getElementById('age');
@@ -212,7 +201,7 @@ class Soulmatcher extends Component {
                 </div>
                 <div>
                   <div className="sidebar__subtitle">Intérêts</div>
-                  <ReactTags tags={this.state.interests} suggestions={this.suggestions}
+                  <ReactTags tags={this.state.interests} suggestions={this.state.suggestions}
                              handleDelete={this.handleDelete.bind(this)} handleAddition={this.handleAdd.bind(this)}
                              placeholder="ex: Paris, lecture, Kubrick"/>
                 </div>

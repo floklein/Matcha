@@ -26,7 +26,6 @@ class Card extends Component {
   };
 
   componentDidMount() {
-      console.log('mount card');
     axios.get(`/api/profile/${this.props.userId}`)
       .then(res => {
         getAverageColor(res.data.profile_pic)
@@ -104,7 +103,7 @@ class Card extends Component {
     const div = document.querySelector('.card.u' + this.props.userId);
     div.style.transition = 'box-shadow 0.4s, transform 1s, background-color 1s';
     if (this.dx < -150) {
-      //TODO: Dislike the user
+      //TODO: Dislike the user and relaunch soulmatcher, display new card
       div.style.transform = 'translateX(-200vw)';
       setTimeout(() => {
         if (div && div.parentElement) {
@@ -112,7 +111,7 @@ class Card extends Component {
         }
       }, 1000);
     } else if (this.dx > 150) {
-      //TODO: Like the user
+      //TODO: Like the user and relaunch soulmatcher, display new card
       div.style.transform = 'translateX(200vw)';
       setTimeout(() => {
         if (div && div.parentElement) {
