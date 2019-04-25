@@ -1,6 +1,7 @@
 /*CARD LAYOUT*/
 .card {
     position: absolute;
+    /*display: none;*/
     top: 0;
     left: 0;
     z-index: 2;
@@ -17,12 +18,12 @@
     transform: scale(0.9);
 }
 
-.card:last-child, .card:nth-last-child(2):not(:first-child):not(:nth-child(2)) {
+.card:last-child, .card:nth-last-child(2) {
     box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.2);
 }
 
-.card:not(:last-child):not(:nth-last-child(2)) {
-    display: none;
+.card:last-child, .card:nth-last-child(2), .card:nth-last-child(3) {
+    display: block;
 }
 
 .card:hover {
@@ -140,7 +141,9 @@
     flex-direction: row;
     flex-wrap: nowrap;
     width: 100%;
+    margin-top: -0.5rem;
     overflow-x: auto;
+    overflow-y: visible;
 }
 
 .card__photos > div {
@@ -148,7 +151,7 @@
     flex-grow: 0;
     width: 6rem;
     height: 6rem;
-    margin: 0 0 1rem 1rem;
+    margin: 0.5rem 0 0.5rem 1rem;
     background-color: white;
     background-size: cover;
     background-position: center;
@@ -165,8 +168,9 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin: 1rem;
-    max-height: 4rem;
+    margin: 0.5rem 1rem 1rem 1rem;
+    padding-top: 0.5rem;
+    max-height: 4.5rem;
     overflow-y: auto;
 }
 
