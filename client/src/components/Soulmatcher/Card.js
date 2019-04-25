@@ -161,7 +161,6 @@ class Card extends Component {
   };
 
   render() {
-    console.log('JE SUIS UNE CARTE ET JE RE-RENDS !!!');
     const {profile_pic, firstName, lastName, username, gender, age, sexuality, photos, interests, distance} = this.state;
     const {r, g, b} = this.state.rgb;
     const genre = this.getGender(gender);
