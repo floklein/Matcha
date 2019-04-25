@@ -1,85 +1,210 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import {NavLink} from 'react-router-dom';
+import axios from "axios";
+import getAverageColor from "get-average-color";
+
+import './card.css';
 
 class Card extends Component {
+  state = {
+    id: '',
+    username: '...',
+    firstName: '...',
+    lastName: '...',
+    age: '...',
+    gender: '...',
+    sexuality: '...',
+    bio: '...',
+    profile_pic: '',
+    rgb: {},
+    photos: [],
+    popularity: '...',
+    latitude: '',
+    longitude: '',
+    interests: [],
+    like: ''
+  };
+
+  componentDidMount() {
+    axios.get(`/api/profile/${this.props.userId}`)
+      .then(res => {
+        getAverageColor(res.data.profile_pic)
+          .then(rgb => {
+            this.setState({
+              id: res.data.id,
+              username: res.data.username,
+              firstName: res.data.firstName,
+              lastName: res.data.lastName,
+              age: res.data.age,
+              gender: res.data.gender,
+              sexuality: res.data.sexuality,
+              bio: res.data.bio,
+              profile_pic: res.data.profile_pic,
+              rgb: rgb,
+              photos: res.data.photos,
+              popularity: res.data.popularity,
+              latitude: res.data.latitude,
+              longitude: res.data.longitude,
+              interests: res.data.interests,
+              like: res.data.like
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   timeout;
   dx;
   dy;
 
   onDrag = (e) => {
     e.persist();
+    const div = document.querySelector('.card.u' + this.props.userId);
     let Ox, Oy;
-
-    // Stores the mouse origin pos
     document.onmousemove = (event) => {
       Ox = event.pageX;
       Oy = event.pageY;
     };
-    // Removes the transform transition
-    e.target.style.transition = 'box-shadow 0.4s, background-color 1s';
+    div.style.transition = 'box-shadow 0.4s, background-color 1s';
     this.timeout = setInterval(() => {
-      // Translates the div to mouse current position
       this.dx = Ox - e.pageX;
       this.dy = Oy - e.pageY;
-      e.target.style.transform = `translate(${this.dx}px, ${this.dy}px)`;
-      // Toggles styles depending of position
+      const {r, g, b} = this.state.rgb;
+      div.style.transform = `translate(${this.dx}px, ${this.dy}px)`;
       if (this.dx < -150) {
-        e.target.style.transition = 'box-shadow 0.4s, background-color 1s';
-        e.target.classList.add('disliking');
-        // e.target.style.backgroundColor = 'red';
+        div.style.transition = 'box-shadow 0.4s, background-color 1s';
+        div.classList.add('disliking');
+        div.style.boxShadow = `0 10px 40px -8px rgba(0, 0, 0, 0.3), 0 0 0 0.4rem rgb(${r}, ${g}, ${b}) inset,
+        0 0 0 0.8rem white inset`;
+        document.querySelector(`.card.u${this.props.userId} .after`).style.background = `linear-gradient(to top right,
+        rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`;
       } else if (this.dx > 150) {
-        e.target.style.transition = 'box-shadow 0.4s, background-color 1s';
-        e.target.classList.add('liking');
-        // e.target.style.backgroundColor = 'green';
+        div.style.transition = 'box-shadow 0.4s, background-color 1s';
+        div.classList.add('liking');
+        div.style.boxShadow = `0 10px 40px -8px rgba(0, 0, 0, 0.3), 0 0 0 0.4rem rgb(${r}, ${g}, ${b}) inset,
+        0 0 0 0.8rem white inset`;
+        document.querySelector(`.card.u${this.props.userId} .after`).style.background = `linear-gradient(to top left,
+        rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`;
       } else {
-        e.target.style.transition = 'background-color 1s';
-        e.target.classList.remove('disliking', 'liking');
-        // e.target.style.backgroundColor = 'white';
+        div.style.transition = 'background-color 1s';
+        div.classList.remove('disliking', 'liking');
+        div.style.boxShadow = '0 10px 40px -8px rgba(0, 0, 0, 0.3)';
       }
     }, 10);
   };
 
   onDrop = (e) => {
     e.persist();
-    // Brings back the transform transition
-    e.target.style.transition = 'box-shadow 0.4s, transform 1s, background-color 1s';
-    // Toggles actions depending of mouse position on drop
+    const div = document.querySelector('.card.u' + this.props.userId);
+    div.style.transition = 'box-shadow 0.4s, transform 1s, background-color 1s';
     if (this.dx < -150) {
       //TODO: Dislike the user
-      e.target.style.transform = 'translateX(-200vw)';
-      // Deletes the div after moving it to left
+      div.style.transform = 'translateX(-200vw)';
       setTimeout(() => {
-        if (e.target && e.target.parentElement) {
-          e.target.parentElement.removeChild(e.target);
+        if (div && div.parentElement) {
+          div.parentElement.removeChild(div);
         }
       }, 1000);
     } else if (this.dx > 150) {
       //TODO: Like the user
-      e.target.style.transform = 'translateX(200vw)';
-      // Deletes the div after moving it to right
+      div.style.transform = 'translateX(200vw)';
       setTimeout(() => {
-        if (e.target && e.target.parentElement) {
-          e.target.parentElement.removeChild(e.target);
+        if (div && div.parentElement) {
+          div.parentElement.removeChild(div);
         }
       }, 500);
     } else {
-      // Takes div back to original position
-      e.target.style.transform = '';
+      div.style.transform = '';
+      div.style.boxShadow = '';
     }
     clearInterval(this.timeout);
   };
 
-  render() {
-    return (
-      <div className="card" onMouseDown={this.onDrag} onMouseUp={this.onDrop} onMouseLeave={this.onDrop}>
+  getGender = (gender) => {
+    switch (gender) {
+      case 'male':
+        return 'Homme';
+      case 'female':
+        return 'Femme';
+      case 'other':
+        return 'Non bianire';
+      default:
+        return '...';
+    }
+  };
 
+  getSexuality = (sexuality) => {
+    switch (sexuality) {
+      case 'heterosexual':
+        return 'Hétéro';
+      case 'homosexual':
+        return 'Homo';
+      case 'bisexual':
+        return 'Bi';
+      default:
+        return '...';
+    }
+  };
+
+  render() {
+    const {profile_pic, firstName, lastName, username, gender, age, sexuality, photos, interests} = this.state;
+    const {r, g, b} = this.state.rgb;
+    const genre = this.getGender(gender);
+    const sexualite = this.getSexuality(sexuality);
+    const bg = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
+
+    return (
+      <div className={'card u' + this.props.userId} onMouseDown={this.onDrag} onMouseUp={this.onDrop} style={bg}>
+        <div className="after"/>
+        <div className="card__content">
+          <div className="card__profile-pic" style={{backgroundImage: `url("${profile_pic}")`}}/>
+          <div className="card__name">
+            {firstName + ' ' + lastName}
+          </div>
+          <div className="card__username">
+            {username}
+          </div>
+          <div className="card__infos">
+            <div>
+              <div>DISTANCE</div>
+              <div>{(Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')}</div>
+            </div>
+            <div>
+              <div>GENRE</div>
+              <div>{genre}</div>
+            </div>
+            <div>
+              <div>ÂGE</div>
+              <div>{age}</div>
+            </div>
+            <div>
+              <div>SEXUALITÉ</div>
+              <div>{sexualite}</div>
+            </div>
+          </div>
+          <div className="card__photos">
+            {photos.map((photo, i) => (
+              <div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>
+            ))}
+            <div className="empty"/>
+          </div>
+          <div className="card__tags">
+            {interests.map((interest, i) => (
+              <div key={i} style={{color: `rgb(${r}, ${g}, ${b})`}}>{interest.tag}</div>
+            ))}
+          </div>
+          <div className="card__more">
+            <NavLink to={'/profile/' + username}>Voir le profil de {firstName}</NavLink>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {};
-};
-
-export default connect(mapStateToProps, null)(Card);
+export default Card;
