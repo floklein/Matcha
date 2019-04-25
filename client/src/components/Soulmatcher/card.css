@@ -1,7 +1,7 @@
 /*CARD LAYOUT*/
 .card {
     position: absolute;
-    /*display: none;*/
+    display: none;
     top: 0;
     left: 0;
     z-index: 2;

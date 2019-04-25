@@ -54,13 +54,13 @@ function fill_db() {
         })
           .then(resp => {
             let sql = "INSERT INTO photos(user_id, pic1, pic2, pic3, pic4, pic5)" +
-                `VALUES(${response.data}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
+              `VALUES(${response.data}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
             connection.query(sql, (err, response) => {
               if (err) throw err;
-                connection.query("UPDATE verified SET status = 1 WHERE user_id = " + id, err => {
-                    resolve(resp);
-                });
-            })
+              connection.query("UPDATE verified SET status = 1 WHERE user_id = " + id, err => {
+                resolve(resp);
+              });
+            });
           })
           .catch((error) => {
             resolve(error);
@@ -72,13 +72,11 @@ function fill_db() {
   })
 }
 
-
 connection.connect((err) => {
   if (err) throw err;
-
   let promises = [];
 
-  for (i = 0; i < 1000; i++) {
+  for (let i = 0; i < 1000; i++) {
     promises.push(fill_db());
   }
 

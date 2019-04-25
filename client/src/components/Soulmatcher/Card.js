@@ -36,22 +36,8 @@ class Card extends Component {
         getAverageColor(res.data.profile_pic)
           .then(rgb => {
             this.setState({
-              id: res.data.id,
-              username: res.data.username,
-              firstName: res.data.firstName,
-              lastName: res.data.lastName,
-              age: res.data.age,
-              gender: res.data.gender,
-              sexuality: res.data.sexuality,
-              bio: res.data.bio,
-              profile_pic: res.data.profile_pic,
+              ...res.data,
               rgb: rgb,
-              photos: res.data.photos,
-              popularity: res.data.popularity,
-              latitude: res.data.latitude,
-              longitude: res.data.longitude,
-              interests: res.data.interests,
-              like: res.data.like,
               distance: (Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')
             });
           })
