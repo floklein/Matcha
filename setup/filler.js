@@ -10,22 +10,22 @@ let connection = mysql.createConnection({
   database: 'matcha',
 });
 
-function fill_db() {
+function fill_db(data) {
   return new Promise((resolve, reject) => {
-    const firstName = faker.name.firstName();
-    const lastName = faker.name.lastName();
+    const firstName = data.name.first.charAt(0).toUpperCase() + data.name.first.slice(1);
+    const lastName = data.name.last.charAt(0).toUpperCase() + data.name.last.slice(1);
     const username = firstName + lastName;
     const email = faker.internet.email();
-    const gender = (faker.random.boolean() ? "male" : "female");
     const password = "Qwerty123";
     const confirm = password;
     const bio = faker.lorem.sentences();
+    const gender = Math.random() > 0.8 ? 'other' : data.gender;
     const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
     const age = Math.floor(Math.random() * 40) + 18;
     const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 5;
     const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 8;
     const popularity = Math.random() * 100;
-    const profilePic = faker.image.avatar();
+    const profilePic = data.picture.large;
     const pic2 = faker.image.avatar();
     const pic3 = faker.image.avatar();
     const pic4 = faker.image.avatar();
@@ -42,8 +42,7 @@ function fill_db() {
     })
       .then(response => {
         const id = response.data;
-        const newurl = "http://localhost:5000/api/user/infos/" + response.data;
-        axios.post(newurl, {
+        axios.post("http://localhost:5000/api/user/infos/" + id, {
           bio,
           sexuality,
           age,
@@ -52,13 +51,16 @@ function fill_db() {
           popularity,
           profilePic
         })
-          .then(resp => {
+          .then(response2 => {
+            console.log('ID:' + id);
+
             let sql = "INSERT INTO photos(user_id, pic1, pic2, pic3, pic4, pic5)" +
-              `VALUES(${response.data}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
-            connection.query(sql, (err, response) => {
+              `VALUES(${id}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
+            connection.query(sql, (err, res) => {
               if (err) throw err;
               connection.query("UPDATE verified SET status = 1 WHERE user_id = " + id, err => {
-                resolve(resp);
+                if (err) throw err;
+                resolve(response2);
               });
             });
           })
@@ -76,13 +78,19 @@ connection.connect((err) => {
   if (err) throw err;
   let promises = [];
 
-  for (let i = 0; i < 1000; i++) {
-    promises.push(fill_db());
-  }
+  axios.get(`https://randomuser.me/api?nat=fr&results=1000`)
+    .then(res => {
+      for (let i = 0; i < 1000; i++) {
+        promises.push(fill_db(res.data.results[i]));
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
 
   Promise.all(promises)
     .then(() => {
-      connection.end();
+      // connection.end();
     })
     .catch((err) => {
     })
