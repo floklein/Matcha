@@ -16,7 +16,7 @@ class Navbar extends Component {
   };
 
   render() {
-    const {isAuthenticated, user} = this.props.auth;
+    const {isAuthenticated} = this.props.auth;
     const guestLinks = (
       <div><NavLink to="/">Accueil</NavLink></div>
     );

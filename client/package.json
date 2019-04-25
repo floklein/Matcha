@@ -7,17 +7,18 @@
     "classnames": "^2.2.6",
     "faker": "^4.1.0",
     "get-average-color": "0.0.6",
+    "http-proxy-middleware": "^0.19.1",
     "jwt-decode": "^2.2.0",
-    "nouislider": "^13.1.4",
+    "nouislider": "^13.1.5",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-redux": "^5.1.1",
+    "react-redux": "^7.0.2",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^1.1.5",
+    "react-scripts": "^2.1.8",
     "react-spring": "^8.0.19",
     "react-tag-autocomplete": "^5.10.0",
-    "redux": "^3.7.2",
+    "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "wnumb": "^1.1.0"
   },
@@ -27,5 +28,10 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000"
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

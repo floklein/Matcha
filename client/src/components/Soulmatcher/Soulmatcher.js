@@ -8,7 +8,7 @@ import axios from 'axios';
 
 import Card from "./Card";
 
-import {likeUser} from "../../store/actions/profileActions";
+// import {likeUser} from "../../store/actions/profileActions";
 
 import './soulmatcher.css';
 import '../../css/nouislider.css';
@@ -159,7 +159,6 @@ class Soulmatcher extends Component {
   };
 
   render() {
-    console.log('JE SUIS SOULMATCHER ET JE RE-RENDS !!!');
     const {users} = this.props;
 
     return (
