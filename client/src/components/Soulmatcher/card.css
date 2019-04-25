@@ -17,8 +17,12 @@
     transform: scale(0.9);
 }
 
-.card:last-child, .card:nth-last-child(2) {
+.card:last-child, .card:nth-last-child(2):not(:first-child):not(:nth-child(2)) {
     box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.2);
+}
+
+.card:not(:last-child):not(:nth-last-child(2)) {
+    display: none;
 }
 
 .card:hover {
