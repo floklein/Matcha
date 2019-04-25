@@ -29,6 +29,7 @@ class Soulmatcher extends Component {
     popularityMax: 200,
     interests: [],
     suggestions: [],
+    first: 0
   };
 
   componentWillMount() {
@@ -136,6 +137,9 @@ class Soulmatcher extends Component {
     const card = document.querySelector('div.card:last-child');
     if (!card) return;
     card.style.transform = 'translateX(200vw)';
+      this.setState({
+          first:  this.state.first + 1
+      });
     setTimeout(() => {
       if (card && card.parentElement) {
         card.parentElement.removeChild(card)
@@ -146,6 +150,9 @@ class Soulmatcher extends Component {
   onDislike = () => {
     const card = document.querySelector('div.card:last-child');
     if (!card) return;
+      this.setState({
+          first:  this.state.first + 1
+      });
     card.style.transform = 'translateX(-200vw)';
     setTimeout(() => {
       if (card && card.parentElement) {
@@ -216,7 +223,7 @@ class Soulmatcher extends Component {
                   <p>Ça nous brise le cœur, mais aucun autre profil ne correspond à vos préférences et vos filtres.</p>
                 </div>
                 {(this.props.users && Array.isArray(this.props.users)) &&
-                  this.props.users.slice(0, 2).reverse().map((user, i) => (
+                  this.props.users.slice(this.state.first, this.state.first + 2).reverse().map((user, i) => (
                   <Card key={i} userId={user.id} distance={user.dist}/>
                   ))}
               </div>
