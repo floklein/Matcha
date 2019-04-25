@@ -259,7 +259,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                 sql_main_query += `i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual" `;
             else
                 sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual") `;
-            sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
+            sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax} AND u.id != ${req.user.id} ;`;
             connection.query(sql_main_query, (err, result) => {
                     if (err) throw err;
                     const tag_sql = "SELECT tag from interests " +

@@ -26,6 +26,7 @@ class Card extends Component {
   };
 
   componentDidMount() {
+      console.log('mount card');
     axios.get(`/api/profile/${this.props.userId}`)
       .then(res => {
         getAverageColor(res.data.profile_pic)

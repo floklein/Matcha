@@ -227,7 +227,7 @@ class Soulmatcher extends Component {
                   <p>Ça nous brise le cœur, mais aucun autre profil ne correspond à vos préférences et vos filtres.</p>
                 </div>
                 {(this.props.users && Array.isArray(this.props.users)) &&
-                  this.props.users.reverse().map((user, i) => (
+                  this.props.users.slice(0, 2).reverse().map((user, i) => (
                   <Card key={i} userId={user.id} distance={user.dist}/>
                   ))}
               </div>
