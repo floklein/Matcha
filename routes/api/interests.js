@@ -3,7 +3,6 @@ const router = express.Router();
 
 const mysql = require('mysql');
 const passport = require('passport');
-const uuid = require('uuid');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -25,12 +24,12 @@ router.get('/getAll', (req, res) => {
     const sql = "SELECT DISTINCT tag  from interests";
     connection.query(sql, (err, resp) => {
         if (err) throw err;
-        resp = resp.map((item) => {
+        resp = resp.map((item, i) => {
             return({
-                id: uuid.v4(),
+                id: i,
                 name: item.tag
             })
-        })
+        });
         res.json(resp);
     })
 });
