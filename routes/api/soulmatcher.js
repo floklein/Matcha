@@ -241,7 +241,6 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
     //Protect against empty or wrong values
     let res_err = {};
 
-
     let sort_function;
             //get sexuality infos from user
             const sql_user_info = "SELECT sexuality, gender FROM infos " +
@@ -252,9 +251,9 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
            let sql_main_query = "SELECT u.id, i.latitude, i.longitude, i.popularity " +
                 `FROM users u INNER JOIN infos i on i.user_id = u.id WHERE u.id != ${req.user.id} AND `;
             if (result[0].sexuality == "heterosexual")
-                sql_main_query += `(i.gender != "${result[0].gender}" AND i.sexuality != "homosexual)" `;
+                sql_main_query += `(i.gender != "${result[0].gender}" AND i.sexuality != "homosexual") `;
             else if (result[0].sexuality == "homosexual")
-                sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual)" `;
+                sql_main_query += `(i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") `;
             else
                 sql_main_query += `((i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual")) `;
             sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
