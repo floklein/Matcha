@@ -5,7 +5,7 @@ import {NavLink} from 'react-router-dom';
 import axios from "axios";
 import getAverageColor from "get-average-color";
 
-import {likeUser} from "../../store/actions/profileActions";
+import {likeUser, dislikeUser} from "../../store/actions/profileActions";
 
 import './card.css';
 
@@ -31,8 +31,6 @@ class Card extends Component {
   };
 
   componentDidMount() {
-    console.log('je fais une requete');
-
     axios.get(`/api/profile/${this.props.userId}`)
       .then(res => {
         getAverageColor(res.data.profile_pic)
@@ -58,11 +56,11 @@ class Card extends Component {
             });
           })
           .catch((err) => {
-            console.log(err);
+            console.log('GAC error: ' + err);
           });
       })
       .catch(err => {
-        console.log(err);
+        console.log('Axios error: ' + err);
       });
   }
 
@@ -111,7 +109,7 @@ class Card extends Component {
     const div = document.querySelector('.card.u' + this.props.userId);
     div.style.transition = 'box-shadow 0.4s, transform 1s, background-color 1s';
     if (this.dx < -150) {
-      //TODO: Dislike the user
+      this.props.dislikeUser(this.state.id);
       div.style.transform = 'translateX(-200vw)';
       setTimeout(() => {
         if (div && div.parentElement) {
@@ -119,7 +117,6 @@ class Card extends Component {
         }
       }, 1000);
     } else if (this.dx > 150) {
-      //TODO: Like the user
       this.props.likeUser(this.state.id);
       div.style.transform = 'translateX(200vw)';
       setTimeout(() => {
@@ -220,4 +217,4 @@ Card.propTypes = {
   likeUser: PropTypes.func.isRequired
 };
 
-export default connect(null, {likeUser})(Card);
+export default connect(null, {likeUser, dislikeUser})(Card);

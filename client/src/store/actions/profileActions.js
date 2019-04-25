@@ -12,23 +12,8 @@ export const fetchProfile = (username) => dispatch => {
           dispatch({
             type: FETCH_PROFILE,
             payload: {
-              id: res.data.id,
-              username: res.data.username,
-              email: res.data.email,
-              firstName: res.data.firstName,
-              lastName: res.data.lastName,
-              age: res.data.age,
-              gender: res.data.gender,
-              sexuality: res.data.sexuality,
-              bio: res.data.bio,
-              profile_pic: res.data.profile_pic,
-              rgb: rgb,
-              photos: res.data.photos,
-              popularity: res.data.popularity,
-              latitude: res.data.latitude,
-              longitude: res.data.longitude,
-              interests: res.data.interests,
-              like: res.data.like
+              ...res.data,
+              rgb: rgb
             }
           });
         })
@@ -47,7 +32,6 @@ export const fetchProfile = (username) => dispatch => {
 export const likeUser = (userId) => dispatch => {
     axios.post('/api/like', {liked: userId})
         .then(res => {
-            console.log(res.data.like);
             dispatch({
                 type: LIKE_USER,
                 payload: res.data.like
@@ -56,4 +40,15 @@ export const likeUser = (userId) => dispatch => {
         .catch(err => {
             console.log(err);
         });
+};
+
+export const dislikeUser = (userId) => dispatch => {
+  axios.post('/api/dislike', {disliked: userId})
+    .then(res => {})
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
 };
