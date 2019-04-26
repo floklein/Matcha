@@ -185,8 +185,8 @@ async function  filters_past(id, result) {
                     if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
                         to_remove.push(i);
                     }
-                    to_remove.sort();
                     if (i == result.length - 1) {
+                      to_remove.sort((a, b) => {return (a - b)});
                         for (let j = to_remove.length - 1; j >= 0; j--) {
                             result.splice(to_remove[j], 1);
                         }
