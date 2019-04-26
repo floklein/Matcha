@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
-const passport = require('passport');
 
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
@@ -26,7 +25,7 @@ function get_pos(user_id, result) {
 }
 
 // FETCH PROFILE INFOS
-router.get('/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/:username', (req, res) => {
   let username = req.params.username;
   let response = {};
   let error = false;

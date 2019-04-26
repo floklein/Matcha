@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
-const passport = require('passport');
+const jwt_check = require('../../utils/jwt_check');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -36,8 +36,14 @@ router.get('/getAll', (req, res) => {
 
 
 //Create a new interest
-router.post('/new', passport.authenticate('jwt', { session: false}), (req, res) => {
-   let response = {
+router.post('/new', (req, res) => {
+
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+    let response = {
        tag: req.body.tag
    };
    if (typeof response.tag == "undefined" || response.tag == "") {
@@ -48,7 +54,7 @@ router.post('/new', passport.authenticate('jwt', { session: false}), (req, res) 
    }
    else {
        sql = "INSERT INTO interests(user_id, tag)" +
-           `VALUES(${req.user.id}, "${response.tag}")`;
+           `VALUES(${user.id}, "${response.tag}")`;
        connection.query(sql, (err, result) => {
            if (err) throw err;
            res.end();

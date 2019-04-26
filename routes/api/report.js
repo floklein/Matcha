@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
-const passport = require('passport');
+const jwt_check = require('../../utils/jwt_check');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -20,10 +20,16 @@ connection.connect(function(err) {
 
 
 
-router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
+router.post('/', (req, res) => {
+
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
     let infos = {
         reported: req.body.reported
-    }
+    };
 
     let response = {};
 
@@ -36,7 +42,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
     }
     else {
         //Check if 2 users are the same
-        if (req.user.id === infos.reported) {
+        if (user.id === infos.reported) {
             response = {
                 ...response,
                 reported: "L'utilisateur ne peut se bloquer lui-même"
@@ -48,7 +54,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
             sql = `SELECT id from users WHERE id = ${infos.reported}`;
             connection.query(sql, (err, result) => {
                 if (result && result.length == 0) {
-                    if (req.user.id === infos.reported) {
+                    if (user.id === infos.reported) {
                         response = {
                             ...response,
                             reported: "Utilisateur bloqué non trouvé"
@@ -58,12 +64,12 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                 }
                 else {
                     //Check if already liked
-                    sql = `SELECT * FROM reports WHERE reporter_id = ${req.user.id} AND reported_id = ${infos.reported}`;
+                    sql = `SELECT * FROM reports WHERE reporter_id = ${user.id} AND reported_id = ${infos.reported}`;
                     connection.query(sql, (err, result) => {
                         if (result && result.length != 0) { //If already reported, do nothing
                         }
                         else {  //Else, report
-                            sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${req.user.id}, ${infos.reported})`;
+                            sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${user.id}, ${infos.reported})`;
                             connection.query(sql, (err, result) => {
                                 res.end("");
                             })

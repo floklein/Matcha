@@ -5,7 +5,7 @@ const pw_hash = require('password-hash');
 const mysql = require('mysql');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
+const jwt_check = require('../../utils/jwt_check');
 
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
@@ -257,7 +257,7 @@ router.post('/login', (req, res) => {
         jwt.sign(payload, 'Mortparequipe', { expiresIn: 3600 }, (err, token) => {
           res.json({
               success: true,
-              token: 'Bearer ' + token
+              token
           })
         });
 
