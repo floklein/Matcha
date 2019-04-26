@@ -166,7 +166,7 @@ class Soulmatcher extends Component {
 
   removeOneUser = (i) => {
     let newUsersArr = this.state.users;
-    newUsersArr.splice(i, 1);
+    newUsersArr.splice(0, 1);
     this.setState({
       users: newUsersArr
     });
@@ -176,7 +176,7 @@ class Soulmatcher extends Component {
     const {users} = this.state;
     console.log('========');
     console.log(this.state.users);
-    console.log(users.slice().reverse());
+    console.log(users.slice(0, 3).reverse());
 
     return (
       <React.Fragment>
