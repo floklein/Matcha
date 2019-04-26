@@ -124,7 +124,7 @@ class Card extends Component {
       case 'female':
         return 'Femme';
       case 'other':
-        return 'Non bianire';
+        return 'Non binaire';
       default:
         return '...';
     }

@@ -52,7 +52,7 @@ function fill_db(data) {
           profilePic
         })
           .then(response2 => {
-            console.log('ID:' + id);
+            console.log('ID:' + id + ' user created.');
 
             let sql = "INSERT INTO photos(user_id, pic1, pic2, pic3, pic4, pic5)" +
               `VALUES(${id}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
@@ -83,15 +83,15 @@ connection.connect((err) => {
       for (let i = 0; i < 1000; i++) {
         promises.push(fill_db(res.data.results[i]));
       }
+      Promise.all(promises)
+        .then(() => {
+          connection.end();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
     .catch(err => {
       console.log(err);
     });
-
-  Promise.all(promises)
-    .then(() => {
-      // connection.end();
-    })
-    .catch((err) => {
-    })
 });

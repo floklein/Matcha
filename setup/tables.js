@@ -77,7 +77,7 @@ connection.connect((err) => {
     "tag VARCHAR(24));";
   connection.query(sql, (err, result) => {
     if (err) throw err;
-    console.log("Result: " + result);
+    console.log('Tables created: ' + result + '.');
   });
   connection.end();
 });
