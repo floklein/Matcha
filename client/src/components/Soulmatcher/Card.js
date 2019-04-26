@@ -98,17 +98,19 @@ class Card extends Component {
       this.props.dislikeUser(this.state.id);
       div.style.transform = 'translateX(-200vw)';
       setTimeout(() => {
-        if (div && div.parentElement) {
-          div.parentElement.removeChild(div);
-        }
+        // if (div && div.parentElement) {
+        //   div.parentElement.removeChild(div);
+        // }
+        this.props.removeOneUser(this.props.key);
       }, 1000);
     } else if (this.dx > 150) {
       this.props.likeUser(this.state.id);
       div.style.transform = 'translateX(200vw)';
       setTimeout(() => {
-        if (div && div.parentElement) {
-          div.parentElement.removeChild(div);
-        }
+        // if (div && div.parentElement) {
+        //   div.parentElement.removeChild(div);
+        // }
+        this.props.removeOneUser(this.props.key);
       }, 500);
     } else {
       div.style.transform = '';

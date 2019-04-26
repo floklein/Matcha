@@ -16,9 +16,7 @@ import {getUsers} from "../../store/actions/soulmatcherActions";
 
 class Soulmatcher extends Component {
   state = {
-    soulmatcher: {
-      users: []
-    },
+    users: [],
     sort: 'relevance',
     order: 'desc',
     ageMin: 18,
@@ -115,6 +113,14 @@ class Soulmatcher extends Component {
     this.props.getUsers(this.state);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.users && Array.isArray(nextProps.users)) {
+      this.setState({
+        users: nextProps.users
+      });
+    }
+  }
+
   handleChange = (input) => e => {
     this.setState({
       [input]: e.target.value
@@ -158,8 +164,19 @@ class Soulmatcher extends Component {
     this.props.getUsers(this.state);
   };
 
+  removeOneUser = (i) => {
+    let newUsersArr = this.state.users;
+    newUsersArr.splice(i, 1);
+    this.setState({
+      users: newUsersArr
+    });
+  };
+
   render() {
-    const {users} = this.props;
+    const {users} = this.state;
+    console.log('========');
+    console.log(this.state.users);
+    console.log(users.slice().reverse());
 
     return (
       <React.Fragment>
@@ -222,7 +239,7 @@ class Soulmatcher extends Component {
                 </div>
                 {(users && Array.isArray(users)) &&
                 users.slice().reverse().map((user, i) => (
-                  <Card key={user.id} userId={user.id} distance={user.dist}/>
+                  <Card key={i} userId={user.id} distance={user.dist} removeOneUser={this.removeOneUser}/>
                 ))}
               </div>
               <button className="like green" onClick={this.onLike}/>
