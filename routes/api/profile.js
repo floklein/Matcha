@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
+const jwt_check = require('../../utils/jwt_check');
 
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
@@ -26,6 +27,12 @@ function get_pos(user_id, result) {
 
 // FETCH PROFILE INFOS
 router.get('/:username', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+
   let username = req.params.username;
   let response = {};
   let error = false;
@@ -81,7 +88,7 @@ router.get('/:username', (req, res) => {
           const nb_user = result4.length;
           let quart = Math.floor(4 * pos / nb_user) + 1;
 
-          sql = `SELECT liker_id, liked_id FROM likes WHERE (liker_id=${req.user.id} AND liked_id=${result[0].id}) OR (liker_id=${result[0].id} AND liked_id=${req.user.id})`;
+          sql = `SELECT liker_id, liked_id FROM likes WHERE (liker_id=${user.id} AND liked_id=${result[0].id}) OR (liker_id=${result[0].id} AND liked_id=${user.id})`;
           connection.query(sql, (err, result5) => {
             if (err) throw err;
 
@@ -90,9 +97,9 @@ router.get('/:username', (req, res) => {
               like = 'both';
             } else if (result5.length === 0) {
               like = 'no';
-            } else if (result5[0].liker_id === req.user.id) {
+            } else if (result5[0].liker_id === user.id) {
               like = 'me';
-            } else if (result5[0].liked_id === req.user.id) {
+            } else if (result5[0].liked_id === user.id) {
               like = 'you'
             }
 
