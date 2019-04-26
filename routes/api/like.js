@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
-const passport = require('passport');
+const jwt_check = require('../../utils/jwt_check');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -17,7 +17,13 @@ connection.connect(function (err) {
   if (err) throw err;
 });
 
-router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/', (req, res) => {
+
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
   let response = {
     liked: req.body.liked
   };
@@ -32,7 +38,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   //Check if 2 users are the same
-  if (req.user.id === response.liked) {
+  if (user.id === response.liked) {
     errors = {
       ...errors,
       liked: "Vous ne pouvez pas vous liker"
@@ -51,16 +57,16 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
       return res.status(400).json(errors);
     }
 
-    sql = `SELECT * FROM likes WHERE liked_id = ${req.user.id} AND liker_id = ${response.liked}`;
+    sql = `SELECT * FROM likes WHERE liked_id = ${user.id} AND liker_id = ${response.liked}`;
     connection.query(sql, (err, result) => {
       if (err) throw err;
       const is_liked = (!!result.length);
 
       //Check if already liked
-      sql = `SELECT * FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
+      sql = `SELECT * FROM likes WHERE liker_id = ${user.id} AND liked_id = ${response.liked}`;
       connection.query(sql, (err, result) => {
         if (result && result.length !== 0) { //If already liked, unlike
-          sql = `DELETE FROM likes WHERE liker_id = ${req.user.id} AND liked_id = ${response.liked}`;
+          sql = `DELETE FROM likes WHERE liker_id = ${user.id} AND liked_id = ${response.liked}`;
           connection.query(sql, (err, result) => {
             sql = "UPDATE infos SET popularity = popularity - 5 " +
               `WHERE user_id = ${response.liked};`;
@@ -70,7 +76,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
             });
           });
         } else {  //Else, like
-          sql = `INSERT INTO likes(liker_id, liked_id) VALUES(${req.user.id}, ${response.liked})`;
+          sql = `INSERT INTO likes(liker_id, liked_id) VALUES(${user.id}, ${response.liked})`;
           connection.query(sql, (err, result) => {
             //Give 5 popularity points when liked
             sql = "UPDATE infos SET popularity = popularity + 5 " +

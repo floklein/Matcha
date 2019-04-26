@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-const passport = require('passport');
+const jwt_check = require('../../utils/jwt_check');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -16,7 +16,13 @@ connection.connect(function (err) {
   if (err) throw err;
 });
 
-router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/', (req, res) => {
+
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
   let request = {
     disliked: req.body.disliked
   };
@@ -31,7 +37,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   //Check if 2 users are the same
-  if (req.user.id === request.disliked) {
+  if (user.id === request.disliked) {
     errors = {
       ...errors,
       disliked: "Vous ne pouvez pas vous disliker vous-même"
@@ -52,13 +58,13 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
     if (err) throw err;
     //Check if already disliked
-    sql = `SELECT * FROM dislikes WHERE disliker_id = ${req.user.id} AND disliked_id = ${request.disliked}`;
+    sql = `SELECT * FROM dislikes WHERE disliker_id = ${user.id} AND disliked_id = ${request.disliked}`;
     connection.query(sql, (err, result) => {
       if (result && result.length !== 0) { //If already disliked, do nothing
         return res.json();
       }
 
-      sql = `INSERT INTO dislikes(disliker_id, disliked_id) VALUES(${req.user.id}, ${request.disliked})`;
+      sql = `INSERT INTO dislikes(disliker_id, disliked_id) VALUES(${user.id}, ${request.disliked})`;
       connection.query(sql, (err, result) => {
         if (err) throw err;
         return res.json();
