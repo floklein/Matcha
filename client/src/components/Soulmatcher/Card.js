@@ -50,6 +50,27 @@ class Card extends Component {
       });
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log('je suis l user ' + nextProps.userId);
+    axios.get(`/api/profile/${nextProps.userId}`)
+      .then(res => {
+        getAverageColor(res.data.profile_pic)
+          .then(rgb => {
+            this.setState({
+              ...res.data,
+              rgb: rgb,
+              distance: (Math.round(nextProps.distance / 100) / 10 + ' km').replace('.', ',')
+            });
+          })
+          .catch((err) => {
+            console.log('GAC error: ' + err);
+          });
+      })
+      .catch(err => {
+        console.log('Axios error: ' + err);
+      });
+  }
+
   timeout;
   dx;
   dy;
@@ -98,19 +119,13 @@ class Card extends Component {
       this.props.dislikeUser(this.state.id);
       div.style.transform = 'translateX(-200vw)';
       setTimeout(() => {
-        this.props.removeOneUser(this.props.key);
-        // if (div && div.parentElement) {
-        //   div.parentElement.removeChild(div);
-        // }
+        this.props.removeOneUser();
       }, 500);
     } else if (this.dx > 150) {
       this.props.likeUser(this.state.id);
       div.style.transform = 'translateX(200vw)';
       setTimeout(() => {
-        this.props.removeOneUser(this.props.key);
-        // if (div && div.parentElement) {
-        //   div.parentElement.removeChild(div);
-        // }
+        this.props.removeOneUser();
       }, 500);
     } else {
       div.style.transform = '';

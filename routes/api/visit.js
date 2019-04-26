@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
     if (typeof visited_id === 'undefined' || visited_id == 0) {
         response = {
             ...response,
-            profile: "L'id est requis."
+            profile: "L'ID de l'utilisateur est requis"
         };
         return res.status(400).json(response)
     }
@@ -44,7 +44,7 @@ router.get('/', (req, res) => {
         if (!res) {
             response = {
                 ...response,
-                id: "L'utilisateur n'existe pas."
+                id: "L'utilisateur n'existe pas"
             };
             return res.status(400).json(response)
         }

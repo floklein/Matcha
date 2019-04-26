@@ -11,12 +11,12 @@ let connection = mysql.createConnection({
     user: 'root',
     password: 'root',
     database: 'matcha'
-})
+});
 
 connection.connect(function(err) {
     if (err) throw err
     console.log('You are now connected...')
-})
+});
 
 
 
@@ -33,10 +33,10 @@ router.post('/', (req, res) => {
 
     let response = {};
 
-    if (typeof infos.reported == 'undefined' || infos.reported == "") {
+    if (typeof infos.reported === 'undefined' || infos.reported === "") {
         response = {
             ...response,
-            reported: "Le compte bloqué est requis"
+            reported: "Compte à bloquer requis"
         };
         return res.status(400).json(response);
     }
@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
         if (user.id === infos.reported) {
             response = {
                 ...response,
-                reported: "L'utilisateur ne peut se bloquer lui-même"
+                reported: "Vous ne pouvez pas vous bloquer vous-même"
             };
             return res.status(400).json(response);
         }
@@ -57,7 +57,7 @@ router.post('/', (req, res) => {
                     if (user.id === infos.reported) {
                         response = {
                             ...response,
-                            reported: "Utilisateur bloqué non trouvé"
+                            reported: "Utilisateur à bloquer non trouvé"
                         };
                         return res.status(400).json(response);
                     }
@@ -66,12 +66,12 @@ router.post('/', (req, res) => {
                     //Check if already liked
                     sql = `SELECT * FROM reports WHERE reporter_id = ${user.id} AND reported_id = ${infos.reported}`;
                     connection.query(sql, (err, result) => {
-                        if (result && result.length != 0) { //If already reported, do nothing
+                        if (result && result.length !== 0) { //If already reported, do nothing
                         }
                         else {  //Else, report
                             sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${user.id}, ${infos.reported})`;
                             connection.query(sql, (err, result) => {
-                                res.end("");
+                                res.end();
                             })
                         }
                     })
@@ -82,4 +82,3 @@ router.post('/', (req, res) => {
 });
 
 module.exports = router;
-

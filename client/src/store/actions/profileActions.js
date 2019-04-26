@@ -35,10 +35,13 @@ export const likeUser = (userId) => dispatch => {
             dispatch({
                 type: LIKE_USER,
                 payload: res.data.like
-            })
+            });
         })
         .catch(err => {
-            console.log(err);
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+          });
         });
 };
 

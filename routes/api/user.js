@@ -212,14 +212,14 @@ router.post('/login', (req, res) => {
     if (typeof info.username == 'undefined' || info.username == "") {
         response = {
             ...response,
-            username: "le login/l'email est requis"
+            username: "Login ou adresse email requis"
         };
         error = true;
     }
     if (typeof info.password == 'undefined' || info.password == "") {
         response = {
             ...response,
-            password: "le mot de passe est requis"
+            password: "Mot de passe est requis"
         };
         error = true;
     }
@@ -254,7 +254,7 @@ router.post('/login', (req, res) => {
           username: result[0].username
         };
 
-        jwt.sign(payload, 'Mortparequipe', { expiresIn: 3600 }, (err, token) => {
+        jwt.sign(payload, 'Mortparequipe', { expiresIn: 21600 }, (err, token) => {
           res.json({
               success: true,
               token
