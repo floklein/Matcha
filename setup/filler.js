@@ -19,11 +19,11 @@ function fill_db(data) {
     const password = "Qwerty123";
     const confirm = password;
     const bio = faker.lorem.sentences();
-    const gender = Math.random() > 0.8 ? 'other' : data.gender;
+    const gender = Math.random() > 0.9 ? 'other' : data.gender;
     const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
     const age = Math.floor(Math.random() * 40) + 18;
-    const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 5;
-    const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 8;
+    const longitude = 2.2137 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 3;
+    const latitude = 46.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 5;
     const popularity = Math.random() * 100;
     const profilePic = data.picture.large;
     const pic2 = faker.image.avatar();

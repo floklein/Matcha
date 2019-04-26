@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
-const passport = require('passport');
+const jwt_check = require('../../utils/jwt_check');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -20,7 +20,13 @@ connection.connect(function(err) {
 
 
 
-router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
+router.post('/', (req, res) => {
+
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
     let infos = {
         blocked: req.body.blocked
     }
@@ -36,7 +42,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
     }
     else {
         //Check if 2 users are the same
-        if (req.user.id === infos.blocked) {
+        if (user.id === infos.blocked) {
             response = {
                 ...response,
                 blocked: "L'utilisateur ne peut se bloquer lui-même"
@@ -48,7 +54,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
             sql = `SELECT id from users WHERE id = ${infos.blocked}`;
             connection.query(sql, (err, result) => {
                 if (result && result.length == 0) {
-                    if (req.user.id === infos.blocked) {
+                    if (user.id === infos.blocked) {
                         response = {
                             ...response,
                             blocked: "Utilisateur bloqué non trouvé"
@@ -58,17 +64,17 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                 }
                 else {
                     //Check if already liked
-                    sql = `SELECT * FROM blocks WHERE blocker_id = ${req.user.id} AND blocked_id = ${infos.blocked}`;
+                    sql = `SELECT * FROM blocks WHERE blocker_id = ${user.id} AND blocked_id = ${infos.blocked}`;
                     connection.query(sql, (err, result) => {
                         if (result && result.length != 0) { //If already liked, unlike
                             //Check if already liked
-                            sql = `DELETE FROM blocks WHERE blocker_id = ${req.user.id} AND blocked_id = ${infos.blocked}`;
+                            sql = `DELETE FROM blocks WHERE blocker_id = ${user.id} AND blocked_id = ${infos.blocked}`;
                             connection.query(sql, (err, result) => {
                                 res.end("");
                             })
                         }
                         else {  //Else, like
-                            sql = `INSERT INTO blocks(blocker_id, blocked_id) VALUES(${req.user.id}, ${infos.blocked})`;
+                            sql = `INSERT INTO blocks(blocker_id, blocked_id) VALUES(${user.id}, ${infos.blocked})`;
                             connection.query(sql, (err, result) => {
                                 res.end("");
                             })

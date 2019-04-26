@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
-const passport = require('passport');
 const geolib = require('geolib');
+const jwt_check = require('../../utils/jwt_check');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -12,12 +12,12 @@ let connection = mysql.createConnection({
     user: 'root',
     password: 'root',
     database: 'matcha'
-})
+});
 
 connection.connect(function(err) {
     if (err) throw err
     console.log('You are now connected...')
-})
+});
 
 function getRelevanceScore(id, infos, tag_res, pos_res) {
     return new Promise(resolve => {
@@ -227,7 +227,13 @@ async function filters_interests(tags_array, result) {
     }))
 }
 
-router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
+router.post('/', (req, res) => {
+
+      const user = jwt_check.getUsersInfos(req.headers.authorization);
+      if (user.id === -1) {
+        return res.status(401).json({error: 'unauthorized access'});
+      }
+
     let request = {
         sort: req.body.sort,
         order: req.body.order,
@@ -239,18 +245,16 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
         distanceMax: req.body.distanceMax,
         interests: req.body.interests
     };
-    //Protect against empty or wrong values
-    let res_err = {};
 
     let sort_function;
             //get sexuality infos from user
             const sql_user_info = "SELECT sexuality, gender FROM infos " +
-                `WHERE user_id = ${req.user.id}`;
+                `WHERE user_id = ${user.id}`;
             connection.query(sql_user_info, (err, result) => {
                 if (err) throw err;
                 //if user is found, chose next query depending on sexuality and gender;
            let sql_main_query = "SELECT u.id, i.latitude, i.longitude, i.popularity " +
-                `FROM users u INNER JOIN infos i on i.user_id = u.id WHERE u.id != ${req.user.id} AND `;
+                `FROM users u INNER JOIN infos i on i.user_id = u.id WHERE u.id != ${user.id} AND `;
             if (result[0].sexuality == "heterosexual")
                 sql_main_query += `(i.gender != "${result[0].gender}" AND i.sexuality != "homosexual") `;
             else if (result[0].sexuality == "homosexual")
@@ -261,18 +265,18 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
             connection.query(sql_main_query, (err, result) => {
                     if (err) throw err;
                     const tag_sql = "SELECT tag from interests " +
-                        `WHERE user_id = ${req.user.id}`;
+                        `WHERE user_id = ${user.id}`;
                     connection.query(tag_sql, (err, tag_res) => {
                         let sql_pos = "SELECT latitude, longitude FROM infos " +
-                            `WHERE user_id = ${req.user.id}`;
+                            `WHERE user_id = ${user.id}`;
                         connection.query(sql_pos, (err, pos_res) => {
                             //Filter by distance
                             result = result.filter((user) => {
-                                const score = syncDistanceScore(req.user.id, user, tag_res, pos_res);
+                                const score = syncDistanceScore(user.id, user, tag_res, pos_res);
                                 return (score / 1000 >= request.distanceMin && score / 1000 <= request.distanceMax);
                             });
 
-                            filters_past(req.user.id, result)
+                            filters_past(user.id, result)
                                 .then ((result) => {
                                     filters_interests(request.interests, result)
                                         .then((result) => {
@@ -298,7 +302,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
                                                 }
                                                 let matchScore;
                                                 if (result[i])
-                                                    matchScore = sort_function(req.user.id, result[i], tag_res, pos_res)
+                                                    matchScore = sort_function(user.id, result[i], tag_res, pos_res)
                                                         .then((score) => {
                                                                 result[i] = {
                                                                     ...result[i],
