@@ -5,6 +5,7 @@ const fs = require('fs');
 const multer = require('multer');
 const upload = multer({dest: __dirname + '/uploads/pics'});
 const uuid = require('uuid');
+const jwt_check = require('../../utils/jwt_check');
 
 router.post('/', upload.single('picture'), (req, res) =>{
     if(req.file) {
