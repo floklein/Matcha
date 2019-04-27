@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
+import PropTypes from 'prop-types';
 import classnames from "classnames";
 import noUiSlider from "nouislider";
 import ReactTags from "react-tag-autocomplete";
 import wNumb from "wnumb";
+
+import {searchUsers} from "../../store/actions/searchActions";
 
 import Preview from './Preview';
 
@@ -92,6 +96,7 @@ class Search extends Component {
         popularityMax: parseInt(values[1], 10)
       });
     });
+    this.props.searchUsers(this.state);
   }
 
   handleChange = (input) => e => {
@@ -202,4 +207,12 @@ class Search extends Component {
   }
 }
 
-export default Search;
+Search.propTypes = {
+  searchUsers: PropTypes.func.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  users: state.search.users
+});
+
+export default connect(mapStateToProps, {searchUsers})(Search);

@@ -76,11 +76,11 @@
 }
 
 .preview__button {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
     position: absolute;
     bottom: 0;
-    margin: 0 0 -1.25rem 0;
+    margin: 0 0 -1.25rem 0 !important;
     left: 50%;
     transform: translate(-50%);
     background: url("../../assets/img/sm-like.svg") center no-repeat, #f75799 linear-gradient(90deg, #fd6687, rgba(0, 0, 0, 0)) !important;
@@ -95,6 +95,19 @@
 
 .preview__button:active {
     background-color: #c5516d !important;
+}
+
+.preview__button.dislike {
+    background: url("../../assets/img/sm-dislike.svg") center no-repeat, #d043ca linear-gradient(to right, #8579e0, rgba(0, 0, 0, 0)) !important;
+    background-size: 1rem, cover !important;
+}
+
+.preview__button.dislike:hover {
+    background-color: #8579e0 !important;
+}
+
+.preview__button.dislike:active {
+    background-color: #5858ae !important;
 }
 
 .preview:hover .preview__button {
