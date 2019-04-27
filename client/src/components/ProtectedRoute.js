@@ -11,7 +11,6 @@ class ProtectedRoute extends Component {
         if (this.props.auth.isAuthenticated) {
           return <this.props.component {...this.props}/>
         } else {
-          this.props.history.push('/');
           return <Redirect to={{
             pathname: '/',
             state: {
