@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import axios from 'axios';
 import getAverageColor from 'get-average-color';
+import {NavLink} from "react-router-dom";
 
 import {likeUser} from "../../store/actions/profileActions";
 
@@ -105,9 +106,11 @@ class Preview extends Component {
 
     return (
       <div className="preview" style={bg}>
-        <div className="preview__profile-pic" style={{backgroundImage: `url("${profile_pic}")`}}/>
-        <div className="preview__name">{firstName + ' ' + lastName}</div>
-        <div className="preview__username">{username}</div>
+        <NavLink to={`/profile/${username}`}>
+          <div className="preview__profile-pic" style={{backgroundImage: `url("${profile_pic}")`}}/>
+          <div className="preview__name">{firstName + ' ' + lastName}</div>
+          <div className="preview__username">{username}</div>
+        </NavLink>
         <div className="preview__infos">
           <div>
             <div>ÂGE</div>
@@ -126,7 +129,7 @@ class Preview extends Component {
             <div>{sexualite}</div>
           </div>
         </div>
-        <button className={classnames('preview__button pink',{
+        <button className={classnames('preview__button pink', {
           'dislike': like === 'me' || like === 'both'
         })} onClick={this.onLikeUser}/>
       </div>

@@ -13,7 +13,6 @@ import Preview from './Preview';
 
 import './search.css';
 import '../../css/nouislider.css';
-import Card from "../Soulmatcher/Card";
 
 class Search extends Component {
   state = {
@@ -27,9 +26,15 @@ class Search extends Component {
     popularityMin: 10,
     popularityMax: 200,
     from: 0,
-    to: 10,
+    to: 20,
     interests: [],
     suggestions: []
+  };
+
+  onScroll = () => {
+    if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+      this.fetchUsers();
+    }
   };
 
   componentWillMount() {
@@ -39,6 +44,11 @@ class Search extends Component {
           suggestions: res.data,
         });
       });
+    window.addEventListener('scroll', this.onScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll);
   }
 
   componentDidMount() {
@@ -89,9 +99,9 @@ class Search extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.users && Array.isArray(nextProps.users)) {
+    if (nextProps.users && Array.isArray(nextProps.users) && nextProps.users !== this.props.users) {
       this.setState({
-        users: nextProps.users
+        users: this.state.users.concat(nextProps.users)
       });
     }
   }
@@ -112,6 +122,26 @@ class Search extends Component {
     const interests = [].concat(this.state.interests, interest);
     this.setState({interests});
   }
+
+  fetchUsers = () => {
+    this.setState({
+      from: this.state.to,
+      to: this.state.to + 4
+    });
+    console.log(this.state.from);
+    console.log(this.state.to);
+    console.log('======');
+    this.props.searchUsers(this.state);
+  };
+
+  newUsers = () => {
+    this.setState({
+      from: 0,
+      to: 20,
+      users: []
+    });
+    this.props.searchUsers(this.state);
+  };
 
   render() {
     const {users} = this.state;
@@ -162,16 +192,15 @@ class Search extends Component {
                 </div>
                 <button className={classnames('sidebar__button blue', {
                   'loading': this.props.loading
-                })} onClick={() => {
-                }}>Modifier
+                })} onClick={this.newUsers}>Modifier
                 </button>
               </div>
             </div>
             <div className="main-panel">
-              {(users && Array.isArray(users)) &&
-              users.slice().reverse().map((user, i) => (
+              {(users && Array.isArray(users)) && users.map((user, i) => (
                 <Preview key={i} userId={user.id} position={'Paris'}/>
               ))}
+              {(this.props.loading && (<div className="loading-more"/>))}
             </div>
           </div>
         </div>
@@ -185,7 +214,8 @@ Search.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  users: state.search.users
+  users: state.search.users,
+  loading: state.search.loading
 });
 
 export default connect(mapStateToProps, {searchUsers})(Search);
