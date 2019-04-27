@@ -5,14 +5,15 @@ import noUiSlider from 'nouislider';
 import wNumb from 'wnumb';
 import ReactTags from 'react-tag-autocomplete';
 import axios from 'axios';
+import classnames from 'classnames';
 
 import Card from "./Card";
 
-// import {likeUser} from "../../store/actions/profileActions";
+import {getUsers} from "../../store/actions/soulmatcherActions";
+import {likeUser, dislikeUser} from "../../store/actions/profileActions";
 
 import './soulmatcher.css';
 import '../../css/nouislider.css';
-import {getUsers} from "../../store/actions/soulmatcherActions";
 
 class Soulmatcher extends Component {
   state = {
@@ -57,7 +58,6 @@ class Soulmatcher extends Component {
         density: 6
       }
     });
-
     noUiSlider.create(sliderDistance, {
       start: [0, 50],
       connect: true,
@@ -75,7 +75,6 @@ class Soulmatcher extends Component {
         density: 4
       }
     });
-
     noUiSlider.create(sliderPopularity, {
       start: [10, 200],
       connect: true,
@@ -90,7 +89,6 @@ class Soulmatcher extends Component {
         density: 5
       }
     });
-
     sliderAge.noUiSlider.on('update', (values, handle) => {
       this.setState({
         ageMin: parseInt(values[0], 10),
@@ -109,7 +107,6 @@ class Soulmatcher extends Component {
         popularityMax: parseInt(values[1], 10)
       });
     });
-
     this.props.getUsers(this.state);
   }
 
@@ -139,32 +136,34 @@ class Soulmatcher extends Component {
   }
 
   onLike = () => {
+    if (this.state.users[0]) {
+      this.props.likeUser(this.state.users[0].id);
+    }
     const card = document.querySelector('div.card:last-child');
     if (!card) return;
     card.style.transform = 'translateX(200vw)';
     setTimeout(() => {
-      if (card && card.parentElement) {
-        card.parentElement.removeChild(card)
-      }
-    }, 1000);
+      this.removeOneUser();
+    }, 500);
   };
 
   onDislike = () => {
+    if (this.state.users[0]) {
+      this.props.dislikeUser(this.state.users[0].id);
+    }
     const card = document.querySelector('div.card:last-child');
     if (!card) return;
     card.style.transform = 'translateX(-200vw)';
     setTimeout(() => {
-      if (card && card.parentElement) {
-        card.parentElement.removeChild(card)
-      }
-    }, 1000);
+      this.removeOneUser();
+    }, 500);
   };
 
   onGetUsers = () => {
     this.props.getUsers(this.state);
   };
 
-  removeOneUser = (i) => {
+  removeOneUser = () => {
     let newUsersArr = this.state.users;
     newUsersArr.splice(0, 1);
     this.setState({
@@ -174,9 +173,6 @@ class Soulmatcher extends Component {
 
   render() {
     const {users} = this.state;
-    console.log('========');
-    console.log(this.state.users);
-    console.log(users.slice(0, 3).reverse());
 
     return (
       <React.Fragment>
@@ -222,11 +218,15 @@ class Soulmatcher extends Component {
                 <div>
                   <div className="sidebar__subtitle">Intérêts</div>
                   <ReactTags tags={this.state.interests} suggestions={this.state.suggestions}
+                             minQueryLength={1}
                              handleDelete={this.handleDelete.bind(this)}
                              handleAddition={this.handleAdd.bind(this)}
                              placeholder="ex: Paris, lecture, Kubrick"/>
                 </div>
-                <button className="sidebar__button blue" onClick={this.onGetUsers}>Modifier</button>
+                <button className={classnames('sidebar__button blue', {
+                  'loading': this.props.loading
+                })} onClick={this.onGetUsers}>Modifier
+                </button>
               </div>
             </div>
             <div className="main-panel">
@@ -252,11 +252,14 @@ class Soulmatcher extends Component {
 }
 
 Soulmatcher.propTypes = {
-  getUsers: PropTypes.func.isRequired
+  getUsers: PropTypes.func.isRequired,
+  likeUser: PropTypes.func.isRequired,
+  dislikeUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  users: state.soulmatcher.users
+  users: state.soulmatcher.users,
+  loading: state.soulmatcher.loading
 });
 
-export default connect(mapStateToProps, {getUsers})(Soulmatcher);
+export default connect(mapStateToProps, {getUsers, likeUser, dislikeUser})(Soulmatcher);

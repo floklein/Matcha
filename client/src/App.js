@@ -3,10 +3,10 @@ import {Provider} from 'react-redux';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
-import {logoutUser, setCurrentUser} from "./store/actions/authActions";
-import setAuthToken from './utils/setAuthToken';
 
 import store from './store';
+
+import ProtectedRoute from './components/ProtectedRoute';
 import Root from './components/Root';
 import Home from './components/Home';
 import Error from './components/Error';
@@ -14,6 +14,9 @@ import Profile from './components/UserProfile/Profile';
 import MyProfile from './components/UserProfile/MyProfile';
 import EditProfile from './components/UserProfile/EditProfile';
 import Soulmatcher from './components/Soulmatcher/Soulmatcher';
+
+import {logoutUser, setCurrentUser} from "./store/actions/authActions";
+import setAuthToken from './utils/setAuthToken';
 
 import './css/normalize.css';
 import './css/global.css';
@@ -40,10 +43,10 @@ class App extends Component {
           <Root>
             <Switch>
               <Route path={'/'} exact component={Home}/>
-              <Route path={'/soulmatcher'} exact component={Soulmatcher}/>
+              <ProtectedRoute path={'/soulmatcher'} exact component={Soulmatcher}/>
               <Route path={'/profile/:username'} exact component={Profile}/>
-              <Route path={'/account/profile'} exact component={MyProfile}/>
-              <Route path={'/account/profile/edit'} exact component={EditProfile}/>
+              <ProtectedRoute path={'/account/profile'} exact component={MyProfile}/>
+              <ProtectedRoute path={'/account/profile/edit'} exact component={EditProfile}/>
               <Route component={Error}/>
             </Switch>
           </Root>
