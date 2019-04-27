@@ -253,7 +253,7 @@ router.post('/', (req, res) => {
   };
 
   if (typeof req.body.sort == 'undefined' || (req.body.sort !== 'relevance' && req.body.sort !== 'age' && req.body.sort !== 'distance' && req.body.sort !== 'popularity' && req.body.sort !== 'interests')|| typeof req.body.order == 'undefined' || (req.body.order !== 'asc' && req.body.order !== 'desc') || typeof req.body.ageMin == 'undefined' || isNaN(req.body.ageMin) || req.body.ageMin === '' || typeof req.body.ageMax == 'undefined' || isNaN(req.body.ageMax) || req.body.ageMax === '' || req.body.ageMin > req.body.ageMax || typeof req.body.popularityMin == 'undefined' || isNaN(req.body.popularityMin) || req.body.popularityMin === '' || typeof req.body.popularityMax == 'undefined' || isNaN(req.body.popularityMax) || req.body.popularityMax === ''|| req.body.popularityMax < req.body.popularityMin || typeof req.body.distanceMin == 'undefined' || isNaN(req.body.distanceMin)|| req.body.distanceMin === '' || typeof req.body.distanceMax == 'undefined' || isNaN(req.body.distanceMax) || req.body.distanceMax === '' || req.body.distanceMax < req.body.distanceMin || typeof req.body.interests == 'undefined' || !Array.isArray(req.body.interests)) {
-    res.status(400).json({
+    return res.status(400).json({
       request: "Erreur dans les champs de recherche"
     })
   }
@@ -262,7 +262,7 @@ router.post('/', (req, res) => {
   connection.query(sql, (err, first_result) => {
     if (err) throw err;
     if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === null || first_result[0].bio === null) {
-      res.status(400).json({
+      return res.status(400).json({
         user: "Vous devez compléter votre profil étendu"
       })
     }
