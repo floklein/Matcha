@@ -372,7 +372,6 @@ router.post('/infos/:id', (req, res) => {
   })
 });
 
-
 //TO DO : Change username in JWT when upi
 router.post('/update', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
