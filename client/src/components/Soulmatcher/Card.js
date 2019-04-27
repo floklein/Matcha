@@ -51,7 +51,6 @@ class Card extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('je suis l user ' + nextProps.userId);
     axios.get(`/api/profile/${nextProps.userId}`)
       .then(res => {
         getAverageColor(res.data.profile_pic)

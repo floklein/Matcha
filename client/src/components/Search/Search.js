@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import classnames from "classnames";
-import noUiSlider from "nouislider";
-import ReactTags from "react-tag-autocomplete";
-import wNumb from "wnumb";
+import classnames from 'classnames';
+import noUiSlider from 'nouislider';
+import ReactTags from 'react-tag-autocomplete';
+import wNumb from 'wnumb';
+import axios from 'axios';
 
 import {searchUsers} from "../../store/actions/searchActions";
 
@@ -12,25 +13,36 @@ import Preview from './Preview';
 
 import './search.css';
 import '../../css/nouislider.css';
+import Card from "../Soulmatcher/Card";
 
 class Search extends Component {
   state = {
     users: [],
-    sort: 'relevance',
-    order: 'desc',
+    sort: 'distance',
+    order: 'asc',
     ageMin: 18,
     ageMax: 50,
-    distanceMin: 0,
-    distanceMax: 50,
+    latitude: 1,
+    longitude: 50,
     popularityMin: 10,
     popularityMax: 200,
+    from: 0,
+    to: 10,
     interests: [],
     suggestions: []
   };
 
+  componentWillMount() {
+    axios.get('/api/interests/getAll')
+      .then((res) => {
+        this.setState({
+          suggestions: res.data,
+        });
+      });
+  }
+
   componentDidMount() {
     let sliderAge = document.getElementById('age');
-    let sliderDistance = document.getElementById('distance');
     let sliderPopularity = document.getElementById('popularity');
 
     noUiSlider.create(sliderAge, {
@@ -45,23 +57,6 @@ class Search extends Component {
         mode: 'steps',
         stepped: true,
         density: 6
-      }
-    });
-    noUiSlider.create(sliderDistance, {
-      start: [0, 50],
-      connect: true,
-      range: {
-        'min': [0],
-        '25%': [10, 1],
-        '50%': [50, 5],
-        '75%': [100, 50],
-        'max': [500]
-      },
-      tooltips: [wNumb({decimals: 1}), wNumb({decimals: 1})],
-      pips: {
-        mode: 'range',
-        stepped: true,
-        density: 4
       }
     });
     noUiSlider.create(sliderPopularity, {
@@ -84,12 +79,6 @@ class Search extends Component {
         ageMax: parseInt(values[1], 10)
       });
     });
-    sliderDistance.noUiSlider.on('update', (values, handle) => {
-      this.setState({
-        distanceMin: parseFloat(values[0]),
-        distanceMax: parseFloat(values[1])
-      });
-    });
     sliderPopularity.noUiSlider.on('update', (values, handle) => {
       this.setState({
         popularityMin: parseInt(values[0], 10),
@@ -97,6 +86,14 @@ class Search extends Component {
       });
     });
     this.props.searchUsers(this.state);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.users && Array.isArray(nextProps.users)) {
+      this.setState({
+        users: nextProps.users
+      });
+    }
   }
 
   handleChange = (input) => e => {
@@ -117,6 +114,8 @@ class Search extends Component {
   }
 
   render() {
+    const {users} = this.state;
+
     return (
       <React.Fragment>
         <div className="centered this">
@@ -127,16 +126,15 @@ class Search extends Component {
                   <div className="sidebar__title">Trier par</div>
                 </div>
                 <select name="sort" title="sort" required onChange={this.handleChange('sort')}
-                        defaultValue="pertinence">
+                        defaultValue="distance">
                   <option value="" disabled>Trier par...</option>
-                  <option value="relevance">Pertinence</option>
                   <option value="age">Âge</option>
                   <option value="distance">Distance</option>
                   <option value="popularity">Popularité</option>
                   <option value="interests">Intérêts</option>
                 </select>
                 <select name="order" title="order" required onChange={this.handleChange('order')}
-                        defaultValue="desc">
+                        defaultValue="asc">
                   <option value="" disabled>En ordre...</option>
                   <option value="asc">Croissant</option>
                   <option value="desc">Décroissant</option>
@@ -149,10 +147,6 @@ class Search extends Component {
                 <div>
                   <div className="sidebar__subtitle">Âge</div>
                   <div id="age" className="noUiSlider"/>
-                </div>
-                <div>
-                  <div className="sidebar__subtitle">Distance</div>
-                  <div id="distance" className="noUiSlider"/>
                 </div>
                 <div>
                   <div className="sidebar__subtitle">Popularité</div>
@@ -174,31 +168,10 @@ class Search extends Component {
               </div>
             </div>
             <div className="main-panel">
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
-              <Preview/>
+              {(users && Array.isArray(users)) &&
+              users.slice().reverse().map((user, i) => (
+                <Preview key={i} userId={user.id} position={'Paris'}/>
+              ))}
             </div>
           </div>
         </div>

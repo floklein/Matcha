@@ -32,7 +32,7 @@
     font-size: 1rem;
     font-weight: 700;
     text-align: center;
-    /*color: white;*/
+    color: white;
     white-space: nowrap;
     overflow-x: auto;
 }
@@ -40,7 +40,7 @@
 .preview__username {
     font-size: 0.75rem;
     text-align: center;
-    /*color: white;*/
+    color: white;
     opacity: 0.5;
     overflow-x: auto;
 }
@@ -64,7 +64,7 @@
     font-family: 'Poppins', sans-serif;
     font-size: 0.6rem;
     font-weight: 700;
-    opacity: 0.2;
+    opacity: 0.35;
 }
 
 .preview__infos > div > div:last-child {
