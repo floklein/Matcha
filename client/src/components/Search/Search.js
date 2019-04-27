@@ -128,9 +128,6 @@ class Search extends Component {
       from: this.state.to,
       to: this.state.to + 4
     });
-    console.log(this.state.from);
-    console.log(this.state.to);
-    console.log('======');
     this.props.searchUsers(this.state);
   };
 

@@ -238,8 +238,8 @@ class Soulmatcher extends Component {
                     vos filtres.</p>
                 </div>
                 {(users && Array.isArray(users)) &&
-                users.slice().reverse().map((user, i) => (
-                  <Card key={i} userId={user.id} distance={user.dist} removeOneUser={this.removeOneUser}/>
+                users.slice(0, 3).reverse().map((user, i) => (
+                  <Card key={user.id} userId={user.id} distance={user.dist} removeOneUser={this.removeOneUser}/>
                 ))}
               </div>
               <button className="like green" onClick={this.onLike}/>
