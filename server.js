@@ -1,6 +1,5 @@
 const express = require('express');
 
-const mysql = require('mysql');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -22,6 +21,7 @@ app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/visit', require('./routes/api/visit'));
 app.use('/api/report', require('./routes/api/report'));
 app.use('/api/dislike', require('./routes/api/dislike'));
+app.use('/api/picture', require('./routes/api/picture'));
 
 const port = 5000;
 
