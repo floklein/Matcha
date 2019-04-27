@@ -8,3 +8,5 @@ export const GET_ERRORS = 'GET_ERRORS';
 // SOULMATCHER
 export const GET_USERS = 'GET_USERS';
 export const LOADING = 'LOADING';
+// SEARCH
+export const SEARCH_USERS = 'SEARCH_USERS';
