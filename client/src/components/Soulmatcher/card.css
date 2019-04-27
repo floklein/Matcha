@@ -99,11 +99,13 @@
     font-size: 2rem;
     font-weight: 700;
     text-align: center;
+    word-break: break-word;
     color: white;
 }
 
 .card__username {
     text-align: center;
+    word-break: break-word;
     color: white;
     opacity: 0.5;
 }
