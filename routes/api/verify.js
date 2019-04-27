@@ -26,14 +26,14 @@ router.post('/', (req, res) => {
     let error = false;
 
     //Check if both fields are filled
-    if (typeof response.id == "undefined" || response.id == null) {
+    if (typeof response.id === "undefined" || response.id == null) {
         res_err = {
             ...res_err,
-            id: "L'id de l'utilisateur est requis"
+            id: "L'ID de l'utilisateur est requis"
         };
         error = true;
     }
-    if (typeof response.code == "undefined" || response.code == null) {
+    if (typeof response.code === "undefined" || response.code == null) {
         res_err = {
             ...res_err,
             code: "Le code de vérification est requis"
@@ -60,7 +60,7 @@ router.post('/', (req, res) => {
             else {
                 res_err = {
                     ...res_err,
-                    match: "Veuillez vérifier le lien reçu par mail"
+                    match: "Lien invalide"
                 };
                 res.status(400).json(res_err);
             }

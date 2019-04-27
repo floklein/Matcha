@@ -97,6 +97,12 @@ body {
     width: 10rem;
 }
 
+.sidebar__button.loading {
+    background: url("../../assets/img/loading-white.svg") center no-repeat, #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0));
+    -webkit-text-fill-color: transparent;
+    background-size: 4rem, cover;
+}
+
 #age, #distance, #popularity {
     width: 13rem;
     margin-bottom: .5rem;
