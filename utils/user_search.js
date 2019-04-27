@@ -195,9 +195,45 @@ module.exports = {
   })
 },
 
+  isBlocked: function isBlocked(id, user) {
+    return new Promise(resolve => {
+      let sql = "SELECT id from blocks " +
+        `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
+      connection.query(sql, (err, res) => {
+        if (err) throw err;
+        resolve(res.length);
+      })
+    })
+  },
+
+  blocks_past: async function blocks_past(id, result) {
+    return new Promise(resolve => {
+      let to_remove = [];
+      if (result.length == 0)
+        resolve(result);
+      for (let i = 0; i < result.length; i++) {
+        this.isBlocked(id, result[i])
+          .then(res => {
+            if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
+              to_remove.push(i);
+            }
+            if (i == result.length - 1) {
+              to_remove.sort((a, b) => {
+                return (a - b)
+              });
+              for (let j = to_remove.length - 1; j >= 0; j--) {
+                result.splice(to_remove[j], 1);
+              }
+              resolve(result);
+            }
+          });
+      }
+    })
+  },
+
 filters_interests: async function filters_interests(tags_array, result) {
   return new Promise((resolve => {
-    if (result.length == 0)
+    if (result.length == 0 || !tags_array || tags_array.length == 0)
       resolve(result);
     let to_remove = [];
     let tags_array_filtered = [];

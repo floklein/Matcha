@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
-const geolib = require('geolib');
 const jwt_check = require('../../utils/jwt_check');
 const u_search = require('../../utils/user_search');
 
