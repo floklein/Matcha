@@ -228,6 +228,14 @@ body {
     height: auto;
 }
 
+#search .main-panel .loading-more {
+    width: 100%;
+    height: 4rem;
+    background: url("../../assets/img/loading-black.svg") center no-repeat;
+    background-size: 7rem;
+    opacity: 0.3;
+}
+
 @media screen and (max-width: 800px) {
     #search .main-panel {
         margin: 0.5rem;
