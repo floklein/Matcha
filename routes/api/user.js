@@ -81,7 +81,7 @@ router.post('/register', (req, res) => {
   let response = {};
   let error = false;
 
-  //Check if username is unique (see how to do multiple queries)
+  //Check if username is unique
   let sql = `SELECT username from users WHERE username = "${info.username}";`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
@@ -370,6 +370,120 @@ router.post('/infos/:id', (req, res) => {
     }
     res.end(req.params.id);
   })
+});
+
+
+//TO DO : Change username in JWT when upi
+router.post('/update', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  const request = {
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    bio: req.body.bio,
+    sexuality: req.body.sexuality,
+    gender: req.body.gender,
+    interests: req.body.interests
+  };
+
+  //TO TEST WITH POSTMAN
+  request.interests = [{id: 1, name: "Harry Potter"}, {id: 2, name: "Politique"}];
+
+  let response = {};
+  let error = false;
+
+  //Check if username is unique and different from previous
+  let sql = `SELECT username from users WHERE username = "${request.username} AND id != ${user.id}";`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    if (result.length !== 0) {
+      response = {
+        ...response,
+        username: "Nom d'utilisateur indisponible."
+      };
+      error = true;
+    }
+
+    //Check if username is long enough
+    if (typeof request.username === 'undefined' || !request.username.match('^[a-zA-Z0-9]{4,30}$')) {
+      response = {
+        ...response,
+        username: "Nom d'utilisateur de 4 à 30 lettres."
+      };
+      error = true;
+    }
+
+    //Check if gender is either Male or female
+    if (typeof request.gender === 'undefined' || request.gender !== 'male' && request.gender !== 'female' && request.gender !== 'other') {
+      response = {
+        ...response,
+        gender: "Genre invalide."
+      };
+      error = true;
+    }
+
+    //Check if both names are incorrect
+    if ((typeof request.firstName === 'undefined' || !request.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof request.lastName === 'undefined' || !request.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$'))) {
+      response = {
+        ...response,
+        name: "Prénom et nom invalides."
+      };
+      error = true;
+    }
+
+    //Check if firstname is correct
+    else if (typeof request.firstName === 'undefined' || !request.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+      response = {
+        ...response,
+        firstName: "Prénom invalide."
+      };
+      error = true;
+    }
+
+    //Check if lastname is correct
+    else if (typeof request.lastName === 'undefined' || !request.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+      response = {
+        ...response,
+        lastName: "Nom invalide."
+      };
+      error = true;
+    }
+
+    //Send json if there is an error and quit
+    if (error === true) {
+      res.status(400);
+      res.end(JSON.stringify(response));
+      return;
+    }
+    else {
+      const sql_user_update = `UPDATE users SET username = "${request.username}" WHERE id = ${user.id};`;
+      connection.query(sql_user_update, (err) => {
+        if (err) throw err;
+        const sql_infos_update = `UPDATE infos SET gender = "${request.gender}", sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}" WHERE user_id = ${user.id};`;
+        connection.query(sql_infos_update, (err) => {
+          if (err) throw err;
+          const sql_delete_interests = `DELETE FROM interests WHERE user_id = ${user.id};`;
+          connection.query(sql_delete_interests, (err) => {
+            if (err) throw err;
+            for (let i = 0; i < request.interests.length; i++) {
+              let sql_add_interest = "INSERT INTO interests(user_id, tag)" +
+                ` VALUES(${user.id}, "${request.interests[i].name}");`;
+              connection.query(sql_add_interest, (err) => {
+                if (err) throw err;
+                if (i === request.interests.length -1) {
+                  return res.json();
+                }
+              })
+            }
+          })
+        })
+      })
+    }
+  });
 });
 
 module.exports = router;
