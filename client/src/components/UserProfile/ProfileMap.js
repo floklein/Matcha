@@ -37,10 +37,11 @@ export class ProfileMap extends Component {
           }}
         />
       </Map>
+
     );
   }
 }
 
 export default GoogleApiWrapper({
-  apiKey: (API_KEY)
+  apiKey: (api_key)
 })(ProfileMap);
