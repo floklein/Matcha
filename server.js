@@ -22,6 +22,7 @@ app.use('/api/visit', require('./routes/api/visit'));
 app.use('/api/report', require('./routes/api/report'));
 app.use('/api/dislike', require('./routes/api/dislike'));
 app.use('/api/picture', require('./routes/api/picture'));
+app.use('/api/locations', require('./routes/api/locations'));
 
 const port = 5000;
 
