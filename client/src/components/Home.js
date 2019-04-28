@@ -7,6 +7,7 @@ import UserForm from "./UserForm/UserForm";
 import triCouple from "../assets/img/tri-couple.svg";
 import triMap from "../assets/img/tri-map.svg";
 import triChat from "../assets/img/tri-chat.svg";
+import MapContainer from "./GoogleMap";
 
 class Home extends Component {
   componentDidMount() {
@@ -55,8 +56,7 @@ class Home extends Component {
           </div>
         </div>
         <div id="map">
-          <iframe title="map" width="3000" height="500" frameBorder="0"
-                  src="https://www.google.com/maps/d/embed?mid=1-57radknCCRjqVekxyooWmvh-jQdV0_w&z=6&ll=47.048454, 3.105408"/>
+            <MapContainer/>
         </div>
       </React.Fragment>
     );

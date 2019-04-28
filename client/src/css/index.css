@@ -157,9 +157,11 @@
 #map {
     overflow: hidden;
     margin-bottom: -60px;
+    width: 1000px;
+    height: 500px;
 }
 
-#map iframe {
+#map  {
     top: -50px;
     position: relative;
     left: 50%;
