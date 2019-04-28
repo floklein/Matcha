@@ -11,6 +11,7 @@ import Error from '../Error';
 
 import './profile.css';
 import './edit.css';
+import ProfileMap from "./ProfileMap";
 
 class Profile extends Component {
   componentDidMount() {
@@ -195,8 +196,10 @@ class Profile extends Component {
                   <h4>POSITION</h4>
                 </div>
                 <div className="profile__cp-content map">
-                  <iframe title="map" width="150%" height="200%"
-                          src="https://www.google.com/maps/d/embed?mid=1-57radknCCRjqVekxyooWmvh-jQdV0_w&z=6&ll=47.048454, 3.105408"/>
+                  <ProfileMap
+                    position={{lat: profile.latitude, lng: profile.longitude}}
+                    gender={profile.gender}
+                  />
                 </div>
                 <div className="profile__cp-buttons">
                   <button className="report" title="Signaler cet utilisateur"/>
