@@ -18,12 +18,11 @@ connection.connect(function (err) {
 });
 
 router.get('/topFifty', (req, res) => {
-  const sql = "SELECT latitude, longitude, gender, profile_pic, firstName, lastName FROM infos ORDER BY popularity desc LIMIT 30;";
+  const sql = "SELECT latitude, longitude, gender, profile_pic, firstName, lastName FROM infos ORDER BY popularity desc LIMIT 50;";
   connection.query(sql, (err, result) => {
     if (err) throw err;
     return res.json(result);
   })
 });
-
 
 module.exports = router;

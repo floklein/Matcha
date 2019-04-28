@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from 'google-maps-react';
 import axios from 'axios';
@@ -30,7 +29,6 @@ export class MapContainer extends Component {
   }
 
   onMarkerClick = (props, marker, e) => {
-    console.log(props);
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
@@ -38,14 +36,6 @@ export class MapContainer extends Component {
     })
   };
 
-  onClose = props => {
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      });
-    }
-  };
 
   onMapClick = props => {
     if (this.state.showingInfoWindow) {
@@ -84,9 +74,8 @@ export class MapContainer extends Component {
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
         >
-          <img src={this.state.selectedPlace.profilePic}></img>
+          <img src={this.state.selectedPlace.profilePic} alt={'profile_picture'}></img>
           <h3>{this.state.selectedPlace.name}</h3>
         </InfoWindow>
       </Map>
@@ -96,5 +85,5 @@ export class MapContainer extends Component {
 
 
 export default GoogleApiWrapper({
-  apiKey: (API_KEY)
+  apiKey: (APIKEY
 })(MapContainer);
