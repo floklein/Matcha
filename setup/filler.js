@@ -32,8 +32,8 @@ function fill_db(data, pos_array) {
     const pic4 = faker.image.avatar();
     const pic5 = faker.image.avatar();
     const random_city_pos = Math.floor(Math.random() * pos_array.length);
-    const longitude = pos_array[random_city_pos][4] + (Math.bool ? 0.02 : -0.02) * Math.random();
-    const latitude = pos_array[random_city_pos][3] + (Math.bool ? 0.02 : -0.02) * Math.random();;
+    const longitude = pos_array[random_city_pos][pos_array[random_city_pos].length - 1] + (Math.bool ? 0.02 : -0.02) * Math.random();
+    const latitude = pos_array[random_city_pos][pos_array[random_city_pos].length - 2] + (Math.bool ? 0.02 : -0.02) * Math.random();;
 
     axios.post('http://localhost:5000/api/user/register', {
       email,
