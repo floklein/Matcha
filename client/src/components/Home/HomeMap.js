@@ -6,7 +6,7 @@ import {GMapiKey} from '../../config/GMapiKey';
 
 import pinkicon from '../../assets/img/pinklogo.svg';
 import blueicon from '../../assets/img/bluelogo.svg';
-import icon from '../../assets/img/logo.svg';
+import purpleicon from '../../assets/img/purplelogo.svg';
 
 export class MapContainer extends Component {
   state = {
@@ -84,7 +84,7 @@ export class MapContainer extends Component {
             key={id}
             position={{lat: item.latitude, lng: item.longitude}}
             icon={{
-              url: (item.gender === 'male' ? blueicon : item.gender === 'female' ? pinkicon : icon),
+              url: (item.gender === 'male' ? blueicon : item.gender === 'female' ? pinkicon : purpleicon),
               scaledSize: new this.props.google.maps.Size(30, 30)
             }}/>
         ))}
