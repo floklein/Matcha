@@ -18,7 +18,7 @@ class Navbar extends Component {
   render() {
     const {isAuthenticated} = this.props.auth;
     const guestLinks = (
-      <div><NavLink to="/">Accueil</NavLink></div>
+      <div/>
     );
     const authLinks = (
       <React.Fragment>
