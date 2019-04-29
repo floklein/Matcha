@@ -48,7 +48,12 @@ export class MapContainer extends Component {
         });
       })
       .catch(err => {
-        console.log(err.response.data);
+        this.setState({
+          selectedPlace: props,
+          activeMarker: marker,
+          showingInfoWindow: true,
+          city: ''
+        });
       });
   };
 

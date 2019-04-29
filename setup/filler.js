@@ -22,8 +22,8 @@ function fill_db(data) {
     const gender = Math.random() > 0.9 ? 'other' : data.gender;
     const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
     const age = Math.floor(Math.random() * 40) + 18;
-    const longitude = 2.80 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 2;
-    const latitude = 48.2276 + (Math.random() > 0.5 ? 1 : -1) - Math.random() * 4;
+    const longitude = 3.113749 + (Math.random() > 0.5 ? 1 : -1) * Math.random() * 3.6;
+    const latitude = 46.32 + (Math.random() > 0.5 ? 1 : -1) * Math.random() * 3.5;
     const popularity = Math.random() * 100;
     const profilePic = data.picture.large;
     const pic2 = faker.image.avatar();
