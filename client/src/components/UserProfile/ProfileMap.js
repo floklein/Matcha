@@ -5,7 +5,7 @@ import {GMapiKey} from '../../config/GMapiKey';
 
 import pinkicon from '../../assets/img/pinklogo.svg';
 import blueicon from '../../assets/img/bluelogo.svg';
-import icon from '../../assets/img/logo.svg';
+import purpleicon from '../../assets/img/purplelogo.svg';
 
 export class ProfileMap extends Component {
   state = {
@@ -24,7 +24,7 @@ export class ProfileMap extends Component {
           onClick={this.onMarkerClick}
           position={this.props.position}
           icon={{
-            url: (this.props.gender === 'male' ? blueicon : this.props.gender === 'female' ? pinkicon : icon),
+            url: (this.props.gender === 'male' ? blueicon : this.props.gender === 'female' ? pinkicon : purpleicon),
             scaledSize: new this.props.google.maps.Size(50, 50)
           }}/>
       </Map>
