@@ -4,6 +4,8 @@ import pinkicon from '../../assets/img/pinklogo.svg';
 import blueicon from '../../assets/img/bluelogo.svg';
 import icon from '../../assets/img/logo.svg';
 
+import {GMapiKey} from '../../config/GMapiKey';
+
 const mapStyles = {
   width: '30%',
   height: '30%'
@@ -43,5 +45,5 @@ export class ProfileMap extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: (api_key)
+  apiKey: GMapiKey
 })(ProfileMap);

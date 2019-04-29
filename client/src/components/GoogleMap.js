@@ -6,6 +6,8 @@ import pinkicon from '../assets/img/pinklogo.svg';
 import blueicon from '../assets/img/bluelogo.svg';
 import icon from '../assets/img/logo.svg';
 
+import {GMapiKey} from '../config/GMapiKey';
+
 const mapStyles = {
   width: '100%',
   height: '100%'
@@ -40,9 +42,8 @@ export class MapContainer extends Component {
 
   onMarkerClick = (props, marker, e) => {
     console.log(props);
-    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${props.position.lat},${props.position.lng}&key=(api_key)`)
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${props.position.lat},${props.position.lng}&key=${GMapiKey}`)
       .then(res => {
-        console.log(res.data.results[0].address_components);
         this.setState({
           selectedPlace: props,
           activeMarker: marker,
@@ -92,7 +93,7 @@ export class MapContainer extends Component {
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
         >
-          <img src={this.state.selectedPlace.profilePic} alt={'profile_picture'}></img>
+          <img src={this.state.selectedPlace.profilePic} alt={'profile_picture'}/>
           <h3>{this.state.selectedPlace.name}</h3>
           <h4>{this.state.city}</h4>
         </InfoWindow>
@@ -102,5 +103,5 @@ export class MapContainer extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: (api_key)
+  apiKey: GMapiKey
 })(MapContainer);
