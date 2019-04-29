@@ -32,4 +32,5 @@ export class ProfileMap extends Component {
   }
 }
 
+
 export default GoogleApiWrapper({apiKey: GMapiKey})(ProfileMap);
