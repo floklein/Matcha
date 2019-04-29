@@ -3,7 +3,7 @@
 #carousel {
     width: 100vw;
     min-height: 40rem;
-    background: url("../assets/pic/home.jpg") no-repeat center;
+    background: url("../../assets/pic/home.jpg") no-repeat center;
     background-size: cover;
 }
 
@@ -155,16 +155,29 @@
 /*MAP*/
 
 #map {
-    overflow: hidden;
-    margin-bottom: -60px;
-    width: 1000px;
-    height: 500px;
+    position: relative;
+    width: 100vw !important;
+    height: 30rem !important;
+    filter: grayscale(30%);
 }
 
-#map  {
-    top: -50px;
-    position: relative;
-    left: 50%;
-    transform: translate(-50%);
-    filter: grayscale(30%);
+.iw__pic {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto;
+    border-radius: 2rem;
+    background-color: lightgrey;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.info-window h3 {
+    margin: 1rem 0 0 0;
+    text-align: center;
+}
+
+.info-window p {
+    margin-top: 0.5rem;
+    text-align: center;
 }

@@ -366,13 +366,12 @@
 }
 
 .profile__cp-content.map {
-    display: grid;
-    align-items: center;
-    justify-items: center;
+    position: relative;
     height: 12rem;
     overflow: hidden;
     border-radius: 1rem;
     box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
+    filter: grayscale(30%);
 }
 
 .profile__cp-buttons {
