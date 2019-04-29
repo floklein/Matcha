@@ -3,7 +3,6 @@ import {Provider} from 'react-redux';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
-
 import store from './store';
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -21,7 +20,6 @@ import setAuthToken from './utils/setAuthToken';
 
 import './css/normalize.css';
 import './css/global.css';
-import './css/index.css';
 import './css/error.css';
 
 if (localStorage.jwtToken && localStorage.jwtToken !== 'undefined') {

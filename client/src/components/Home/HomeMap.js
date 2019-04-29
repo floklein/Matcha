@@ -1,17 +1,12 @@
-import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, Marker, InfoWindow,  } from 'google-maps-react';
+import React, {Component} from 'react';
+import {Map, GoogleApiWrapper, Marker, InfoWindow,} from 'google-maps-react';
+import axios from 'axios/index';
 
-import axios from 'axios';
-import pinkicon from '../assets/img/pinklogo.svg';
-import blueicon from '../assets/img/bluelogo.svg';
-import icon from '../assets/img/logo.svg';
+import {GMapiKey} from '../../config/GMapiKey';
 
-import {GMapiKey} from '../config/GMapiKey';
-
-const mapStyles = {
-  width: '100%',
-  height: '100%'
-};
+import pinkicon from '../../assets/img/pinklogo.svg';
+import blueicon from '../../assets/img/bluelogo.svg';
+import icon from '../../assets/img/logo.svg';
 
 export class MapContainer extends Component {
   state = {
@@ -28,7 +23,9 @@ export class MapContainer extends Component {
         this.setState({
           markers: res.data,
         });
-        console.log(this.state.markers);
+      })
+      .catch(err => {
+        console.log(err.response.data);
       });
   }
 
@@ -41,7 +38,6 @@ export class MapContainer extends Component {
   };
 
   onMarkerClick = (props, marker, e) => {
-    console.log(props);
     axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${props.position.lat},${props.position.lng}&key=${GMapiKey}`)
       .then(res => {
         this.setState({
@@ -49,12 +45,14 @@ export class MapContainer extends Component {
           activeMarker: marker,
           showingInfoWindow: true,
           city: this.getAddressPart(res.data.results[0].address_components, "locality") + ', ' + this.getAddressPart(res.data.results[0].address_components, "administrative_area_level_2")
-        })
+        });
+      })
+      .catch(err => {
+        console.log(err.response.data);
       });
   };
 
-
-  onMapClick = props => {
+  onMapClick = (props) => {
     if (this.state.showingInfoWindow) {
       this.setState({
         showingInfoWindow: false,
@@ -69,39 +67,34 @@ export class MapContainer extends Component {
         onClick={this.onMapClick}
         google={this.props.google}
         zoom={6}
-        style={mapStyles}
         initialCenter={{
           lat: 46.8534,
           lng: 2.3488
-        }}
-        >
-
+        }}>
         {this.state.markers.map((item, id) => (
           <Marker
             onClick={this.onMarkerClick}
-            name = {item.firstName + " " + item.lastName}
-            profilePic = {item.profile_pic}
-            key = {id}
-            position = {{lat: item.latitude, lng: item.longitude}}
-            icon = {{
+            name={item.firstName + " " + item.lastName}
+            profilePic={item.profile_pic}
+            key={id}
+            position={{lat: item.latitude, lng: item.longitude}}
+            icon={{
               url: (item.gender === 'male' ? blueicon : item.gender === 'female' ? pinkicon : icon),
               scaledSize: new this.props.google.maps.Size(30, 30)
-            }}
-          />
+            }}/>
         ))}
         <InfoWindow
           marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-        >
-          <img src={this.state.selectedPlace.profilePic} alt={'profile_picture'}/>
-          <h3>{this.state.selectedPlace.name}</h3>
-          <h4>{this.state.city}</h4>
+          visible={this.state.showingInfoWindow}>
+          <div className="info-window">
+            <div className="iw__pic" style={{backgroundImage: `url("${this.state.selectedPlace.profilePic}")`}} alt="profile_picture"/>
+            <h3>{this.state.selectedPlace.name}</h3>
+            <p>{this.state.city}</p>
+          </div>
         </InfoWindow>
       </Map>
     );
   }
 }
 
-export default GoogleApiWrapper({
-  apiKey: GMapiKey
-})(MapContainer);
+export default GoogleApiWrapper({apiKey: GMapiKey})(MapContainer);

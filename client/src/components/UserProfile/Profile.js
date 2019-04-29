@@ -8,10 +8,10 @@ import {likeUser} from "../../store/actions/profileActions";
 
 import Loading from '../Loading';
 import Error from '../Error';
+import ProfileMap from "./ProfileMap";
 
 import './profile.css';
 import './edit.css';
-import ProfileMap from "./ProfileMap";
 
 class Profile extends Component {
   componentDidMount() {
@@ -198,8 +198,7 @@ class Profile extends Component {
                 <div className="profile__cp-content map">
                   <ProfileMap
                     position={{lat: profile.latitude, lng: profile.longitude}}
-                    gender={profile.gender}
-                  />
+                    gender={profile.gender}/>
                 </div>
                 <div className="profile__cp-buttons">
                   <button className="report" title="Signaler cet utilisateur"/>
