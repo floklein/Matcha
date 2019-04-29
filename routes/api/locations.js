@@ -18,7 +18,7 @@ connection.connect(function (err) {
 });
 
 router.get('/topFifty', (req, res) => {
-  const sql = "SELECT latitude, longitude, gender, profile_pic, firstName, lastName FROM infos ORDER BY popularity desc LIMIT 70;";
+  const sql = "SELECT latitude, longitude, gender, profile_pic, firstName, lastName FROM infos ORDER BY popularity desc LIMIT 100;";
   connection.query(sql, (err, result) => {
     if (err) throw err;
     return res.json(result);
