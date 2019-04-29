@@ -78,6 +78,138 @@
     animation-iteration-count: 1;
 }
 
+#navbar .nav-button {
+    position: relative;
+}
+
+#navbar .nav-menu {
+    position: absolute;
+    visibility: hidden;
+    top: 1rem;
+    right: -0.5rem;
+    z-index: 100;
+    width: 0;
+    height: fit-content;
+    background-color: white;
+    border: solid 1px lightgrey;
+    border-radius: 0.4rem;
+    box-shadow: 0 0 15px -6px rgba(0, 0, 0, 0.3);
+    transition: width 0.5s, opacity 0.5s;
+    opacity: 0;
+    color: black;
+    overflow: hidden;
+}
+
+#navbar .nav-menu.opened {
+    visibility: visible;
+    width: 18rem;
+    opacity: 1;
+}
+
+@media screen and (max-width: 400px) {
+    #navbar .nav-menu {
+        position: fixed;
+        top: 3.5rem;
+        right: 50%;
+        transform: translate(50%);
+    }
+}
+
+.menu__title {
+    width: 100%;
+    height: 2rem;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    font-weight: 700;
+    border-bottom: 1px solid lightgrey;
+    cursor: default;
+}
+
+.items {
+    max-height: 18rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.item {
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    border-bottom: 1px solid lightgrey;
+    overflow: hidden;
+    cursor: default;
+}
+
+.account .item {
+    cursor: pointer;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.item:hover {
+    background-color: whitesmoke;
+}
+
+.item__img {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 4rem;
+    height: 4rem;
+    background-position: center;
+    background-image: url("../../assets/img/notif-seen.svg");
+    background-repeat: no-repeat;
+    background-size: 2rem;
+}
+
+.item.new .item__img {
+    background-image: url("../../assets/img/notif-notseen.svg");
+    background-size: 2.2rem;
+}
+
+.item.profile .item__img {
+    background-image: url("../../assets/img/menu-profile.svg");
+    background-size: 2.2rem;
+}
+
+.item.edit .item__img {
+    background-image: url("../../assets/img/menu-edit.svg");
+    background-size: 2.2rem;
+}
+
+.item.settings .item__img {
+    background-image: url("../../assets/img/menu-settings.svg");
+    background-size: 2.2rem;
+}
+
+.item.logout .item__img {
+    background-image: url("../../assets/img/menu-logout.svg");
+    background-size: 2.2rem;
+}
+
+.item__txt {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 14rem;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    opacity: 0.7;
+}
+
+.item__txt h4 {
+    margin: 0;
+}
+
+.item__txt p {
+    margin: 0.1rem 0 0 0;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/*ANIMATIONS AND MEDIA QUERIES*/
 @keyframes shake {
     0% {
         transform: translate(0.3px, 0.3px) rotate(0deg);
