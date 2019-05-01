@@ -219,6 +219,7 @@ body {
 
 /*MAIN PANEL*/
 #search .main-panel {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

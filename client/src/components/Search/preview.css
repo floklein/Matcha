@@ -17,6 +17,10 @@
     transform: scale(1.05);
 }
 
+.preview.current {
+    transition: opacity 7s;
+}
+
 .preview__profile-pic {
     width: 4rem;
     height: 4rem;
