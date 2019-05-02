@@ -69,7 +69,7 @@ connection.connect((err) => {
     "pic2 VARCHAR(256), " +
     "pic3 VARCHAR(256), " +
     "pic4 VARCHAR(256), " +
-    "pic5 VARCHAR(256));"+
+    "pic5 VARCHAR(256)); "+
     "" +
     "CREATE TABLE IF NOT EXISTS messages(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
@@ -77,6 +77,14 @@ connection.connect((err) => {
     "receiver_id INT NOT NULL, " +
     "message VARCHAR(256) NOT NULL, " +
     "`time` DATETIME NOT NULL); " +
+    "" +
+    "CREATE TABLE IF NOT EXISTS notifs(" +
+    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+    "user_id INT NOT NULL, " +
+    "type VARCHAR(12) NOT NULL, " +
+    "content VARCHAR(64) NOT NULL, " +
+    "`time` DATETIME NOT NULL, " +
+    "`read` BOOLEAN DEFAULT 0); " +
     "" +
     "CREATE TABLE IF NOT EXISTS interests(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
