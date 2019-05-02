@@ -21,7 +21,6 @@ function isLikedBack(liked, liker) {
   return new Promise(resolve => {
     let sql = "SELECT id from likes " +
       `WHERE liker_id = ${liked} AND liked_id = ${liker};`;
-    console.log(sql);
     connection.query(sql, (err, res) => {
       if (err) throw err;
       if (res.length === 0)
