@@ -24,6 +24,8 @@ app.use('/api/dislike', require('./routes/api/dislike'));
 app.use('/api/picture', require('./routes/api/picture'));
 app.use('/api/locations', require('./routes/api/locations'));
 app.use('/api/match', require('./routes/api/match'));
+app.use('/api/chat', require('./routes/api/chat'));
+
 
 const port = 5000;
 

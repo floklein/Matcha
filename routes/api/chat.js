@@ -17,8 +17,22 @@ connection.connect(function (err) {
   if (err) throw err;
 });
 
-router.get('/', (req, res) => {
 
+router.get('/', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+  let match_id = req.body.id;
+  let response = [];
+
+  const sql = "SELECT sender_id, receiver_id, message, time FROM messages " +
+    `WHERE (sender_id = ${match_id} AND receiver_id = ${user.id}) OR (sender_id = ${user.id} AND receiver_id = ${match_id}) ` +
+    "ORDER BY time DESC LIMIT 20;";
+  connection.query(sql, (err, resp) => {
+    if (err) throw err;
+    return res.json(resp);
+  })
 });
 
 module.exports = router;
