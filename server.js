@@ -23,7 +23,24 @@ app.use('/api/report', require('./routes/api/report'));
 app.use('/api/dislike', require('./routes/api/dislike'));
 app.use('/api/picture', require('./routes/api/picture'));
 app.use('/api/locations', require('./routes/api/locations'));
+app.use('/api/match', require('./routes/api/match'));
+app.use('/api/chat', require('./routes/api/chat'));
+
 
 const port = 5000;
 
-app.listen(port, () => `Server running on port ${port}`);
+let server = app.listen(port);
+let io = require('socket.io').listen(server);
+
+
+connections = [];
+io.sockets.on('connection', socket => {
+  connections.push(socket);
+  console.log("Connected");
+
+  socket.on('disconnect', (data) => {
+    console.log("Disconnected");
+  });
+});
+
+// require("./sockets/socketIO")(io);
