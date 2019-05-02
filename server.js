@@ -30,17 +30,17 @@ app.use('/api/chat', require('./routes/api/chat'));
 const port = 5000;
 
 let server = app.listen(port);
-let io = require('socket.io').listen(server);
+// let io = require('socket.io').listen(server);
 
 
-connections = [];
-io.sockets.on('connection', socket => {
-  connections.push(socket);
-  console.log("Connected");
+// connections = [];
+// io.sockets.on('connection', socket => {
+//   connections.push(socket);
+//   console.log("Connected");
 
-  socket.on('disconnect', (data) => {
-    console.log("Disconnected");
-  });
-});
+  // socket.on('disconnect', (data) => {
+  //   console.log("Disconnected");
+  // });
+// });
 
 // require("./sockets/socketIO")(io);
