@@ -71,6 +71,13 @@ connection.connect((err) => {
     "pic4 VARCHAR(256), " +
     "pic5 VARCHAR(256));"+
     "" +
+    "CREATE TABLE IF NOT EXISTS messages(" +
+    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+    "sender_id INT NOT NULL, " +
+    "receiver_id INT NOT NULL, " +
+    "message VARCHAR(256) NOT NULL, " +
+    "`time` DATETIME NOT NULL); " +
+    "" +
     "CREATE TABLE IF NOT EXISTS interests(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "user_id int not NULL, " +
