@@ -55,7 +55,7 @@ class ChatPanel extends Component {
         <div id="chatpanel">
           <div className="chat__title-bar" onClick={this.toggleChat}>
             <div className="chat__title-text">
-              <h4>Discussion instantanée</h4>
+              Discussion instantanée
             </div>
             <div className="chat__title-notifs">
               <div className="chat__notifs-div">
@@ -69,6 +69,9 @@ class ChatPanel extends Component {
               && matches.map((match) => (
                 <UserPic key={match.id} userId={match.id} notif={false} current={match.id === this.props.current}/>
               ))}
+              <div className="chat__ub-no-users">
+                Vous n'avez pas encore matché...
+              </div>
             </div>
             <Messages/>
             <form onSubmit={this.onSendMessage}>
