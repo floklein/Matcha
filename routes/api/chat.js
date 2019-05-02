@@ -23,14 +23,21 @@ router.get('/', (req, res) => {
   if (user.id === -1) {
     return res.status(401).json({error: 'unauthorized access'});
   }
-  let match_id = req.body.id;
+  let match_id = req.query.id;
+  let response = [];
 
-  const sql = "SELECT sender_id, receiver_id, message, time FROM messages " +
+  const sql = "SELECT id, sender_id, receiver_id, message , DATE_FORMAT(`time`, '%k:%i') AS `date` FROM messages " +
     `WHERE (sender_id = ${match_id} AND receiver_id = ${user.id}) OR (sender_id = ${user.id} AND receiver_id = ${match_id}) ` +
     "ORDER BY time DESC LIMIT 20;";
   connection.query(sql, (err, resp) => {
     if (err) throw err;
-    return res.json(resp);
+    resp.map((message) => {
+      response.push({
+        ...message,
+        whose: (message.sender_id === user.id ? "mine" : "yours")
+      })
+    });
+    return res.json(response);
   })
 });
 

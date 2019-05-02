@@ -1,14 +1,22 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import UserPic from './UserPic';
 import Messages from './Messages';
+
+import {getMatches, getMessages, sendMessage} from "../../store/actions/chatActions";
 
 import './chatpanel.css';
 
 class ChatPanel extends Component {
   state = {
-    shown: false
+    shown: false,
+    message: ''
   };
+
+  componentDidMount() {
+    this.props.getMatches();
+  }
 
   toggleChat = () => {
     const {shown} = this.state;
@@ -18,7 +26,28 @@ class ChatPanel extends Component {
     });
   };
 
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  onSendMessage = (e) => {
+    e.preventDefault();
+    if (this.props.current && this.state.message !== '') {
+      this.props.sendMessage(this.props.current, this.state.message);
+      this.setState({
+        message: ''
+      });
+      const msgDiv = document.querySelector('.chat__messages');
+      setTimeout(() => {
+        msgDiv.scrollTop = msgDiv.scrollHeight;
+      }, 100);
+    }
+  };
+
   render() {
+    const {matches} = this.props;
     const styleChat = {height: this.state.shown ? '21rem' : '0'};
 
     return (
@@ -36,24 +65,23 @@ class ChatPanel extends Component {
           </div>
           <div className="chat__interface" style={styleChat}>
             <div className="chat__users-bar">
-              <UserPic userId="Florent" notif={true}/>
-              <UserPic userId="Tanguy" notif={false}/>
-              <UserPic userId="Shana" notif={true}/>
-              <UserPic userId="Yannis" notif={false}/>
-              <UserPic userId="Arnaud" notif={false}/>
-              <UserPic userId="Pierre-Antoine" notif={true}/>
-              <UserPic userId="Léa" notif={false}/>
-              <UserPic userId="BOT" notif={false}/>
+              {matches && Array.isArray(matches)
+              && matches.map((match) => (
+                <UserPic key={match.id} userId={match.id} notif={false} current={match.id === this.props.current}/>
+              ))}
             </div>
             <Messages/>
-            <div className="chat__input-bar">
-              <div className="chat__input">
-                <input type="text" placeholder="Écrivez votre message..."/>
+            <form onSubmit={this.onSendMessage}>
+              <div className="chat__input-bar">
+                <div className="chat__input">
+                  <input type="text" name="message" placeholder="Écrivez votre message..."
+                         onChange={this.handleChange} value={this.state.message}/>
+                </div>
+                <div className="chat__submit">
+                  <button type="submit" className="chat__button"/>
+                </div>
               </div>
-              <div className="chat__submit">
-                <div className="chat__button"/>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </React.Fragment>
@@ -61,4 +89,11 @@ class ChatPanel extends Component {
   }
 }
 
-export default ChatPanel;
+const mapStateToProps = (state) => ({
+  matches: state.chat.matches,
+  messages: state.chat.messages,
+  message: state.chat.message,
+  current: state.chat.current
+});
+
+export default connect(mapStateToProps, {getMatches, getMessages, sendMessage})(ChatPanel);
