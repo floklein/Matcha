@@ -8,17 +8,71 @@
     z-index: 500000;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .big-picture.shown {
     display: flex;
 }
 
+.bp__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 500001;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
 .bp__img {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
     width: 80vw;
     height: 80vh;
+    z-index: 500002;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.bp__previous, .bp__next {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.bp__previous {
+    justify-content: flex-start;
+}
+
+.bp__next {
+    justify-content: flex-end;
+}
+
+.bp__button {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 1rem;
+    border-radius: 50%;
+    background: url("../../assets/img/arrow-left.svg") center no-repeat;
+    opacity: 0;
+    transition: opacity 0.4s, background-color 0.2s;
+}
+
+.bp__next .bp__button {
+    transform: scaleX(-1);
+}
+
+.bp__previous:hover .bp__button, .bp__next:hover .bp__button {
+    opacity: 1;
+}
+
+.bp__button:hover {
+    background-color: white;
+}
+
+.bp__button:active {
+    background-color: lightgrey;
 }

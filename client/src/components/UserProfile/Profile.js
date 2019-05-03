@@ -15,7 +15,8 @@ import './profile.css';
 
 class Profile extends Component {
   state = {
-    image: ''
+    images: [],
+    current: 0
   };
 
   componentDidMount() {
@@ -96,6 +97,19 @@ class Profile extends Component {
     }
   };
 
+  whichPhoto = (elem) => {
+    for (var i = 0; (elem = elem.previousSibling); i++);
+    return i;
+  };
+
+  openPicture = (e) => {
+    const current = this.whichPhoto(e.target);
+    this.setState({
+      images: this.props.profile.photos,
+      current: current
+    });
+  };
+
   render() {
     if (this.props.error)
       return (<Error errTitle="Profil inexistant."
@@ -114,7 +128,7 @@ class Profile extends Component {
 
     return (
       <React.Fragment>
-        <BigPicture image={this.state.image}/>
+        <BigPicture images={this.state.images} current={this.state.current}/>
         <div className="profile__top">
           <div className="profile__top-img" style={bgPhoto}/>
         </div>
@@ -183,7 +197,7 @@ class Profile extends Component {
                 <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
                     <div key={i} style={{backgroundImage: `url('${photo}')`}}
-                         title="Cliquer pour agrandir" onClick={(e) => this.setState({image: e.target.style.backgroundImage})}/>
+                         title="Cliquer pour agrandir" onClick={this.openPicture}/>
                   ))}
                   {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
                 </div>

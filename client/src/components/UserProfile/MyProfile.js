@@ -14,7 +14,8 @@ import {NavLink} from "react-router-dom";
 
 class MyProfile extends Component {
   state = {
-    image: ''
+    images: [],
+    current: 0
   };
 
   componentDidMount() {
@@ -68,6 +69,19 @@ class MyProfile extends Component {
     }
   };
 
+  whichPhoto = (elem) => {
+    for (var i = 0; (elem = elem.previousSibling); i++);
+    return i;
+  };
+
+  openPicture = (e) => {
+    const current = this.whichPhoto(e.target);
+    this.setState({
+      images: this.props.profile.photos,
+      current: current
+    });
+  };
+
   render() {
     if (!this.props.profile)
       return (<Loading/>);
@@ -81,7 +95,7 @@ class MyProfile extends Component {
 
     return (
       <React.Fragment>
-        <BigPicture image={this.state.image}/>
+        <BigPicture images={this.state.images} current={this.state.current}/>
         <div className="profile__top">
           <div className="profile__top-img" style={bgPhoto}/>
         </div>
@@ -144,7 +158,7 @@ class MyProfile extends Component {
                 <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
                     <div key={i} style={{backgroundImage: `url('${photo}')`}}
-                    onClick={(e) => this.setState({image: e.target.style.backgroundImage})}/>
+                    onClick={this.openPicture} title="Cliquer pour agrandir"/>
                   ))}
                   {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
                 </div>
