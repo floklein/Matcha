@@ -47,7 +47,6 @@
 .profile__sp-img {
     width: 100%;
     height: 20rem;
-    /*do not shorten!*/
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -277,7 +276,7 @@
     flex-grow: 1;
     margin: 2rem 1rem;
     padding: 2rem;
-    background-color: whitesmoke;
+    background-color: white;
     border-radius: 1rem;
     box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.3);
 }
@@ -295,7 +294,7 @@
 .profile__cp-content.bio {
     padding: 1rem;
     border-radius: 1rem;
-    background-color: white;
+    background-color: whitesmoke;
     box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
 }
 

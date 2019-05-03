@@ -10,3 +10,8 @@ export const GET_USERS = 'GET_USERS';
 export const LOADING = 'LOADING';
 // SEARCH
 export const SEARCH_USERS = 'SEARCH_USERS';
+// CHAT
+export const GET_MATCHES = 'GET_MATCHES';
+export const GET_MESSAGES = 'GET_MESSAGES';
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const SET_CURRENT = 'SET_CURRENT';

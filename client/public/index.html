@@ -10,6 +10,24 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.18/chance.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <style>
+        .dust {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            flex-grow: 1;
+            flex-shrink: 1;
+            max-width: 15rem;
+            min-width: 10rem;
+            height: 14.5rem;
+            margin: 1rem;
+        }
+    </style>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -37,7 +55,6 @@
   To create a production bundle, use `npm run build` or `yarn build`.
 -->
 </body>
-
 <script>
   window.onscroll = () => {
     if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
@@ -70,4 +87,5 @@
       };
   };
 </script>
+<script src="thanos.js"></script>
 </html>

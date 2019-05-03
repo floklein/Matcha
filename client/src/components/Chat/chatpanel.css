@@ -31,10 +31,10 @@
     align-items: center;
     justify-items: start;
     margin-left: 0.5rem;
-}
-
-.chat__title-text h4 {
-    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.025rem;
+    font-weight: 700;
 }
 
 .chat__title-notifs {
@@ -80,6 +80,18 @@
     border-bottom: 1px solid lightgrey;
 }
 
+.chat__ub-no-users {
+    display: none;
+    margin: 0 auto;
+    font-size: 0.8rem;
+    opacity: 0.49;
+    letter-spacing: 0.025rem;
+}
+
+.chat__ub-no-users:first-child:last-child {
+    display: block;
+}
+
 .chat__user-div {
     position: relative;
     display: inline-block;
@@ -94,14 +106,19 @@
     height: 2.5rem;
     margin: 0.5rem;
     border-radius: 1.25rem;
-    background: lightgrey url("../../assets/img/user.svg") center no-repeat;
-    background-size: 1.5rem;
-    /*background-size: cover;*/
+    background-color: lightgrey;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     cursor: pointer;
 }
 
-.chat__user-pic.notif {
+.chat__user-div.notif .chat__user-pic {
     box-shadow: 0 0 0 2px white, 0 0 0 4px red;
+}
+
+.chat__user-div.current .chat__user-pic {
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #00bcd4 !important;
 }
 
 .chat__user-overlay {
@@ -119,6 +136,7 @@
     font-size: 0.7rem;
     overflow: hidden;
     cursor: pointer;
+    opacity: 0.8;
 }
 
 .chat__user-div:hover .chat__user-overlay {
@@ -132,6 +150,28 @@
     border-bottom: 1px solid lightgrey;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+.chat__msg-no-messages {
+    display: none;
+    margin-top: 3.75rem;
+    text-align: center;
+    opacity: 0.5;
+}
+
+.chat__msg-no-messages:first-child:last-child {
+    display: block;
+}
+
+.chat__msg-no-messages span {
+    font-size: 0.8rem;
+    letter-spacing: 0.025rem;
+    opacity: 0.5;
+}
+
+.chat__msg-no-messages img {
+    width: 5rem;
+    filter: grayscale(100%);
 }
 
 .chat__message {
@@ -157,7 +197,7 @@
 }
 
 .chat__message.mine .chat__msg-content {
-    background-color: dodgerblue;
+    background: #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0));
     color: white;
 }
 
@@ -169,7 +209,6 @@
     margin: 0;
     word-break: break-word;
     font-size: 0.8rem;
-    /*text-align: justify;*/
     line-height: 1.2rem;
 }
 
@@ -213,9 +252,20 @@
 }
 
 .chat__button {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: 0 0.5rem;
-    background-color: dodgerblue;
-    border-radius: 0.75rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0 auto;
+    background: url("../../assets/img/chat-send.svg") no-repeat center, #5192e1 linear-gradient(to right, #00bcd4, rgba(0, 0, 0, 0));
+    background-size: 0.8rem, cover;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.chat__button:hover {
+    background-color: #00bcd4;
+}
+
+.chat__button:active {
+    background-color: #008ba2;
 }

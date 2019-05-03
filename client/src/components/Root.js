@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import Sidebar from "./Sidebar/sidebar";
 import Navbar from "./Navbar/navbar";
@@ -8,6 +9,8 @@ import PopUp from './PopUp/PopUp';
 
 class Root extends Component {
   render() {
+    const isAuth = this.props.auth.isAuthenticated;
+
     return (
       <React.Fragment>
         <Sidebar/>
@@ -18,11 +21,15 @@ class Root extends Component {
             {this.props.children}
           </div>
           <Footer/>
-          <ChatPanel/>
+          {isAuth && (<ChatPanel/>)}
         </div>
       </React.Fragment>
     );
   }
 }
 
-export default Root;
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Root);
