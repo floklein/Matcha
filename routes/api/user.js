@@ -485,4 +485,12 @@ router.post('/update', (req, res) => {
   });
 });
 
+router.get('/getMaxPopAndAge', (req, res) => {
+  const sql = "SELECT MAX(popularity) as max_pop, Max(age) as max_age FROM infos";
+  connection.query(sql, (err, resp) => {
+    if (err) throw err;
+    return res.json(resp);
+  })
+});
+
 module.exports = router;

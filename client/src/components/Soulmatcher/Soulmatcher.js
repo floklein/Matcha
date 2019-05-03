@@ -22,10 +22,12 @@ class Soulmatcher extends Component {
     order: 'desc',
     ageMin: 18,
     ageMax: 50,
+    rangeAgeMax: 50,
     distanceMin: 0,
     distanceMax: 50,
     popularityMin: 10,
     popularityMax: 200,
+    rangePopMax: 200,
     interests: [],
     suggestions: []
   };
@@ -33,9 +35,32 @@ class Soulmatcher extends Component {
   componentWillMount() {
     axios.get('/api/interests/getAll')
       .then((res) => {
-        this.setState({
-          suggestions: res.data,
-        });
+        axios.get('/api/user/getMaxPopAndAge')
+          .then((res2) => {
+            setTimeout(() => {
+              this.setState({
+                suggestions: res.data,
+                rangePopMax: res2.data[0].max_pop,
+                rangeAgeMax: res2.data[0].max_age
+              });
+
+              let sliderAge = document.getElementById('age');
+              let sliderPopularity = document.getElementById('popularity');
+              sliderAge.noUiSlider.updateOptions({
+                range: {
+                  'min': [18],
+                  'max': [this.state.rangeAgeMax]
+                }
+              });
+              sliderPopularity.noUiSlider.updateOptions({
+                range: {
+                  'min': 0,
+                  'max': this.state.rangePopMax
+                }
+              });
+
+            }, 1);
+          });
       });
   }
 
