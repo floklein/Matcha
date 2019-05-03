@@ -21,14 +21,16 @@ class Search extends Component {
     order: 'asc',
     ageMin: 18,
     ageMax: 50,
+    rangeAgeMax: 50,
     latitude: 1,
     longitude: 50,
     popularityMin: 10,
     popularityMax: 200,
+    rangePopMax: 200,
     from: 0,
     to: 20,
     interests: [],
-    suggestions: []
+    suggestions: [],
   };
 
   onScroll = () => {
@@ -40,9 +42,32 @@ class Search extends Component {
   componentWillMount() {
     axios.get('/api/interests/getAll')
       .then((res) => {
-        this.setState({
-          suggestions: res.data,
-        });
+        axios.get('/api/user/getMaxPopAndAge')
+          .then((res2) => {
+            setTimeout(() => {
+              this.setState({
+                suggestions: res.data,
+                rangePopMax: res2.data[0].max_pop,
+                rangeAgeMax: res2.data[0].max_age
+              });
+
+              let sliderAge = document.getElementById('age');
+              let sliderPopularity = document.getElementById('popularity');
+              sliderAge.noUiSlider.updateOptions({
+                range: {
+                  'min': [18],
+                  'max': [this.state.rangeAgeMax]
+                }
+              });
+              sliderPopularity.noUiSlider.updateOptions({
+                range: {
+                  'min': 0,
+                  'max': this.state.rangePopMax
+                }
+              });
+
+            }, 1);
+          });
       });
     window.addEventListener('scroll', this.onScroll);
   }
@@ -70,7 +95,7 @@ class Search extends Component {
       }
     });
     noUiSlider.create(sliderPopularity, {
-      start: [10, 200],
+      start: [10, 100],
       connect: true,
       range: {
         'min': 0,
