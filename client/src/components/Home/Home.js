@@ -8,7 +8,6 @@ import MapContainer from "./HomeMap";
 import triCouple from "../../assets/img/tri-couple.svg";
 import triMap from "../../assets/img/tri-map.svg";
 import triChat from "../../assets/img/tri-chat.svg";
-import openSocket from 'socket.io-client';
 
 import './home.css';
 

@@ -11,7 +11,7 @@ let connection = mysql.createConnection({
 });
 
 connection.connect(function (err) {
-  if (err) throw err
+  if (err) throw err;
   console.log('You are now connected...')
 });
 
@@ -23,7 +23,7 @@ module.exports = {
     let sql = "SELECT tag from interests " +
       `WHERE user_id = ${infos.id}`;
     connection.query(sql, (err, res) => {
-      // if (err) throw err;
+      if (err) throw err;
 
       //Filter one array of tags with the other one to get nb of common tags
       const filtered_array = tag_res.filter((tag) => {
@@ -55,7 +55,7 @@ module.exports = {
           {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
         );
         if (err) throw err;
-        else matchingScore += 200 * res.length;
+        matchingScore += 200 * res.length;
         resolve({
           score: matchingScore,
           dist
@@ -64,6 +64,7 @@ module.exports = {
     })
   });
 },
+
   getAgeScore: function getAgeScore(id, infos, tag_res, pos_res) {
   return new Promise(resolve => {
     const dist = geolib.getDistance(
@@ -124,7 +125,7 @@ module.exports = {
     const sql = "SELECT tag from interests " +
       `WHERE user_id = ${infos.id}`;
     connection.query(sql, (err, res) => {
-      // if (err) throw err;
+      if (err) throw err;
 
       //Filter one array of tags with the other one to get nb of common tags
       const filtered_array = tag_res.filter((tag) => {
@@ -150,19 +151,19 @@ module.exports = {
     let sql = "SELECT id from blocks " +
       `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
     connection.query(sql, (err, res) => {
-      if (err) throw err;
+      if (err) console.log(err);
       if (res.length)
         resolve(res.length);
       sql = "SELECT id from likes " +
         `WHERE (liker_id = ${id} AND liked_id = ${user.id});`;
       connection.query(sql, (err, res) => {
-        if (err) throw err;
+        if (err) console.log(err);
         if (res.length)
           resolve(res.length);
         sql = "Select id from dislikes " +
           `WHERE (disliker_id = ${id} AND disliked_id = ${user.id});`;
         connection.query(sql, (err, res) => {
-          if (err) throw err;
+          if (err) console.log(err);
           resolve(res.length);
         })
       })
@@ -200,7 +201,7 @@ module.exports = {
       let sql = "SELECT id from blocks " +
         `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
       connection.query(sql, (err, res) => {
-        if (err) throw err;
+        if (err) console.log(err);
         resolve(res.length);
       })
     })
@@ -241,7 +242,7 @@ filters_interests: async function filters_interests(tags_array, result) {
       const sql = "select tag from interests " +
         `Where user_id = ${result[i].id}`;
       connection.query(sql, (err, res) => {
-        if (err) throw err;
+        if (err) console.log(err);
         tags_array_filtered = tags_array.filter((tag) => {
           for (let j = 0; j < res.length; j++) {
             if (tag.name === res[j].tag)
