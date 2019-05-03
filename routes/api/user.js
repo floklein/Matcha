@@ -489,7 +489,14 @@ router.get('/getMaxPopAndAge', (req, res) => {
   const sql = "SELECT MAX(popularity) as max_pop, Max(age) as max_age FROM infos";
   connection.query(sql, (err, resp) => {
     if (err) throw err;
-    return res.json(resp);
+    if (resp.length > 0 && resp[0] && resp[0].max_age !== null && resp[0].max_pop !== null)
+      return res.json(resp);
+    else {
+      return res.json({
+        max_pop: 200,
+        max_age: 77
+      })
+    }
   })
 });
 
