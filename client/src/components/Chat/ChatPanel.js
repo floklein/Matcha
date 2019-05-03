@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import io from 'socket.io-client';
 
 import UserPic from './UserPic';
 import Messages from './Messages';
@@ -7,22 +8,17 @@ import Messages from './Messages';
 import {getMatches, getMessages, sendMessage} from "../../store/actions/chatActions";
 
 import './chatpanel.css';
-import io from 'socket.io-client';
+
 const socket = io('http://localhost:5000');
 
 class ChatPanel extends Component {
   state = {
     shown: false,
-    message: '',
-    socket: socket,
-    received: false
+    message: ''
   };
 
-  componentWillMount() {
-    this.props.getMatches();
-  }
-
   componentDidMount() {
+    this.props.getMatches();
   }
 
   toggleChat = () => {
@@ -34,18 +30,18 @@ class ChatPanel extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props.matches);
-    if (this.props.matches) {
-      for (let i = 0; i < this.props.matches.length; i++) {
-        socket.emit('room', `r${Math.max(this.props.matches[i].me, this.props.matches[i].id)}-${Math.min(this.props.matches[i].me, this.props.matches[i].id)}`);
+    if (nextProps.current && nextProps.current !== this.props.current) {
+      socket.on('new message', () => {
+        setTimeout(() => {
+          this.props.getMessages(nextProps.current);
+        }, 50);
+      });
+    }
+    if (nextProps.matches && nextProps.matches !== this.props.matches) {
+      for (let i = 0; i < nextProps.matches.length; i++) {
+        socket.emit('room', `r${Math.max(nextProps.matches[i].me, nextProps.matches[i].id)}-${Math.min(nextProps.matches[i].me, nextProps.matches[i].id)}`);
       }
     }
-    socket.on('new message', () => {
-      this.props.getMessages(this.props.current);
-      this.setState({
-        received: true
-      })
-    })
   }
 
   handleChange = (e) => {
@@ -62,7 +58,7 @@ class ChatPanel extends Component {
         message: ''
       });
       if (this.props.matches && this.props.matches[0])
-        this.state.socket.emit('send message', "r" + (this.props.matches[0].me > this.props.current ? (this.props.matches[0].me + "-" + this.props.current) : this.props.current + "-" + this.props.matches[0].me));
+        socket.emit('send message', `r${Math.max(this.props.matches[0].me, this.props.current)}-${Math.min(this.props.matches[0].me, this.props.current)}`);
       const msgDiv = document.querySelector('.chat__messages');
       setTimeout(() => {
         msgDiv.scrollTop = msgDiv.scrollHeight;
@@ -71,7 +67,6 @@ class ChatPanel extends Component {
   };
 
   render() {
-    console.log('render');
     const {matches} = this.props;
     const styleChat = {height: this.state.shown ? '21rem' : '0'};
 
