@@ -3,6 +3,8 @@ const router = express.Router();
 
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
+const io = require('socket.io-client');
+const socket = io('http://localhost:3000');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -48,6 +50,7 @@ router.post('/', (req, res) => {
   }
   let match_id = req.body.id;
   let message = req.body.message;
+  let room = 'r' + (user.id > req.body.id ? (user.id + '-' + req.body.id) : (req.body.id + '-' + user.id));
 
   let sql = "SELECT id FROM likes " +
     `WHERE (liker_id = ${match_id} AND liked_id = ${user.id}) OR (liked_id = ${match_id} AND liker_id = ${user.id});`;

@@ -21,6 +21,8 @@ import setAuthToken from './utils/setAuthToken';
 import './css/normalize.css';
 import './css/global.css';
 import './css/error.css';
+import io from 'socket.io-client';
+const socket = io('http://localhost:5000');
 
 if (localStorage.jwtToken && localStorage.jwtToken !== 'undefined') {
   setAuthToken(localStorage.jwtToken);

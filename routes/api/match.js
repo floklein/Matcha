@@ -45,7 +45,7 @@ router.get('/', (req, res) => {
   let response = [];
 
   //Get all our likes
-  const sql = "SELECT liked_id, liked_id from likes " +
+  const sql = "SELECT liked_id, liker_id from likes " +
     `WHERE liker_id = ${user.id};`;
   connection.query(sql, (err, resp) => {
     if (err) throw err;
@@ -55,7 +55,8 @@ router.get('/', (req, res) => {
       isLikedBack(resp[i].liked_id, user.id)
         .then((bool) => {
           if (bool)
-            response.push({id: resp[i].liked_id});
+            response.push({id: resp[i].liked_id,
+              me: resp[i].liker_id});
           if (i === resp.length - 1)
             return res.json(response);
         });

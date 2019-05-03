@@ -7,15 +7,22 @@ import Messages from './Messages';
 import {getMatches, getMessages, sendMessage} from "../../store/actions/chatActions";
 
 import './chatpanel.css';
+import io from 'socket.io-client';
+const socket = io('http://localhost:5000');
 
 class ChatPanel extends Component {
   state = {
     shown: false,
-    message: ''
+    message: '',
+    socket: socket,
+    received: false
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getMatches();
+  }
+
+  componentDidMount() {
   }
 
   toggleChat = () => {
@@ -25,6 +32,21 @@ class ChatPanel extends Component {
       shown: !shown
     });
   };
+
+  componentWillReceiveProps(nextProps) {
+    console.log(this.props.matches);
+    if (this.props.matches) {
+      for (let i = 0; i < this.props.matches.length; i++) {
+        socket.emit('room', `r${Math.max(this.props.matches[i].me, this.props.matches[i].id)}-${Math.min(this.props.matches[i].me, this.props.matches[i].id)}`);
+      }
+    }
+    socket.on('new message', () => {
+      this.props.getMessages(this.props.current);
+      this.setState({
+        received: true
+      })
+    })
+  }
 
   handleChange = (e) => {
     this.setState({
@@ -39,6 +61,8 @@ class ChatPanel extends Component {
       this.setState({
         message: ''
       });
+      if (this.props.matches && this.props.matches[0])
+        this.state.socket.emit('send message', "r" + (this.props.matches[0].me > this.props.current ? (this.props.matches[0].me + "-" + this.props.current) : this.props.current + "-" + this.props.matches[0].me));
       const msgDiv = document.querySelector('.chat__messages');
       setTimeout(() => {
         msgDiv.scrollTop = msgDiv.scrollHeight;
@@ -47,6 +71,7 @@ class ChatPanel extends Component {
   };
 
   render() {
+    console.log('render');
     const {matches} = this.props;
     const styleChat = {height: this.state.shown ? '21rem' : '0'};
 
