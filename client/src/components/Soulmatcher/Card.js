@@ -76,6 +76,9 @@ class Card extends Component {
 
   onDrag = (e) => {
     e.persist();
+    if (!!e.button) {
+      return;
+    }
     const div = document.querySelector('.card.u' + this.props.userId);
     let Ox, Oy;
     document.onmousemove = (event) => {
@@ -115,6 +118,7 @@ class Card extends Component {
     const div = document.querySelector('.card.u' + this.props.userId);
     div.style.transition = 'box-shadow 0.4s, transform 1s, background-color 1s';
     if (this.dx < -150) {
+      console.log('dislike');
       this.props.dislikeUser(this.state.id);
       div.style.transform = 'translateX(-200vw)';
       setTimeout(() => {

@@ -8,11 +8,16 @@ import {likeUser} from "../../store/actions/profileActions";
 
 import Loading from '../Loading';
 import Error from '../Error';
-import ProfileMap from "./ProfileMap";
+import ProfileMap from './ProfileMap';
+import BigPicture from './BigPicture'
 
 import './profile.css';
 
 class Profile extends Component {
+  state = {
+    image: ''
+  };
+
   componentDidMount() {
     this.props.fetchProfile(this.props.match.params.username);
   }
@@ -109,6 +114,7 @@ class Profile extends Component {
 
     return (
       <React.Fragment>
+        <BigPicture image={this.state.image}/>
         <div className="profile__top">
           <div className="profile__top-img" style={bgPhoto}/>
         </div>
@@ -176,7 +182,8 @@ class Profile extends Component {
                 </div>
                 <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo}')`}}/>
+                    <div key={i} style={{backgroundImage: `url('${photo}')`}}
+                         title="Cliquer pour agrandir" onClick={(e) => this.setState({image: e.target.style.backgroundImage})}/>
                   ))}
                   {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
                 </div>

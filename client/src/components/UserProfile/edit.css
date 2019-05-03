@@ -16,6 +16,7 @@
     color: white;
     font-size: 0.6rem;
     opacity: 0.7;
+    cursor: pointer;
 }
 
 .profile__cp-content.my.photos > div:not(.add-photo):not(.no-photo):hover::after {
@@ -31,6 +32,7 @@
     color: white;
     font-size: 0.6rem;
     opacity: 0.7;
+    cursor: pointer;
 }
 
 .profile__cp-content.my.photos > div.add-photo {
@@ -38,6 +40,7 @@
     transition: opacity 0.2s;
     background: grey url("../../assets/img/add-photo.svg") no-repeat center;
     background-size: 3rem;
+    cursor: pointer;
 }
 
 .profile__cp-content.my.photos > div.add-photo:hover {

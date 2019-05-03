@@ -47,7 +47,9 @@ export const likeUser = (userId) => dispatch => {
 
 export const dislikeUser = (userId) => dispatch => {
   axios.post('/api/dislike', {disliked: userId})
-    .then(res => {})
+    .then(res => {
+      console.log(res);
+    })
     .catch(err => {
       dispatch({
         type: GET_ERRORS,
