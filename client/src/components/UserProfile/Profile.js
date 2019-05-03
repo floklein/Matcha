@@ -11,7 +11,6 @@ import Error from '../Error';
 import ProfileMap from "./ProfileMap";
 
 import './profile.css';
-import './edit.css';
 
 class Profile extends Component {
   componentDidMount() {
@@ -62,16 +61,6 @@ class Profile extends Component {
         return (<div className="popularity p1">Nouveau
           <div>- {popularity.score}</div>
         </div>);
-    }
-  };
-
-  photoAction = (e) => {
-    const position = e.clientY - e.target.offsetTop + window.scrollY;
-    console.log(position);
-    if (position < 20) {
-      console.log('delete');
-    } else if (position > 75) {
-      console.log('profile');
     }
   };
 
@@ -187,10 +176,9 @@ class Profile extends Component {
                 </div>
                 <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>
+                    <div key={i} style={{backgroundImage: `url('${photo}')`}}/>
                   ))}
                   {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
-                  <div className="add-photo" style={bgColor}/>
                 </div>
                 <div className="profile__cp-title">
                   <h4>POSITION</h4>

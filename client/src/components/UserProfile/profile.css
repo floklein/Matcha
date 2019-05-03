@@ -124,7 +124,7 @@
     opacity: 0.2;
 }
 
-.profile__sp-infos > div > div:last-child {
+.profile__sp-infos > div > *:last-child {
     font-family: 'Raleway', sans-serif;
     font-weight: 700;
     opacity: 0.5;

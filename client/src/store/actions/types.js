@@ -15,3 +15,5 @@ export const GET_MATCHES = 'GET_MATCHES';
 export const GET_MESSAGES = 'GET_MESSAGES';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SET_CURRENT = 'SET_CURRENT';
+// USER
+export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';

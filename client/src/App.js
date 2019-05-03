@@ -14,6 +14,7 @@ import MyProfile from './components/UserProfile/MyProfile';
 import EditProfile from './components/UserProfile/EditProfile';
 import Soulmatcher from './components/Soulmatcher/Soulmatcher';
 import Search from './components/Search/Search';
+import Settings from './components/UserSettings/UserSettings';
 
 import {logoutUser, setCurrentUser} from "./store/actions/authActions";
 import setAuthToken from './utils/setAuthToken';
@@ -21,8 +22,6 @@ import setAuthToken from './utils/setAuthToken';
 import './css/normalize.css';
 import './css/global.css';
 import './css/error.css';
-import io from 'socket.io-client';
-const socket = io('http://localhost:5000');
 
 if (localStorage.jwtToken && localStorage.jwtToken !== 'undefined') {
   setAuthToken(localStorage.jwtToken);
@@ -49,6 +48,7 @@ class App extends Component {
               <Route path={'/profile/:username'} exact component={Profile}/>
               <ProtectedRoute path={'/account/profile'} exact component={MyProfile}/>
               <ProtectedRoute path={'/account/profile/edit'} exact component={EditProfile}/>
+              <ProtectedRoute path={'/account/settings'} exact component={Settings}/>
               <Route component={Error}/>
             </Switch>
           </Root>
