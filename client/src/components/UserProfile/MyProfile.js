@@ -6,12 +6,17 @@ import {fetchProfile} from "../../store/actions/profileActions";
 
 import Loading from '../Loading';
 import ProfileMap from "./ProfileMap";
+import BigPicture from './BigPicture';
 
 import './profile.css';
 import './edit.css';
 import {NavLink} from "react-router-dom";
 
 class MyProfile extends Component {
+  state = {
+    image: ''
+  };
+
   componentDidMount() {
     this.props.fetchProfile(this.props.me.id);
   }
@@ -63,16 +68,6 @@ class MyProfile extends Component {
     }
   };
 
-  photoAction = (e) => {
-    const position = e.clientY - e.target.offsetTop + window.scrollY;
-    console.log(position);
-    if (position < 20) {
-      console.log('delete');
-    } else if (position > 75) {
-      console.log('profile');
-    }
-  };
-
   render() {
     if (!this.props.profile)
       return (<Loading/>);
@@ -86,6 +81,7 @@ class MyProfile extends Component {
 
     return (
       <React.Fragment>
+        <BigPicture image={this.state.image}/>
         <div className="profile__top">
           <div className="profile__top-img" style={bgPhoto}/>
         </div>
@@ -145,12 +141,12 @@ class MyProfile extends Component {
                 <div className="profile__cp-title">
                   <h4>PHOTOS</h4>
                 </div>
-                <div className="profile__cp-content my photos">
+                <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>
+                    <div key={i} style={{backgroundImage: `url('${photo}')`}}
+                    onClick={(e) => this.setState({image: e.target.style.backgroundImage})}/>
                   ))}
                   {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
-                  <div className="add-photo" style={bgColor}/>
                 </div>
                 <div className="profile__cp-title">
                   <h4>POSITION</h4>

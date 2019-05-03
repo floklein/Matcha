@@ -354,7 +354,7 @@
     box-shadow: 0 0 16px -5px rgba(0, 0, 0, 0.5);
 }
 
-.profile__cp-content.photos > div:not(.no-photo) {
+.profile__cp-content.photos:not(.my) > div:not(.no-photo) {
     cursor: pointer;
 }
 

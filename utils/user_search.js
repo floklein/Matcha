@@ -151,19 +151,19 @@ module.exports = {
     let sql = "SELECT id from blocks " +
       `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
     connection.query(sql, (err, res) => {
-      if (err) console.log(err);
+      if (err) throw err;
       if (res.length)
         resolve(res.length);
       sql = "SELECT id from likes " +
         `WHERE (liker_id = ${id} AND liked_id = ${user.id});`;
       connection.query(sql, (err, res) => {
-        if (err) console.log(err);
+        if (err) throw err;
         if (res.length)
           resolve(res.length);
         sql = "Select id from dislikes " +
           `WHERE (disliker_id = ${id} AND disliked_id = ${user.id});`;
         connection.query(sql, (err, res) => {
-          if (err) console.log(err);
+          if (err) throw err;
           resolve(res.length);
         })
       })
@@ -176,12 +176,16 @@ module.exports = {
     let to_remove = [];
     if (result.length == 0)
       resolve(result);
+    console.log(result);
     for (let i = 0; i < result.length; i++) {
       this.isBlocked_liked_or_disliked(id, result[i])
         .then(res => {
           if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
             to_remove.push(i);
+            console.log('removing ' + i);
           }
+          //TODO: Asynchrone dans for() => resolve() parfois trop tôt !
+          // Faux avec EnoraLecomt, connecté en tant que ConstanceFontai
           if (i == result.length - 1) {
             to_remove.sort((a, b) => {
               return (a - b)
@@ -201,7 +205,7 @@ module.exports = {
       let sql = "SELECT id from blocks " +
         `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
       connection.query(sql, (err, res) => {
-        if (err) console.log(err);
+        if (err) throw err;
         resolve(res.length);
       })
     })
@@ -242,7 +246,7 @@ filters_interests: async function filters_interests(tags_array, result) {
       const sql = "select tag from interests " +
         `Where user_id = ${result[i].id}`;
       connection.query(sql, (err, res) => {
-        if (err) console.log(err);
+        if (err) throw err;
         tags_array_filtered = tags_array.filter((tag) => {
           for (let j = 0; j < res.length; j++) {
             if (tag.name === res[j].tag)
