@@ -83,6 +83,14 @@ module.exports = {
   });
 },
 
+  getMaxPopAndAge: function getMaxPopAndAge() {
+    const sql = "SELECT MAX(popularity, age) FROM infos";
+    connection.query(sql, (err, res) => {
+      if (err) throw err;
+      return res;
+    })
+  },
+
   getDistanceScore: function getDistanceScore(id, infos, tag_res, pos_res) {
   return new Promise(resolve => {
 
