@@ -3,7 +3,6 @@ module.exports = (io) => {
     console.log("Connected");
 
     socket.on('room', (room) => {
-      console.log(room);
       socket.join(room);
     });
 
