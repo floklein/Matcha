@@ -492,10 +492,10 @@ router.get('/getMaxPopAndAge', (req, res) => {
     if (resp.length > 0 && resp[0] && resp[0].max_age !== null && resp[0].max_pop !== null)
       return res.json(resp);
     else {
-      return res.json({
+      return res.json([{
         max_pop: 200,
         max_age: 77
-      })
+      }])
     }
   })
 });
