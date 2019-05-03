@@ -30,17 +30,6 @@ app.use('/api/notifs', require('./routes/api/notifs'));
 const port = 5000;
 
 let server = app.listen(port);
-// let io = require('socket.io').listen(server);
+let io = require('socket.io').listen(server);
 
-
-// connections = [];
-// io.sockets.on('connection', socket => {
-//   connections.push(socket);
-//   console.log("Connected");
-
-  // socket.on('disconnect', (data) => {
-  //   console.log("Disconnected");
-  // });
-// });
-
-// require("./sockets/socketIO")(io);
+require("./sockets/socketIO")(io);
