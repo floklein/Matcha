@@ -1,12 +1,3 @@
-/*GLOBAL CHANGES*/
-body {
-    background-color: whitesmoke;
-}
-
-.this.centered {
-    background-color: whitesmoke;
-}
-
 /*MAIN GRID*/
 #soulmatcher {
     display: grid;

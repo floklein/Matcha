@@ -150,7 +150,7 @@ class Search extends Component {
             <div className="sidebar">
               <div className="sidebar__sort">
                 <div className="sidebar__title-box">
-                  <div className="sidebar__title">Trier par</div>
+                  <div className="sidebar__title thanos">Trier par</div>
                 </div>
                 <select name="sort" title="sort" required onChange={this.handleChange('sort')}
                         defaultValue="distance">
@@ -193,7 +193,7 @@ class Search extends Component {
                 </button>
               </div>
             </div>
-            <div className="main-panel">
+            <div className="main-panel avengers">
               {(users && Array.isArray(users)) && users.map((user, i) => (
                 <Preview key={i} userId={user.id} position={'Paris'}/>
               ))}
