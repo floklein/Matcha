@@ -14,6 +14,8 @@ import BigPicture from './BigPicture'
 
 import './profile.css';
 
+//TODO: debug problem big picture once you got out of big picture and back in
+
 class Profile extends Component {
   state = {
     images: [],
