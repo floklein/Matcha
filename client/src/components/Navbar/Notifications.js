@@ -6,7 +6,8 @@ import {getNotifs} from '../../store/actions/notificationActions';
 
 class Notifications extends Component {
   state = {
-    list: []
+    list: [],
+    filter: 'all'
   };
 
   componentDidMount() {
@@ -17,6 +18,11 @@ class Notifications extends Component {
     if (nextProps.list && nextProps.list !== this.props.list && Array.isArray(nextProps.list)) {
       this.setState({
         list: nextProps.list
+      });
+    }
+    if (nextProps.filterBy && nextProps.filterBy !== this.props.filterBy) {
+      this.setState({
+        filter: nextProps.filterBy
       });
     }
   }
@@ -36,12 +42,20 @@ class Notifications extends Component {
     }
   };
 
+  filterBy = (arr) => {
+    if (this.state.filter === 'all') {
+      return (arr);
+    } else {
+      return (arr.filter(elem => elem.type === this.state.filter));
+    }
+  };
+
   render() {
     const {list} = this.state;
 
     return (
       <div className="items">
-        {list && list.map((notif) => (
+        {list && this.filterBy(list).map((notif) => (
           <div key={notif.id} className={classnames('item', {
             'new': !notif.read
           })}>

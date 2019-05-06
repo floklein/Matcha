@@ -1,4 +1,4 @@
-import {UPLOAD_IMAGE, CHANGE_INFOS, LOADING, GET_ERRORS} from './types';
+import {CHANGE_INFOS, LOADING, GET_ERRORS} from './types';
 
 import axios from 'axios';
 

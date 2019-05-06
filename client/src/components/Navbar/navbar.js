@@ -18,7 +18,8 @@ import logo from '../../assets/img/logo.svg'
 class Navbar extends Component {
   state = {
     notifMenu: false,
-    userMenu: false
+    userMenu: false,
+    filterNotifsBy: 'all'
   };
 
   onLogoutClick = () => {
@@ -47,12 +48,18 @@ class Navbar extends Component {
     });
   };
 
-  markAllAsRead = (e) => {
+  markAllAsRead = () => {
     axios.patch('/api/notifs/readAll')
       .then(res => {
         this.props.getNotifs();
       })
       .catch();
+  };
+
+  handleFilterChange = (e) => {
+    this.setState({
+      filterNotifsBy: e.target.value
+    });
   };
 
   render() {
@@ -86,7 +93,7 @@ class Navbar extends Component {
             'opened': this.state.notifMenu
           })}>
             <div className="menu__title notifications">
-              <select defaultValue="all">
+              <select defaultValue="all" onChange={this.handleFilterChange}>
                 <option value="all">Toutes</option>
                 <option value="visit">Visites</option>
                 <option value="like">Likes</option>
@@ -96,7 +103,7 @@ class Navbar extends Component {
               Notifications
               <button onClick={this.markAllAsRead}/>
             </div>
-            <Notifications/>
+            <Notifications filterBy={this.state.filterNotifsBy}/>
           </div>
         </div>
         <div className="nav-button account">
