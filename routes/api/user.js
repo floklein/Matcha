@@ -6,6 +6,7 @@ const mysql = require('mysql');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
 const jwt_check = require('../../utils/jwt_check');
+const nodemailer = require('nodemailer');
 
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
@@ -190,7 +191,27 @@ router.post('/register', (req, res) => {
         //Send an email if everything is alright
         connection.query(sql4, (err, result) => {
           if (err) throw err;
-          //end if everything went fine
+          //send mail if everything went fine
+          let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'matcha.fk.tbd@gmail.com',
+              pass: 'Qwerty123-'
+            }
+          });
+          let mailOptions = {
+            from: 'Matcha <no-reply@matcha.com>',
+            to: info.email,
+            subject: 'Sending Email using Node.js',
+            text: 'That was easy!'
+          };
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
           res.end(String(id));
         });
       })
@@ -372,7 +393,6 @@ router.post('/infos/:id', (req, res) => {
   })
 });
 
-//TO DO : Change username in JWT when upi
 router.post('/update', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
@@ -388,9 +408,6 @@ router.post('/update', (req, res) => {
     gender: req.body.gender,
     interests: req.body.interests
   };
-
-  //TO TEST WITH POSTMAN
-  request.interests = [{id: 1, name: "Harry Potter"}, {id: 2, name: "Politique"}];
 
   let response = {};
   let error = false;
