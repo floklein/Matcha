@@ -28,6 +28,8 @@ router.get('/', (req, res) => {
   let match_id = req.query.id;
   let response = [];
 
+  if (typeof match_id === 'undefined' || isNaN(match_id) || match_id == 0)
+    return res.status(400).json({error: "L'id est requis"});
   const sql = "SELECT id, sender_id, receiver_id, message , DATE_FORMAT(`time`, '%k:%i') AS `date` FROM messages " +
     `WHERE (sender_id = ${match_id} AND receiver_id = ${user.id}) OR (sender_id = ${user.id} AND receiver_id = ${match_id}) ` +
     "ORDER BY time DESC LIMIT 20;";
@@ -50,7 +52,10 @@ router.post('/', (req, res) => {
   }
   let match_id = req.body.id;
   let message = req.body.message;
-  let room = 'r' + (user.id > req.body.id ? (user.id + '-' + req.body.id) : (req.body.id + '-' + user.id));
+  let room = 'r' + (user.id > req.body.id ? (user.id + '-' + match_id) : (match_id + '-' + user.id));
+
+  if (typeof match_id === 'undefined' || isNaN(match_id) || match_id == 0 || typeof message === 'undefined' ||  message === '')
+    return res.status(400).json({error: "L'id et le message sont requis"});
 
   let sql = "SELECT id FROM likes " +
     `WHERE (liker_id = ${match_id} AND liked_id = ${user.id}) OR (liked_id = ${match_id} AND liker_id = ${user.id});`;

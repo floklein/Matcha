@@ -117,6 +117,7 @@ class Profile extends Component {
     if (!this.props.profile)
       return (<Loading/>);
     const profile = this.props.profile;
+    console.log(profile);
     const gender = this.getGender(profile.gender);
     const sexuality = this.getSexuality(profile.sexuality);
     const popularity = this.getPopularity(profile.popularity);

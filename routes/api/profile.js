@@ -1,3 +1,7 @@
+const axios = require('axios');
+let GMapiKey = require('../../config/GMapikey');
+GMapiKey = GMapiKey.GMapikey;
+
 const express = require('express');
 const router = express.Router();
 
@@ -16,6 +20,14 @@ let connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err
 });
+
+getAddressPart = (address, Part) => {
+  const findType = type => type.types[0] === Part;
+  const location = address.map(obj => obj);
+  const rr = location.filter(findType)[0];
+
+  return (rr.long_name);
+};
 
 function get_pos(user_id, result) {
   for (let i = 0; i < result.length; i++) {
@@ -102,24 +114,40 @@ router.get('/:username', (req, res) => {
             } else if (result5[0].liked_id === user.id) {
               like = 'you'
             }
-
-            result[0] = {
-              ...result[0],
-              photos: photos,
-              popularity: {
-                score: result[0].popularity,
-                rank: quart
-              },
-              interests: result3,
-              like: like
-            };
-            return res.json(result[0]);
+            axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${result[0].latitude},${result[0].longitude}&key=${GMapiKey}`)
+              .then(res_api => {
+                result[0] = {
+                  ...result[0],
+                  photos: photos,
+                  popularity: {
+                    score: result[0].popularity,
+                    rank: quart
+                  },
+                  interests: result3,
+                  like: like,
+                  position: getAddressPart(res_api.data.results[0].address_components, "locality")
+                };
+                return res.json(result[0]);
+              })
+              .catch((err) => {
+                result[0] = {
+                  ...result[0],
+                  photos: photos,
+                  popularity: {
+                    score: result[0].popularity,
+                    rank: quart
+                  },
+                  interests: result3,
+                  like: like,
+                  position: "..."
+                };
+                return res.json(result[0]);
+              })
           });
         });
       });
     });
   });
 });
-
 
 module.exports = router;

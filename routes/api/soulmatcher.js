@@ -19,6 +19,45 @@ connection.connect(function (err) {
   console.log('You are now connected...')
 });
 
+function calculateScore(request, result_i, tag_res, pos_res, user) {
+ return new Promise((resolve) => {
+   let sort_function;
+   switch (request.sort) {
+     case "relevance":
+       sort_function = u_search.getRelevanceScore;
+       break;
+     case "age":
+       sort_function = u_search.getAgeScore;
+       break;
+     case "distance":
+       sort_function = u_search.getDistanceScore;
+       break;
+     case "popularity":
+       sort_function = u_search.getPopularityScore;
+       break;
+     case "interests":
+       sort_function = u_search.getInterestsScore;
+       break;
+   }
+   let matchScore;
+   let resi_saved = result_i;
+   if (result_i)
+     sort_function(user.id, result_i, tag_res, pos_res)
+       .then((score) => {
+         result_i = {
+           ...resi_saved,
+           matchScore: score
+         };
+         resolve(result_i);
+       })
+       .catch((err) => {
+         console.log(err);
+       });
+
+ })
+}
+
+
 
 router.post('/', (req, res) => {
 
@@ -27,6 +66,7 @@ router.post('/', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
+  let promises = [];
   let request = {
     sort: req.body.sort,
     order: req.body.order,
@@ -54,7 +94,6 @@ router.post('/', (req, res) => {
       });
       return res.end();
     }
-    let sort_function;
     //get sexuality infos from user
     const sql_user_info = "SELECT sexuality, gender FROM infos " +
       `WHERE user_id = ${user.id}`;
@@ -96,57 +135,28 @@ router.post('/', (req, res) => {
               .then((result) => {
                 u_search.filters_interests(request.interests, result)
                   .then((result) => {
-                    const res_saved = result.length;
                     if (result.length === 0) {
                       return res.json({});
                     }
                     for (let i = 0; i < result.length; i++) {
-                      switch (request.sort) {
-                        case "relevance":
-                          sort_function = u_search.getRelevanceScore;
-                          break;
-                        case "age":
-                          sort_function = u_search.getAgeScore;
-                          break;
-                        case "distance":
-                          sort_function = u_search.getDistanceScore;
-                          break;
-                        case "popularity":
-                          sort_function = u_search.getPopularityScore;
-                          break;
-                        case "interests":
-                          sort_function = u_search.getInterestsScore;
-                          break;
-                      }
-                      let matchScore;
-                      let resi_saved = result[i];
-                      if (result[i])
-                        matchScore = sort_function(user.id, result[i], tag_res, pos_res)
-                          .then((score) => {
-                            result[i] = {
-                              ...resi_saved,
-                              matchScore: score
-                            };
-                            if (i === res_saved - 1) {
-                              result.sort((first, second) => {
-                                if (request.order == "desc")
-                                  return (second.matchScore.score - first.matchScore.score);
-                                else
-                                  return (first.matchScore.score - second.matchScore.score)
-                              });
-                              return res.json(result.map((item) => {
-                                return ({
-                                  id: item.id,
-                                  matchScore: item.matchScore.score,
-                                  dist: item.matchScore.dist
-                                })
-                              }));
-                            }
-                          })
-                          .catch((err) => {
-                              console.log(err);
-                            });
+                      promises.push(calculateScore(request, result[i], tag_res, pos_res, user))
                     }
+                    Promise.all(promises)
+                      .then((values) => {
+                        values.sort((first, second) => {
+                          if (request.order == "desc")
+                            return (second.matchScore.score - first.matchScore.score);
+                          else
+                            return (first.matchScore.score - second.matchScore.score)
+                        });
+                        return res.json(values.map((item) => {
+                          return ({
+                            id: item.id,
+                              matchScore: item.matchScore.score,
+                              dist: item.matchScore.dist
+                          })
+                        }));
+                      })
                   })
                   .catch((err) => {
                     console.log(err);
