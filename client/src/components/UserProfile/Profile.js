@@ -8,12 +8,17 @@ import {likeUser} from "../../store/actions/profileActions";
 
 import Loading from '../Loading';
 import Error from '../Error';
-import ProfileMap from "./ProfileMap";
+import ProfileMap from './ProfileMap';
+import BigPicture from './BigPicture'
 
 import './profile.css';
-import './edit.css';
 
 class Profile extends Component {
+  state = {
+    images: [],
+    current: 0
+  };
+
   componentDidMount() {
     this.props.fetchProfile(this.props.match.params.username);
   }
@@ -65,16 +70,6 @@ class Profile extends Component {
     }
   };
 
-  photoAction = (e) => {
-    const position = e.clientY - e.target.offsetTop + window.scrollY;
-    console.log(position);
-    if (position < 20) {
-      console.log('delete');
-    } else if (position > 75) {
-      console.log('profile');
-    }
-  };
-
   likeThisUser = () => {
     this.props.likeUser(this.props.profile.id);
   };
@@ -102,6 +97,19 @@ class Profile extends Component {
     }
   };
 
+  whichPhoto = (elem) => {
+    for (var i = 0; (elem = elem.previousSibling); i++);
+    return i;
+  };
+
+  openPicture = (e) => {
+    const current = this.whichPhoto(e.target);
+    this.setState({
+      images: this.props.profile.photos,
+      current: current
+    });
+  };
+
   render() {
     if (this.props.error)
       return (<Error errTitle="Profil inexistant."
@@ -120,6 +128,7 @@ class Profile extends Component {
 
     return (
       <React.Fragment>
+        <BigPicture images={this.state.images} current={this.state.current}/>
         <div className="profile__top">
           <div className="profile__top-img" style={bgPhoto}/>
         </div>
@@ -187,10 +196,10 @@ class Profile extends Component {
                 </div>
                 <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>
+                    <div key={i} style={{backgroundImage: `url('${photo}')`}}
+                         title="Cliquer pour agrandir" onClick={this.openPicture}/>
                   ))}
                   {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
-                  <div className="add-photo" style={bgColor}/>
                 </div>
                 <div className="profile__cp-title">
                   <h4>POSITION</h4>

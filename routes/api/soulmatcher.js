@@ -15,9 +15,47 @@ let connection = mysql.createConnection({
 });
 
 connection.connect(function (err) {
-  if (err) throw err
+  if (err) throw err;
   console.log('You are now connected...')
 });
+
+function calculateScore(request, result_i, tag_res, pos_res, user) {
+ return new Promise((resolve) => {
+   let sort_function;
+   switch (request.sort) {
+     case "relevance":
+       sort_function = u_search.getRelevanceScore;
+       break;
+     case "age":
+       sort_function = u_search.getAgeScore;
+       break;
+     case "distance":
+       sort_function = u_search.getDistanceScore;
+       break;
+     case "popularity":
+       sort_function = u_search.getPopularityScore;
+       break;
+     case "interests":
+       sort_function = u_search.getInterestsScore;
+       break;
+   }
+   let matchScore;
+   let resi_saved = result_i;
+   if (result_i)
+     matchScore = sort_function(user.id, result_i, tag_res, pos_res)
+       .then((score) => {
+         result_i = {
+           ...resi_saved,
+           matchScore: score
+         };
+         resolve(result_i);
+       })
+       .catch((err) => {
+         console.log(err);
+       });
+
+ })
+}
 
 
 router.post('/', (req, res) => {
@@ -27,6 +65,7 @@ router.post('/', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
+  let promises = [];
   let request = {
     sort: req.body.sort,
     order: req.body.order,
@@ -47,13 +86,13 @@ router.post('/', (req, res) => {
   const sql = "SELECT age, bio, profile_pic from infos " +
     `WHERE user_id = ${user.id};`;
   connection.query(sql, (err, first_result) => {
-    if (err) throw err;
+    if (err) console.log(err);
     if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === null || first_result[0].bio === null) {
-      return res.status(400).json({
+      res.status(400).json({
         user: "Vous devez compléter votre profil étendu"
-      })
+      });
+      return res.end();
     }
-    let sort_function;
     //get sexuality infos from user
     const sql_user_info = "SELECT sexuality, gender FROM infos " +
       `WHERE user_id = ${user.id}`;
@@ -93,64 +132,45 @@ router.post('/', (req, res) => {
 
             u_search.filters_past(user.id, result)
               .then((result) => {
-                  u_search.filters_interests(request.interests, result)
-                    .then((result) => {
-                      if (result.length === 0)
-                        return res.json({});
-                      for (let i = 0; i < result.length; i++) {
-                        switch (request.sort) {
-                          case "relevance":
-                            sort_function = u_search.getRelevanceScore;
-                            break;
-                          case "age":
-                            sort_function = u_search.getAgeScore;
-                            break;
-                          case "distance":
-                            sort_function = u_search.getDistanceScore;
-                            break;
-                          case "popularity":
-                            sort_function = u_search.getPopularityScore;
-                            break;
-                          case "interests":
-                            sort_function = u_search.getInterestsScore;
-                            break;
-                        }
-                        let matchScore;
-                        if (result[i])
-                          matchScore = sort_function(user.id, result[i], tag_res, pos_res)
-                            .then((score) => {
-                                result[i] = {
-                                  ...result[i],
-                                  matchScore: score
-                                };
-                                if (i === result.length - 1) {
-                                  result.sort((first, second) => {
-                                    if (request.order == "desc")
-                                      return (second.matchScore.score - first.matchScore.score);
-                                    else
-                                      return (first.matchScore.score - second.matchScore.score)
-                                  });
-                                  return res.json(result.map((item) => {
-                                    return ({
-                                      id: item.id,
-                                      matchScore: item.matchScore.score,
-                                      dist: item.matchScore.dist
-                                    })
-                                  }));
-                                }
-                              }
-                            );
-                      }
-                    })
-                }
-              );
-
+                u_search.filters_interests(request.interests, result)
+                  .then((result) => {
+                    const res_saved = result.length;
+                    if (result.length === 0) {
+                      return res.json({});
+                    }
+                    for (let i = 0; i < result.length; i++) {
+                      promises.push(calculateScore(request, result[i], tag_res, pos_res, user))
+                    }
+                    Promise.all(promises)
+                      .then((values) => {
+                        console.log("then");
+                        values.sort((first, second) => {
+                          if (request.order == "desc")
+                            return (second.matchScore.score - first.matchScore.score);
+                          else
+                            return (first.matchScore.score - second.matchScore.score)
+                        });
+                        return res.json(values.map((item) => {
+                          return ({
+                            id: item.id,
+                              matchScore: item.matchScore.score,
+                              dist: item.matchScore.dist
+                          })
+                        }));
+                      })
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  })
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           });
         });
       })
     })
   });
-
 });
 
 module.exports = router;

@@ -11,7 +11,7 @@ let connection = mysql.createConnection({
 });
 
 connection.connect(function (err) {
-  if (err) throw err
+  if (err) throw err;
   console.log('You are now connected...')
 });
 
@@ -23,7 +23,7 @@ module.exports = {
     let sql = "SELECT tag from interests " +
       `WHERE user_id = ${infos.id}`;
     connection.query(sql, (err, res) => {
-      // if (err) throw err;
+      if (err) throw err;
 
       //Filter one array of tags with the other one to get nb of common tags
       const filtered_array = tag_res.filter((tag) => {
@@ -55,7 +55,7 @@ module.exports = {
           {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
         );
         if (err) throw err;
-        else matchingScore += 200 * res.length;
+        matchingScore += 200 * res.length;
         resolve({
           score: matchingScore,
           dist
@@ -64,6 +64,7 @@ module.exports = {
     })
   });
 },
+
   getAgeScore: function getAgeScore(id, infos, tag_res, pos_res) {
   return new Promise(resolve => {
     const dist = geolib.getDistance(
@@ -124,7 +125,7 @@ module.exports = {
     const sql = "SELECT tag from interests " +
       `WHERE user_id = ${infos.id}`;
     connection.query(sql, (err, res) => {
-      // if (err) throw err;
+      if (err) throw err;
 
       //Filter one array of tags with the other one to get nb of common tags
       const filtered_array = tag_res.filter((tag) => {
@@ -175,12 +176,16 @@ module.exports = {
     let to_remove = [];
     if (result.length == 0)
       resolve(result);
+    console.log(result);
     for (let i = 0; i < result.length; i++) {
       this.isBlocked_liked_or_disliked(id, result[i])
         .then(res => {
           if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
             to_remove.push(i);
+            console.log('removing ' + i);
           }
+          //TODO: Asynchrone dans for() => resolve() parfois trop tôt !
+          // Faux avec EnoraLecomt, connecté en tant que ConstanceFontai
           if (i == result.length - 1) {
             to_remove.sort((a, b) => {
               return (a - b)
