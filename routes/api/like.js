@@ -3,6 +3,7 @@ const router = express.Router();
 
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
+const notifs = require('../../utils/notifs');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -72,6 +73,9 @@ router.post('/', (req, res) => {
               `WHERE user_id = ${response.liked};`;
             connection.query(sql, (err) => {
               if (err) throw err;
+              if (is_liked) {
+                notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`);
+              }
               return res.json({like: (is_liked ? "you" : "no")});
             });
           });
@@ -83,6 +87,10 @@ router.post('/', (req, res) => {
               `WHERE user_id = ${response.liked};`;
             connection.query(sql, (err, resp) => {
               if (err) throw err;
+              if (!is_liked)
+                notifs.postNotif(response.liked, 'like', `${user.username} vous a liké`);
+              else
+                notifs.postNotif(response.liked, 'match', `Vous avez matché avec ${user.username}`);
               return res.json({like: (is_liked ? "both" : "me")});
             });
           });
