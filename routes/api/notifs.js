@@ -38,7 +38,7 @@ router.get('/', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
-  const sql = "SELECT type, content, `read` from notifs " +
+  const sql = "SELECT id, type, content, `read` from notifs " +
     `WHERE user_id = ${user.id} ORDER BY time DESC; `;
   connection.query(sql, (err, result) => {
     if (err) throw err;
