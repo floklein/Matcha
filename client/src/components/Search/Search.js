@@ -220,7 +220,7 @@ class Search extends Component {
             </div>
             <div className="main-panel avengers">
               {(users && Array.isArray(users)) && users.map((user, i) => (
-                <Preview key={i} userId={user.id} position={'Paris'}/>
+                <Preview key={i} userId={user.id}/>
               ))}
               {(this.props.loading && (<div className="loading-more"/>))}
             </div>
