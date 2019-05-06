@@ -186,8 +186,10 @@ router.post('/register', (req, res) => {
         `VALUES("${info.gender}", ${result.insertId}, 0, "${info.firstName}", "${info.lastName}")`;
       const id = result.insertId;
       connection.query(sql3, (err, result) => {
+        const code = uuid.v4();
+        const link = `localhost:3000/verify?id=${id}&code=${code}`;
         const sql4 = "INSERT INTO verified(user_id, code, status)" +
-          `VALUES (${id}, "${uuid.v4()}", false);`;
+          `VALUES (${id}, "${code}", false);`;
         //Send an email if everything is alright
         connection.query(sql4, (err, result) => {
           if (err) throw err;
@@ -203,7 +205,7 @@ router.post('/register', (req, res) => {
             from: 'Matcha <no-reply@matcha.com>',
             to: info.email,
             subject: 'Sending Email using Node.js',
-            text: 'That was easy!'
+            text: link
           };
           transporter.sendMail(mailOptions, function(error, info){
             if (error) {
