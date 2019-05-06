@@ -78,8 +78,8 @@ router.get('/', (req, res) => {
                                 `WHERE user_id = ${visited_id};`;
                             connection.query(sql, (err, resp) => {
                                 if (err) throw err;
-                            })
-                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil`);
+                            });
+                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
                         }
                         return res.json('');
                     })

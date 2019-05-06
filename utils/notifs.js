@@ -15,13 +15,20 @@ connection.connect(function (err) {
 });
 
 module.exports = {
-  postNotif: function postNotif(id, type, content) {
-    //TO DO : some checks
+  postNotif: function postNotif(id, type, content, user_id, notifier_name) {
+    //TODO: verif data
 
-    const sql = "INSERT INTO notifs(user_id, type, content, time) " +
-      `VALUES(${id}, "${type}", "${content}", now());`;
-    connection.query(sql, (err) => {
+    let sql = "SELECT id from blocks " +
+      `WHERE (blocker_id = ${user_id} AND blocked_id = ${id}) OR (blocked_id = ${user_id} AND blocker_id = ${id})`;
+    connection.query(sql, (err, res) => {
       if (err) throw err;
-    })
+      if (res.length)
+        return;
+      sql = "INSERT INTO notifs(user_id, type, content, notifier_name, time) " +
+        `VALUES(${id}, "${type}", "${content}", "${notifier_name}", now());`;
+      connection.query(sql, (err) => {
+        if (err) throw err;
+      })
+    });
   }
 };

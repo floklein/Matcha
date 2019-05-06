@@ -81,6 +81,7 @@ connection.connect((err) => {
     "CREATE TABLE IF NOT EXISTS notifs(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "user_id INT NOT NULL, " +
+    "notifier_name VARCHAR(24), " +
     "type VARCHAR(12) NOT NULL, " +
     "content VARCHAR(64) NOT NULL, " +
     "`time` DATETIME NOT NULL, " +

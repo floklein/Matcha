@@ -48,16 +48,22 @@ router.post('/', (req, res) => {
   }
 
   //Check if liked exists
-  let sql = `SELECT id from users WHERE id = ${response.liked}`;
-  connection.query(sql, (err, result) => {
-    if (result && result.length === 0) {
+  let sql = `SELECT u.id, u.username, i.profile_pic  from users u INNER JOIN infos i ON u.id = i.user_id WHERE id = ${response.liked}`;
+  connection.query(sql, (err, result0) => {
+    if (result0 && result0.length === 0) {
       errors = {
         ...errors,
         liked: "Utilisateur inexistant"
       };
       return res.status(400).json(errors);
     }
-
+    if (result0 && result0[0].profile_pic === '/photos/default.png') {
+      errors = {
+        ...errors,
+        liked: "Vous ne pouvez liker un utilisateur qui n'a pas de photo de profil"
+      };
+      return res.status(400).json(errors);
+    }
     sql = `SELECT * FROM likes WHERE liked_id = ${user.id} AND liker_id = ${response.liked}`;
     connection.query(sql, (err, result) => {
       if (err) throw err;
@@ -74,7 +80,7 @@ router.post('/', (req, res) => {
             connection.query(sql, (err) => {
               if (err) throw err;
               if (is_liked) {
-                notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`);
+                notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`, user.id);
               }
               return res.json({like: (is_liked ? "you" : "no")});
             });
@@ -88,9 +94,12 @@ router.post('/', (req, res) => {
             connection.query(sql, (err, resp) => {
               if (err) throw err;
               if (!is_liked)
-                notifs.postNotif(response.liked, 'like', `${user.username} vous a liké`);
-              else
-                notifs.postNotif(response.liked, 'match', `Vous avez matché avec ${user.username}`);
+                notifs.postNotif(response.liked, 'like', `${user.username} vous a liké`, user.id, user.username);
+              else {
+                console.log(result0);
+                notifs.postNotif(response.liked, 'match', `Vous avez matché avec ${user.username}`, user.id, user.username);
+                notifs.postNotif(user.id, 'match', `Vous avez matché avec ${result0[0].username}`, response.liked, result0[0].username);
+              }
               return res.json({like: (is_liked ? "both" : "me")});
             });
           });
