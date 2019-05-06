@@ -9,13 +9,9 @@
     height: 100%;
     border-radius: 1rem;
     background-color: white;
-    transition: box-shadow 0.4s, background-color 1s, transform 1s;
+    transition: box-shadow 0.4s, background-color 1s, transform 1s, filter 1s;
     overflow: hidden;
     cursor: grab;
-}
-
-.card:not(:last-child) {
-    transform: scale(0.9);
 }
 
 .card:last-child, .card:nth-last-child(2) {
@@ -24,6 +20,16 @@
 
 .card:last-child, .card:nth-last-child(2), .card:nth-last-child(3) {
     display: block;
+}
+
+.card:nth-last-child(2) {
+    transform: translateY(2.5rem) scale(0.9);
+    filter: blur(3px);
+}
+
+.card:nth-last-child(3) {
+    transform: translateY(5rem) scale(0.8);
+    filter: blur(6px);
 }
 
 .card:hover {

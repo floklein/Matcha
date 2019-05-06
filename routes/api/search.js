@@ -12,7 +12,7 @@ let connection = mysql.createConnection({
   user: 'root',
   password: 'root',
   database: 'matcha'
-});
+});""
 
 connection.connect(function (err) {
   if (err) throw err;
