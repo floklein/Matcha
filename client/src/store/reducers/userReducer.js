@@ -1,4 +1,4 @@
-import {UPLOAD_IMAGE, LOADING} from "../actions/types";
+import {UPLOAD_IMAGE, CHANGE_INFOS, LOADING} from "../actions/types";
 
 const initialState = {};
 
@@ -8,6 +8,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         newImage: action.payload
+      };
+    case CHANGE_INFOS:
+      return {
+        ...state,
+        outcome: action.payload
       };
     case LOADING:
       return {
