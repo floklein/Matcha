@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 
 const multer = require('multer');
-const upload = multer({'../../client/public/photos'});
+const upload = multer({dest: '../../client/public/photos'});
 const uuid = require('uuid');
 const jwt_check = require('../../utils/jwt_check');
 
