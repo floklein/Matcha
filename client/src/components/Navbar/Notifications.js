@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import classnames from "classnames";
+import {NavLink} from 'react-router-dom';
 
 import {getNotifs} from '../../store/actions/notificationActions';
+
+import noNotif from '../../assets/img/notif-none.svg';
 
 class Notifications extends Component {
   state = {
@@ -55,16 +58,20 @@ class Notifications extends Component {
 
     return (
       <div className="items">
+        <div className="item no-notif">
+          <img src={noNotif} alt="no notifs"/>
+          <span>Pas de notifications.</span>
+        </div>
         {list && this.filterBy(list).map((notif) => (
-          <div key={notif.id} className={classnames('item', {
+          <NavLink key={notif.id} className={classnames('item', {
             'new': !notif.read
-          })}>
+          })} to={`/profile/${notif.notifier_name}`}>
             <div className="item__img"/>
             <div className="item__txt">
               <h4>{this.getTitle(notif.type)}</h4>
               <p>{notif.content}</p>
             </div>
-          </div>
+          </NavLink>
         ))}
       </div>
     );
