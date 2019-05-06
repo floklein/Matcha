@@ -11,7 +11,7 @@ class BigPicture extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.images && nextProps.images !== '') {
+    if (nextProps.images && this.props.images !== nextProps.images && Array.isArray(nextProps.images)) {
       this.setState({
         images: nextProps.images,
         current: nextProps.current,

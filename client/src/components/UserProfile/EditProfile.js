@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 
 import {fetchProfile} from "../../store/actions/profileActions";
-import {uploadImage} from "../../store/actions/userActions";
+import {uploadImage, changeInfos} from "../../store/actions/userActions";
 
 import Loading from '../Loading';
 import ProfileMap from './ProfileMap';
@@ -12,13 +12,25 @@ import ContentEditable from './ContentEditable'
 
 import './profile.css';
 import './edit.css';
-import {NavLink} from "react-router-dom";
 
 class EditProfile extends Component {
   state = {};
 
   componentDidMount() {
     this.props.fetchProfile(this.props.me.id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.profile !== this.props.profile) {
+      this.setState({
+        ...nextProps.profile
+      });
+    }
+    if (nextProps.submitOutcome !== this.props.submitOutcome) {
+      if (nextProps.submitOutcome === true) {
+        window.location.href = '/account/profile';
+      }
+    }
   }
 
   getGender = (gender) => {
@@ -115,6 +127,10 @@ class EditProfile extends Component {
     }
   };
 
+  submitChanges = () => {
+    this.props.changeInfos(this.state);
+  }
+
   render() {
     if (!this.props.profile)
       return (<Loading/>);
@@ -138,19 +154,20 @@ class EditProfile extends Component {
               </div>
               <div className="profile__sp-content">
                 <div>
-                  <NavLink to="/account/profile">
-                    <button>TERMINÉ</button>
-                  </NavLink>
+                  <button onClick={this.submitChanges}>TERMINÉ</button>
                 </div>
                 <div>
                   <h1>
-                    <ContentEditable html={profile.firstName} onChange={this.handleFirstName}>{profile.firstName}</ContentEditable>
+                    <ContentEditable html={profile.firstName}
+                                     onChange={this.handleFirstName}>{profile.firstName}</ContentEditable>
                     &nbsp;
-                    <ContentEditable html={profile.lastName} onChange={this.handleLastName}>{profile.lastName}</ContentEditable>
+                    <ContentEditable html={profile.lastName}
+                                     onChange={this.handleLastName}>{profile.lastName}</ContentEditable>
                   </h1>
                 </div>
                 <div>
-                  <p><ContentEditable html={profile.username} onChange={this.handleUsername}>{profile.username}</ContentEditable>&nbsp;</p>
+                  <p><ContentEditable html={profile.username}
+                                      onChange={this.handleUsername}>{profile.username}</ContentEditable>&nbsp;</p>
                 </div>
                 <div className="profile__sp-infos">
                   <div>
@@ -198,7 +215,9 @@ class EditProfile extends Component {
                   <h4>BIO</h4>
                 </div>
                 <div className="profile__cp-content bio">
-                  <p><ContentEditable html={profile.bio} onChange={this.handleBio}>{profile.bio ? profile.bio : `${profile.firstName} n'a pas écrit de bio.`}</ContentEditable>&nbsp;</p>
+                  <p><ContentEditable html={profile.bio}
+                                      onChange={this.handleBio}>{profile.bio ? profile.bio : `${profile.firstName} n'a pas écrit de bio.`}</ContentEditable>&nbsp;
+                  </p>
                 </div>
                 <div className="profile__cp-title">
                   <h4>INTÉRÊTS</h4>
@@ -242,14 +261,16 @@ class EditProfile extends Component {
 
 EditProfile.propTypes = {
   fetchProfile: PropTypes.func.isRequired,
-  uploadImage: PropTypes.func.isRequired
+  uploadImage: PropTypes.func.isRequired,
+  changeInfos: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   profile: state.profile.user,
   error: state.errors.profile,
   me: state.auth.user,
-  loading: state.user.loading
+  loading: state.user.loading,
+  submitOutcome: state.user.outcome
 });
 
-export default connect(mapStateToProps, {fetchProfile, uploadImage})(EditProfile);
+export default connect(mapStateToProps, {fetchProfile, uploadImage, changeInfos})(EditProfile);

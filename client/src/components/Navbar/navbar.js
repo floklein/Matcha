@@ -3,10 +3,12 @@ import {NavLink} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import axios from 'axios';
 
-import {logoutUser} from "../../store/actions/authActions";
+import {logoutUser} from '../../store/actions/authActions';
+import {getNotifs} from '../../store/actions/notificationActions';
 
-import Notifications from "./Notifications";
+import Notifications from './Notifications';
 import Account from './Account';
 
 import './navbar.css'
@@ -16,7 +18,8 @@ import logo from '../../assets/img/logo.svg'
 class Navbar extends Component {
   state = {
     notifMenu: false,
-    userMenu: false
+    userMenu: false,
+    filterNotifsBy: 'all'
   };
 
   onLogoutClick = () => {
@@ -29,7 +32,6 @@ class Navbar extends Component {
       notifMenu: false,
       userMenu: false
     });
-    window.removeEventListener('mouseup', this.clickAway);
   };
 
   toggleNotifMenu = () => {
@@ -37,7 +39,6 @@ class Navbar extends Component {
       notifMenu: !this.state.notifMenu,
       userMenu: false
     });
-    window.addEventListener('mouseup', this.clickAway);
   };
 
   toggleUserMenu = () => {
@@ -45,7 +46,20 @@ class Navbar extends Component {
       userMenu: !this.state.userMenu,
       notifMenu: false
     });
-    window.addEventListener('mouseup', this.clickAway);
+  };
+
+  markAllAsRead = () => {
+    axios.patch('/api/notifs/readAll')
+      .then(res => {
+        this.props.getNotifs();
+      })
+      .catch();
+  };
+
+  handleFilterChange = (e) => {
+    this.setState({
+      filterNotifsBy: e.target.value
+    });
   };
 
   render() {
@@ -65,6 +79,9 @@ class Navbar extends Component {
     );
     const authButtons = (
       <React.Fragment>
+        <div className={classnames('nav-overlay', {
+          'shown': this.state.notifMenu || this.state.userMenu
+        })} onClick={this.clickAway}/>
         <div className="nav-button notifications">
           <svg onClick={this.toggleNotifMenu} xmlns="http://www.w3.org/2000/svg" width="30" height="30"
                viewBox="0 0 24 24"
@@ -75,8 +92,18 @@ class Navbar extends Component {
           <div className={classnames('nav-menu', {
             'opened': this.state.notifMenu
           })}>
-            <div className="menu__title">Notifications</div>
-            <Notifications/>
+            <div className="menu__title notifications">
+              <select defaultValue="all" onChange={this.handleFilterChange}>
+                <option value="all">Toutes</option>
+                <option value="visit">Visites</option>
+                <option value="like">Likes</option>
+                <option value="unlike">Unlikes</option>
+                <option value="match">Matches</option>
+              </select>
+              Notifications
+              <button onClick={this.markAllAsRead}/>
+            </div>
+            <Notifications filterBy={this.state.filterNotifsBy}/>
           </div>
         </div>
         <div className="nav-button account">
@@ -133,6 +160,7 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   logoutUser: PropTypes.func.isRequired,
+  getNotifs: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -140,4 +168,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, {logoutUser})(Navbar);
+export default connect(mapStateToProps, {logoutUser, getNotifs})(Navbar);

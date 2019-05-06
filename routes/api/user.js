@@ -408,7 +408,8 @@ router.post('/update', (req, res) => {
     bio: req.body.bio,
     sexuality: req.body.sexuality,
     gender: req.body.gender,
-    interests: req.body.interests
+    interests: req.body.interests,
+    age: req.body.age
   };
 
   let response = {};
@@ -471,6 +472,14 @@ router.post('/update', (req, res) => {
       error = true;
     }
 
+    else if (typeof request.bio === 'undefined' || request.bio.length === 0 || request.bio.length > 460) {
+      response = {
+        ...response,
+        bio: "Bio invalide."
+      };
+      error = true;
+    }
+
     //Send json if there is an error and quit
     if (error === true) {
       res.status(400);
@@ -481,7 +490,7 @@ router.post('/update', (req, res) => {
       const sql_user_update = `UPDATE users SET username = "${request.username}" WHERE id = ${user.id};`;
       connection.query(sql_user_update, (err) => {
         if (err) throw err;
-        const sql_infos_update = `UPDATE infos SET gender = "${request.gender}", sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}" WHERE user_id = ${user.id};`;
+        const sql_infos_update = `UPDATE infos SET gender = "${request.gender}", age=${request.age}, sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}" WHERE user_id = ${user.id};`;
         connection.query(sql_infos_update, (err) => {
           if (err) throw err;
           const sql_delete_interests = `DELETE FROM interests WHERE user_id = ${user.id};`;
@@ -489,7 +498,7 @@ router.post('/update', (req, res) => {
             if (err) throw err;
             for (let i = 0; i < request.interests.length; i++) {
               let sql_add_interest = "INSERT INTO interests(user_id, tag)" +
-                ` VALUES(${user.id}, "${request.interests[i].name}");`;
+                ` VALUES(${user.id}, "${request.interests[i].tag}");`;
               connection.query(sql_add_interest, (err) => {
                 if (err) throw err;
                 if (i === request.interests.length -1) {
