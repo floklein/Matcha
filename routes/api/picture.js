@@ -34,7 +34,7 @@ router.delete('/:pic_nb', (req, res) =>{
     connection.query(sql, (err) => {
       if (err) throw err;
       let pic_to_del = pic[0].pic;
-      sql = `UPDATE infos set profile_pic = NULL WHERE user_id = ${user.id} and profile_pic = "${pic_to_del}";`;
+      sql = `UPDATE infos set profile_pic = '/photos/default.png' WHERE user_id = ${user.id} and profile_pic = "${pic_to_del}";`;
       connection.query(sql, (err) => {
         if (err) throw err;
         return res.json();
