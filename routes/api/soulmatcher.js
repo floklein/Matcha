@@ -135,7 +135,6 @@ router.post('/', (req, res) => {
               .then((result) => {
                 u_search.filters_interests(request.interests, result)
                   .then((result) => {
-                    const res_saved = result.length;
                     if (result.length === 0) {
                       return res.json({});
                     }
@@ -144,7 +143,6 @@ router.post('/', (req, res) => {
                     }
                     Promise.all(promises)
                       .then((values) => {
-                        console.log("then");
                         values.sort((first, second) => {
                           if (request.order == "desc")
                             return (second.matchScore.score - first.matchScore.score);
