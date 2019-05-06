@@ -48,12 +48,19 @@ router.post('/', (req, res) => {
   }
 
   //Check if liked exists
-  let sql = `SELECT id, username from users WHERE id = ${response.liked}`;
+  let sql = `SELECT u.id, u.username, i.profile_pic  from users u INNER JOIN infos i ON u.id = i.user_id WHERE id = ${response.liked}`;
   connection.query(sql, (err, result0) => {
     if (result0 && result0.length === 0) {
       errors = {
         ...errors,
         liked: "Utilisateur inexistant"
+      };
+      return res.status(400).json(errors);
+    }
+    if (result0 && result0[0].profile_pic === '/photos/default.png') {
+      errors = {
+        ...errors,
+        liked: "Vous ne pouvez liker un utilisateur qui n'a pas de photo de profil"
       };
       return res.status(400).json(errors);
     }
