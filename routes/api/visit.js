@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
+const notifs = require('../../utils/notifs');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -78,7 +79,8 @@ router.get('/', (req, res) => {
                             connection.query(sql, (err, resp) => {
                                 if (err) throw err;
                             })
-                        } //If it was changed, add popularity
+                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil`);
+                        }
                         return res.json('');
                     })
                 }
