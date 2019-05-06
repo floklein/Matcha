@@ -12,7 +12,6 @@ import ContentEditable from './ContentEditable'
 
 import './profile.css';
 import './edit.css';
-import {NavLink} from "react-router-dom";
 
 class EditProfile extends Component {
   state = {};

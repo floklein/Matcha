@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
-    const visited_id = req.body.visited;
+    const visited_id = req.query.visited;
     let response = {};
 
     if (typeof visited_id === 'undefined' || visited_id == 0) {

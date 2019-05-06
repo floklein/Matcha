@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import axios from 'axios';
 
 import {fetchProfile} from "../../store/actions/profileActions";
 import {likeUser} from "../../store/actions/profileActions";
@@ -110,6 +111,10 @@ class Profile extends Component {
     });
   };
 
+  visitProfile = (id) => {
+    axios.get(`/api/visit?visited=${id}`);
+  };
+
   render() {
     if (this.props.error)
       return (<Error errTitle="Profil inexistant."
@@ -117,7 +122,7 @@ class Profile extends Component {
     if (!this.props.profile)
       return (<Loading/>);
     const profile = this.props.profile;
-    console.log(profile);
+    this.visitProfile(profile.id);
     const gender = this.getGender(profile.gender);
     const sexuality = this.getSexuality(profile.sexuality);
     const popularity = this.getPopularity(profile.popularity);
