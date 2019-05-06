@@ -19,6 +19,36 @@ connection.connect(function (err) {
   console.log('You are now connected...')
 });
 
+function calculateScore(request, result_i, tag_res, pos_res, user) {
+  return new Promise((resolve) => {
+    let sort_function;
+    switch (request.sort) {
+      case "age":
+        sort_function = u_search.getAgeScore;
+        break;
+      case "distance":
+        sort_function = u_search.getDistanceScore;
+        break;
+      case "popularity":
+        sort_function = u_search.getPopularityScore;
+        break;
+      case "interests":
+        sort_function = u_search.getInterestsScore;
+        break;
+    }
+    if (result_i)
+      sort_function(user.id, result_i, tag_res, pos_res)
+        .then((score) => {
+            result_i = {
+              ...result_i,
+              matchScore: score
+            };
+            resolve(result_i);
+          }
+        );
+  });
+}
+
 
 router.post('/', (req, res) => {
 
@@ -26,6 +56,7 @@ router.post('/', (req, res) => {
   if (user.id === -1) {
     return res.status(401).json({error: 'unauthorized access'});
   }
+  let promises = [];
 
   let request = {
     sort: req.body.sort,
@@ -78,47 +109,27 @@ router.post('/', (req, res) => {
                   .then((result) => {
                     if (result.length === 0)
                       return res.json({});
-                    for (let i = 0; i < result.length; i++) {
-                      switch (request.sort) {
-                        case "age":
-                          sort_function = u_search.getAgeScore;
-                          break;
-                        case "distance":
-                          sort_function = u_search.getDistanceScore;
-                          break;
-                        case "popularity":
-                          sort_function = u_search.getPopularityScore;
-                          break;
-                        case "interests":
-                          sort_function = u_search.getInterestsScore;
-                          break;
+                      for (let i = 0; i < result.length; i++) {
+                        promises.push(calculateScore(request, result[i], tag_res, pos_res, user))
                       }
-                      let matchScore;
-                      if (result[i])
-                        matchScore = sort_function(user.id, result[i], tag_res, pos_res)
-                          .then((score) => {
-                              result[i] = {
-                                ...result[i],
-                                matchScore: score
-                              };
-                              if (i === result.length - 1) {
-                                result.sort((first, second) => {
-                                  if (request.order === "desc")
-                                    return (second.matchScore.score - first.matchScore.score);
-                                  else
-                                    return (first.matchScore.score - second.matchScore.score)
-                                });
-                                let final_result = (result.map((item) => {
-                                  return ({
-                                    id: item.id,
-                                    matchScore: item.matchScore.score,
-                                  });
-                                }));
-                                return res.json(final_result.slice(request.from, request.to));
-                              }
-                            }
-                          );
-                    }
+                      Promise.all(promises)
+                        .then((values) => {
+                          values.sort((first, second) => {
+                            if (request.order == "desc")
+                              return (second.matchScore.score - first.matchScore.score);
+                            else
+                              return (first.matchScore.score - second.matchScore.score)
+                          });
+                          return res.json(values.map((item) => {
+                            return ({
+                              id: item.id,
+                              matchScore: item.matchScore.score,
+                              dist: item.matchScore.dist
+                            })
+                          }).filter((item, i) => {
+                              return (i >= request.from && i < request.to);
+                          }));
+                    });
                   })
               }
             );

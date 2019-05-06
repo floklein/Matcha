@@ -146,25 +146,25 @@ module.exports = {
   });
 },
 
-  isBlocked_liked_or_disliked: function isBlocked_liked_or_disliked(id, user) { //need to add dislike
+  isBlocked_liked_or_disliked: function isBlocked_liked_or_disliked(id, user, i) { //need to add dislike
   return new Promise(resolve => {
     let sql = "SELECT id from blocks " +
       `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
     connection.query(sql, (err, res) => {
       if (err) throw err;
       if (res.length)
-        resolve(res.length);
+        resolve(i);
       sql = "SELECT id from likes " +
         `WHERE (liker_id = ${id} AND liked_id = ${user.id});`;
       connection.query(sql, (err, res) => {
         if (err) throw err;
         if (res.length)
-          resolve(res.length);
+          resolve(i);
         sql = "Select id from dislikes " +
           `WHERE (disliker_id = ${id} AND disliked_id = ${user.id});`;
         connection.query(sql, (err, res) => {
           if (err) throw err;
-          resolve(res.length);
+          resolve(res.length ? i : -1);
         })
       })
     })
@@ -173,30 +173,20 @@ module.exports = {
 
   filters_past: async function filters_past(id, result) {
   return new Promise(resolve => {
-    let to_remove = [];
+    let promises = [];
     if (result.length == 0)
       resolve(result);
-    console.log(result);
     for (let i = 0; i < result.length; i++) {
-      this.isBlocked_liked_or_disliked(id, result[i])
-        .then(res => {
-          if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
-            to_remove.push(i);
-            console.log('removing ' + i);
-          }
-          //TODO: Asynchrone dans for() => resolve() parfois trop tôt !
-          // Faux avec EnoraLecomt, connecté en tant que ConstanceFontai
-          if (i == result.length - 1) {
-            to_remove.sort((a, b) => {
-              return (a - b)
-            });
-            for (let j = to_remove.length - 1; j >= 0; j--) {
-              result.splice(to_remove[j], 1);
-            }
-            resolve(result);
-          }
-        });
+      promises.push(this.isBlocked_liked_or_disliked(id, result[i], i));
     }
+    Promise.all(promises)
+      .then((values) => {
+        values = values.sort((a, b) => {return (b - a);}).filter((val) => {return (val !== -1);});
+        for (let j = 0; j < values.length; j++) {
+          result.splice(values[j], 1);
+        }
+        resolve(result);
+      })
   })
 },
 
