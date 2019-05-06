@@ -17,3 +17,6 @@ export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SET_CURRENT = 'SET_CURRENT';
 // USER
 export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
+export const CHANGE_INFOS = 'CHANGE_INFOS';
+// NOTIFICATIONS
+export const GET_NOTIFS = 'GET_NOTIFS';

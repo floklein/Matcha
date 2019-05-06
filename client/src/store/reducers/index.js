@@ -6,6 +6,7 @@ import soulmatcherReducer from './soulmatcherReducer';
 import searchReducer from './searchReducer';
 import chatReducer from './chatReducer';
 import userReducer from './userReducer';
+import notificationReducer from './notificationReducer';
 
 export default combineReducers({
   profile: profileReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   soulmatcher: soulmatcherReducer,
   search: searchReducer,
   chat: chatReducer,
-  user: userReducer
+  user: userReducer,
+  notifications: notificationReducer
 });

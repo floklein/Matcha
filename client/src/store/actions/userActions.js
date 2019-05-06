@@ -1,4 +1,4 @@
-import {UPLOAD_IMAGE, LOADING, GET_ERRORS} from './types';
+import {CHANGE_INFOS, LOADING, GET_ERRORS} from './types';
 
 import axios from 'axios';
 
@@ -34,5 +34,39 @@ export const uploadImage = (image) => dispatch => {
           payload: false
         });
       }, 2000);
+    });
+};
+
+export const changeInfos = (infos) => dispatch => {
+  dispatch({
+    type: LOADING,
+    payload: true
+  });
+  axios.post('/api/user/update', infos)
+    .then(res => {
+      console.log(res);
+      dispatch({
+        type: LOADING,
+        payload: false
+      });
+      dispatch({
+        type: CHANGE_INFOS,
+        payload: true
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+      dispatch({
+        type: CHANGE_INFOS,
+        payload: false
+      });
+      dispatch({
+        type: LOADING,
+        payload: false
+      });
     });
 };

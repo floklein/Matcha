@@ -14,12 +14,17 @@ export class ProfileMap extends Component {
   };
 
   render() {
+    if (this.props.position === {}) {
+      return (<div/>)
+    }
+
     return (
       <Map
         onClick={this.onMapClick}
         google={this.props.google}
         zoom={12}
-        initialCenter={this.props.position}>
+        initialCenter={this.props.position}
+        center={this.props.position}>
         <Marker
           onClick={this.onMarkerClick}
           position={this.props.position}
