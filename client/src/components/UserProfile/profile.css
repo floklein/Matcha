@@ -390,7 +390,7 @@
     margin: 2rem 0 -0.5rem 0;
 }
 
-.profile__cp-buttons button {
+.profile__cp-buttons > button {
     width: 2.5rem;
     height: 1.5rem;
     margin: 0 0 0 0.5rem;
@@ -402,19 +402,19 @@
     background-repeat: no-repeat;
 }
 
-.profile__cp-buttons button:hover {
+.profile__cp-buttons > button:hover {
     background-color: #c2c2c2 !important;
 }
 
-.profile__cp-buttons button:active {
+.profile__cp-buttons > button:active {
     background-color: #a2a2a2 !important;
 }
 
-.profile__cp-buttons button.report {
+.profile__cp-buttons > button.report {
     background-image: url("../../assets/img/profile-report.svg");
 }
 
-.profile__cp-buttons button.block {
+.profile__cp-buttons > button.block {
     background-image: url("../../assets/img/profile-block.svg");
 }
 
