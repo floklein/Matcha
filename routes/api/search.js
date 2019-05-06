@@ -126,6 +126,8 @@ router.post('/', (req, res) => {
                               matchScore: item.matchScore.score,
                               dist: item.matchScore.dist
                             })
+                          }).filter((item, i) => {
+                              return (i >= request.from && i < request.to);
                           }));
                     });
                   })
