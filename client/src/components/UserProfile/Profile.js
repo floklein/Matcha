@@ -10,14 +10,16 @@ import {likeUser} from "../../store/actions/profileActions";
 import Loading from '../Loading';
 import Error from '../Error';
 import ProfileMap from './ProfileMap';
-import BigPicture from './BigPicture'
+import BigPicture from './BigPicture';
+import VeryBadWindow from './VeryBadWindow';
 
 import './profile.css';
 
 class Profile extends Component {
   state = {
     images: [],
-    current: 0
+    current: 0,
+    vbwStep: ''
   };
 
   componentDidMount() {
@@ -115,24 +117,22 @@ class Profile extends Component {
     axios.get(`/api/visit?visited=${id}`);
   };
 
-  onReport = () => {
-    axios.post('/api/report', {reported: this.props.profile.id})
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err.response.data);
-      });
+  openReport = () => {
+    this.setState({
+      vbwStep: 'report'
+    });
   };
 
-  onBlock = () => {
-    axios.post('/api/block', {blocked: this.props.profile.id})
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err.response.data);
-      });
+  openBlock = () => {
+    this.setState({
+      vbwStep: 'block'
+    });
+  };
+
+  closeVBW = () => {
+    this.setState({
+      vbwStep: ''
+    });
   };
 
   render() {
@@ -236,8 +236,9 @@ class Profile extends Component {
                     gender={profile.gender}/>
                 </div>
                 <div className="profile__cp-buttons">
-                  <button className="report" title="Signaler cet utilisateur" onClick={this.onReport}/>
-                  <button className="block" title="Bloquer cet utilisateur" onClick={this.onBlock}/>
+                  <button className="report" title="Signaler cet utilisateur" onClick={this.openReport}/>
+                  <button className="block" title="Bloquer cet utilisateur" onClick={this.openBlock}/>
+                  <VeryBadWindow step={this.state.vbwStep} closeParent={this.closeVBW} userId={profile.id}/>
                 </div>
               </div>
             </div>

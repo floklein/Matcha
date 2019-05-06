@@ -1,0 +1,114 @@
+.very-bad-window {
+    position: fixed;
+    display: none;
+    align-items: center;
+    justify-items: center;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.very-bad-window.opened {
+    display: grid;
+}
+
+.vbw__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+}
+
+.vbw__popup {
+    width: 95%;
+    max-width: 25rem;
+    z-index: 12000;
+    background-color: white;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid lightgrey;
+    box-shadow: 0 0 64px -8px rgba(0, 0, 0, 0.5);
+}
+
+.vbw__title-bar {
+    position: relative;
+    height: 3rem;
+    border-bottom: 1px solid lightgrey;
+    background-color: whitesmoke;
+}
+
+.vbw__close {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    top: 50%;
+    margin: 0 0.5rem;
+    transform: translateY(-50%);
+    background: url("../../assets/img/cross.svg") center no-repeat;
+    z-index: 12001;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.vbw__close:hover {
+    background-color: lightgrey;
+}
+
+.vbw__close:active {
+    background-color: #b6b6b6;
+}
+
+.vbw__title-bar h1 {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+}
+
+.vbw__main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.vbw__main-img {
+    width: 10rem;
+    margin: 2rem 0 1rem 0;
+    padding: 1rem;
+    background-color: black;
+    border-radius: 1rem;
+    box-shadow: -2rem 0 0 -5px grey, 2rem 0 0 -5px grey,
+    -3.5rem 0 0 -5px lightgrey, 3.5rem 0 0 -5px lightgrey,
+    -4.25rem 0 0 -5px whitesmoke, 4.25rem 0 0 -5px whitesmoke;
+}
+
+.vbw__main-txt {
+    width: 80%;
+    margin-top: 1rem;
+    padding: 0.5rem 5%;
+    line-height: 1.5rem;
+    background-color: whitesmoke;
+    text-align: center;
+    border: 1px dotted lightgrey;
+    border-radius: 0.5rem;
+}
+
+.vbw__main-txt:last-child {
+    margin-bottom: 2rem;
+}
+
+.vbw__main-button {
+    margin: 2rem 0 !important;
+    width: 8rem !important;
+    height: 2.5rem !important;
+    filter: grayscale(100%);
+}
