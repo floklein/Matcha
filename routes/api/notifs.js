@@ -70,7 +70,6 @@ router.post('/', (req, res) => {
     content: req.body.content,
   };
 
-  //TODO: More if to check if values are correct
   const sql = "INSERT INTO notifs(user_id, type, content, time) " +
     `VALUES(${user.id}, "${request.type}", "${request.content}", now());`;
   connection.query(sql, (err) => {
