@@ -73,7 +73,7 @@ router.post('/', (req, res) => {
             connection.query(sql, (err) => {
               if (err) throw err;
               if (is_liked) {
-                notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`);
+                notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`, user.id);
               }
               return res.json({like: (is_liked ? "you" : "no")});
             });
@@ -87,11 +87,11 @@ router.post('/', (req, res) => {
             connection.query(sql, (err, resp) => {
               if (err) throw err;
               if (!is_liked)
-                notifs.postNotif(response.liked, 'like', `${user.username} vous a liké`);
+                notifs.postNotif(response.liked, 'like', `${user.username} vous a liké`, user.id);
               else {
                 console.log(result0);
-                notifs.postNotif(response.liked, 'match', `Vous avez matché avec ${user.username}`);
-                notifs.postNotif(user.id, 'match', `Vous avez matché avec ${result0[0].username}`);
+                notifs.postNotif(response.liked, 'match', `Vous avez matché avec ${user.username}`, user.id);
+                notifs.postNotif(user.id, 'match', `Vous avez matché avec ${result0[0].username}`, response.liked);
               }
               return res.json({like: (is_liked ? "both" : "me")});
             });
