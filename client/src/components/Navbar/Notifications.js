@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import classnames from "classnames";
 
 import {getNotifs} from '../../store/actions/notificationActions';
-import {getMatches, getMessages, sendMessage} from "../../store/actions/chatActions";
 
 class Notifications extends Component {
   state = {
@@ -29,7 +28,7 @@ class Notifications extends Component {
       case 'like':
         return 'Super nouvelle !';
       case 'unlike':
-        return 'Ça nous brise le coœur...';
+        return 'Ça nous brise le cœur...';
       case 'match':
         return 'C\'est un match !';
       default:
@@ -43,7 +42,7 @@ class Notifications extends Component {
     return (
       <div className="items">
         {list && list.map((notif) => (
-          <div className={classnames('item', {
+          <div key={notif.id} className={classnames('item', {
             'new': !notif.read
           })}>
             <div className="item__img"/>
