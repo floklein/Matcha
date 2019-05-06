@@ -176,13 +176,11 @@ module.exports = {
     let to_remove = [];
     if (result.length == 0)
       resolve(result);
-    console.log(result);
     for (let i = 0; i < result.length; i++) {
       this.isBlocked_liked_or_disliked(id, result[i])
         .then(res => {
           if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
             to_remove.push(i);
-            console.log('removing ' + i);
           }
           //TODO: Asynchrone dans for() => resolve() parfois trop tôt !
           // Faux avec EnoraLecomt, connecté en tant que ConstanceFontai

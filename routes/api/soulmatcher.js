@@ -42,7 +42,7 @@ function calculateScore(request, result_i, tag_res, pos_res, user) {
    let matchScore;
    let resi_saved = result_i;
    if (result_i)
-     matchScore = sort_function(user.id, result_i, tag_res, pos_res)
+     sort_function(user.id, result_i, tag_res, pos_res)
        .then((score) => {
          result_i = {
            ...resi_saved,
@@ -56,6 +56,7 @@ function calculateScore(request, result_i, tag_res, pos_res, user) {
 
  })
 }
+
 
 
 router.post('/', (req, res) => {
