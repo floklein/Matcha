@@ -20,7 +20,7 @@ class Preview extends Component {
     sexuality: '...',
     profile_pic: '',
     rgb: {},
-    position: this.props.position,
+    position: '...',
     like: 'no'
   };
 
