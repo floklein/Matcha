@@ -15,7 +15,7 @@ connection.connect(function (err) {
 });
 
 module.exports = {
-  postNotif: function postNotif(id, type, content, user_id) {
+  postNotif: function postNotif(id, type, content, user_id, notifier_name) {
     //TODO: verif data
 
     let sql = "SELECT id from blocks " +
@@ -24,8 +24,8 @@ module.exports = {
       if (err) throw err;
       if (res.length)
         return;
-      sql = "INSERT INTO notifs(user_id, type, content, time) " +
-        `VALUES(${id}, "${type}", "${content}", now());`;
+      sql = "INSERT INTO notifs(user_id, type, content, notifier_name, time) " +
+        `VALUES(${id}, "${type}", "${content}", "${notifier_name}", now());`;
       connection.query(sql, (err) => {
         if (err) throw err;
       })
