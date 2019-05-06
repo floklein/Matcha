@@ -115,6 +115,26 @@ class Profile extends Component {
     axios.get(`/api/visit?visited=${id}`);
   };
 
+  onReport = () => {
+    axios.post('/api/report', {reported: this.props.profile.id})
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data);
+      });
+  };
+
+  onBlock = () => {
+    axios.post('/api/block', {blocked: this.props.profile.id})
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err.response.data);
+      });
+  };
+
   render() {
     if (this.props.error)
       return (<Error errTitle="Profil inexistant."
@@ -216,8 +236,8 @@ class Profile extends Component {
                     gender={profile.gender}/>
                 </div>
                 <div className="profile__cp-buttons">
-                  <button className="report" title="Signaler cet utilisateur"/>
-                  <button className="block" title="Bloquer cet utilisateur"/>
+                  <button className="report" title="Signaler cet utilisateur" onClick={this.onReport}/>
+                  <button className="block" title="Bloquer cet utilisateur" onClick={this.onBlock}/>
                 </div>
               </div>
             </div>

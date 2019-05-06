@@ -295,7 +295,8 @@
     padding: 1rem;
     border-radius: 1rem;
     background-color: whitesmoke;
-    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.3);
+    border: 1px dotted #dedede;
 }
 
 .profile__cp-content.bio p {
@@ -322,9 +323,10 @@
     border-radius: 1rem;
     color: white;
     font-size: 0.9rem;
-    box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.4);
     word-wrap: unset;
     text-transform: lowercase;
+    cursor: default;
 }
 
 .profile__cp-content.tags > div::before {
@@ -351,7 +353,13 @@
     background-size: cover;
     background-position: center;
     border-radius: 1rem;
-    box-shadow: 0 0 16px -5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.4s, transform 0.4s;
+}
+
+.profile__cp-content.photos > div:not(.add-photo):hover {
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
 }
 
 .profile__cp-content.photos:not(.my) > div:not(.no-photo) {
@@ -369,8 +377,9 @@
     height: 12rem;
     overflow: hidden;
     border-radius: 1rem;
-    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.3);
     filter: grayscale(30%);
+    border: 1px solid #dedede;
 }
 
 .profile__cp-buttons {
@@ -385,7 +394,7 @@
     width: 2.5rem;
     height: 1.5rem;
     margin: 0 0 0 0.5rem;
-    background-color: white !important;
+    background-color: #b2b2b2 !important;
     box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.2);
     transition: background-color 0.4s, opacity 0.4s;
     background-size: 1rem;
@@ -393,8 +402,12 @@
     background-repeat: no-repeat;
 }
 
+.profile__cp-buttons button:hover {
+    background-color: #c2c2c2 !important;
+}
+
 .profile__cp-buttons button:active {
-    opacity: 0.7;
+    background-color: #a2a2a2 !important;
 }
 
 .profile__cp-buttons button.report {
