@@ -23,6 +23,7 @@ class VeryBadWindow extends Component {
   }
 
   getContent = () => {
+    //TODO: Il faut d'autres cas si déjà report/block
     switch (this.state.step) {
       case 'report':
         return (
