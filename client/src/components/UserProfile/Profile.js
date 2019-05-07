@@ -79,7 +79,6 @@ class Profile extends Component {
   };
 
   likeThisUser = () => {
-    socket.emit('send notif', `r${this.props.profile.id}`);
     this.props.likeUser(this.props.profile.id);
   };
 
