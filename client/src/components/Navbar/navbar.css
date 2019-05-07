@@ -190,10 +190,6 @@
     flex-wrap: nowrap;
     border-bottom: 1px solid lightgrey;
     overflow: hidden;
-    cursor: default;
-}
-
-.account .item {
     cursor: pointer;
 }
 
@@ -203,6 +199,33 @@
 
 .item:hover {
     background-color: whitesmoke;
+}
+
+.item.no-notif {
+    display: none;
+    height: 8rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    background-color: white !important;
+    cursor: unset;
+}
+
+.item.no-notif:first-child:last-child {
+    display: flex;
+}
+
+.item.no-notif span {
+    font-size: 0.8rem;
+    letter-spacing: 0.025rem;
+    opacity: 0.5;
+}
+
+.item.no-notif img {
+    width: 4rem;
+    margin-bottom: 0.5rem;
+    filter: grayscale(100%) brightness(120%);
 }
 
 .item__img {
