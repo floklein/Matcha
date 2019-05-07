@@ -40,11 +40,22 @@ export class MapContainer extends Component {
   onMarkerClick = (props, marker, e) => {
     axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${props.position.lat},${props.position.lng}&key=${GMapiKey}`)
       .then(res => {
+        let comp;
+        const city = this.getAddressPart(res.data.results[0].address_components, "locality");
+        if (city === 'Paris') {
+          comp = this.getAddressPart(res.data.results[0].address_components, "postal_code").slice(-2);
+          comp = (comp[0] === '0' ? comp.slice(-1) : comp);
+          comp += (comp === "1" ? "er" : "ème");
+          comp += " Arrondissement";
+        }
+        else {
+          comp = this.getAddressPart(res.data.results[0].address_components, "administrative_area_level_2");
+        }
         this.setState({
           selectedPlace: props,
           activeMarker: marker,
           showingInfoWindow: true,
-          city: this.getAddressPart(res.data.results[0].address_components, "locality") + ', ' + this.getAddressPart(res.data.results[0].address_components, "administrative_area_level_2")
+          city: city + ', ' + comp
         });
       })
       .catch(err => {
