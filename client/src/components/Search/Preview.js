@@ -9,6 +9,8 @@ import {likeUser} from "../../store/actions/profileActions";
 
 import './preview.css';
 
+let unmounted = false;
+
 class Preview extends Component {
   state = {
     id: '',
@@ -25,15 +27,18 @@ class Preview extends Component {
   };
 
   componentDidMount() {
+    unmounted = false;
     axios.get(`/api/profile/${this.props.userId}`)
       .then(res => {
         getAverageColor(res.data.profile_pic)
           .then(rgb => {
-            this.setState({
-              ...res.data,
-              rgb: rgb,
-              distance: (Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')
-            });
+            if (!unmounted) {
+              this.setState({
+                ...res.data,
+                rgb: rgb,
+                distance: (Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')
+              });
+            }
           })
           .catch(err => {
           });
@@ -42,16 +47,22 @@ class Preview extends Component {
       });
   }
 
+  componentWillUnmount() {
+    unmounted = true;
+  }
+
   componentWillReceiveProps(nextProps) {
     axios.get(`/api/profile/${nextProps.userId}`)
       .then(res => {
         getAverageColor(res.data.profile_pic)
           .then(rgb => {
-            this.setState({
-              ...res.data,
-              rgb: rgb,
-              distance: (Math.round(nextProps.distance / 100) / 10 + ' km').replace('.', ',')
-            });
+            if (!unmounted) {
+              this.setState({
+                ...res.data,
+                rgb: rgb,
+                distance: (Math.round(nextProps.distance / 100) / 10 + ' km').replace('.', ',')
+              });
+            }
           })
           .catch(err => {
           });
