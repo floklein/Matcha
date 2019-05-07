@@ -96,7 +96,6 @@ router.post('/', (req, res) => {
               if (!is_liked)
                 notifs.postNotif(response.liked, 'like', `${user.username} vous a liké`, user.id, user.username);
               else {
-                console.log(result0);
                 notifs.postNotif(response.liked, 'match', `Vous avez matché avec ${user.username}`, user.id, user.username);
                 notifs.postNotif(user.id, 'match', `Vous avez matché avec ${result0[0].username}`, response.liked, result0[0].username);
               }
