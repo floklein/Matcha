@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import {Spring, config} from 'react-spring/renderprops';
 import classnames from 'classnames';
 import {loginUser} from '../../../store/actions/authActions';
-import io from "socket.io-client";
-const socket = io('http://localhost:5000');
 
 export class LoginForm extends Component {
   state = {

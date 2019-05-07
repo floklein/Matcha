@@ -1,4 +1,4 @@
-import {GET_NOTIFS} from '../actions/types';
+import {GET_NOTIFS, NEW_NOTIF} from '../actions/types';
 
 const initialState = {};
 
@@ -8,6 +8,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         list: action.payload
+      };
+    case NEW_NOTIF:
+      return {
+        ...state,
+        newNotif: action.payload
       };
     default:
       return state;

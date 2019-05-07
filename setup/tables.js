@@ -11,7 +11,6 @@ let connection = mysql.createConnection({
 
 connection.connect((err) => {
   if (err) throw err
-  console.log('You are now connected...');
 
   const sql = "CREATE TABLE IF NOT EXISTS users (" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +

@@ -1,0 +1,69 @@
+.notifications-popups {
+    position: fixed;
+    top: 4rem;
+    right: 0;
+    z-index: 4000;
+    max-width: 100vw;
+    max-height: 100vh;
+}
+
+.notification {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: 4rem auto;
+    width: 18rem;
+    max-width: calc(100vw - 3rem);
+    height: 4rem;
+    margin: 1.5rem;
+    background-color: #353d44;
+    border-radius: 0.5rem;
+    border: 2px solid #292f34;
+    box-shadow: 0 0 15px -6px rgba(0, 0, 0, 0.4);
+    transition: transform 1s ease, height 1s ease, margin-top 1s ease, margin-bottom 1s ease;
+    color: #e8e8e8;
+    cursor: default;
+}
+
+.notification.start {
+    transform: translateY(-100vh);
+}
+
+.notification.display {
+    transform: translateY(0);
+}
+
+.notification.end {
+    transform: translateX(100vw);
+}
+
+.notification.dead {
+    transform: translateX(100vw);
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 0;
+}
+
+.notif__icon {
+    width: 3rem;
+    height: 3rem;
+    background: #47535d url("../../assets/img/notif-bell.svg") no-repeat center;
+    background-size: 2rem;
+    border-radius: 0.5rem;
+}
+
+.notif__text {
+    justify-self: self-end;
+    text-align: right;
+    padding: 0.9rem;
+}
+
+.notif__type {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+.notif__content {
+    opacity: 0.7;
+    font-size: 0.8rem;
+}

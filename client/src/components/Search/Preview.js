@@ -35,12 +35,10 @@ class Preview extends Component {
               distance: (Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')
             });
           })
-          .catch((err) => {
-            console.log('GAC error: ' + err);
+          .catch(err => {
           });
       })
       .catch(err => {
-        console.log('Axios error: ' + err);
       });
   }
 
@@ -55,12 +53,10 @@ class Preview extends Component {
               distance: (Math.round(nextProps.distance / 100) / 10 + ' km').replace('.', ',')
             });
           })
-          .catch((err) => {
-            console.log('GAC error: ' + err);
+          .catch(err => {
           });
       })
       .catch(err => {
-        console.log('Axios error: ' + err);
       });
   }
 
