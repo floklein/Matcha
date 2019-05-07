@@ -79,7 +79,7 @@ router.get('/', (req, res) => {
                             connection.query(sql, (err, resp) => {
                                 if (err) throw err;
                             });
-                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
+                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil.`, user.id, user.username);
                         }
                         return res.json('');
                     })
