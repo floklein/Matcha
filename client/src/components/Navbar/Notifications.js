@@ -17,12 +17,13 @@ class Notifications extends Component {
 
   componentDidMount() {
     this.props.getNotifs();
+    socket.on('new notif', (data) => {
+      console.log(data);
+      this.props.getNotifs();
+    });
   }
 
   componentWillReceiveProps(nextProps) {
-    socket.on('new notif', () => {
-      this.props.getNotifs();
-    });
     if (nextProps.list && nextProps.list !== this.props.list && Array.isArray(nextProps.list)) {
       socket.emit('room', `r${nextProps.list[0].user_id}`);
       this.setState({
