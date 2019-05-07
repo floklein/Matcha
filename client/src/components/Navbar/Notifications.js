@@ -6,6 +6,8 @@ import {NavLink} from 'react-router-dom';
 import {getNotifs} from '../../store/actions/notificationActions';
 
 import noNotif from '../../assets/img/notif-none.svg';
+import io from "socket.io-client";
+const socket = io('http://localhost:5000');
 
 class Notifications extends Component {
   state = {
@@ -18,7 +20,11 @@ class Notifications extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    socket.on('new notif', () => {
+      this.props.getNotifs();
+    });
     if (nextProps.list && nextProps.list !== this.props.list && Array.isArray(nextProps.list)) {
+      socket.emit('room', `r${nextProps.list[0].user_id}`);
       this.setState({
         list: nextProps.list
       });
