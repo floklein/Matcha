@@ -75,11 +75,11 @@ function create_tags(user_id) {
       connection.query(sql, (err, result) => {
         if (err) throw err;
 
-        console.log(`User ID:${user_id} got 1 new interest.`);
         if (j = arr_tags.length - 1)
           resolve(result);
       });
     }
+    console.log(`User ID:${user_id} got ${nb_pics} new interests.`);
   });
 }
 
