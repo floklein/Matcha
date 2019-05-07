@@ -25,7 +25,6 @@ class Notifications extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.list && nextProps.list !== this.props.list && Array.isArray(nextProps.list)) {
-      socket.emit('room', `r${nextProps.list[0].user_id}`);
       this.setState({
         list: nextProps.list
       });
