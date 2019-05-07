@@ -221,6 +221,7 @@ router.post('/login', (req, res) => {
   let info = {
     username: req.body.username,
     password: req.body.password,
+    position: req.body.position
   };
   let response = {};
   let error = false;
