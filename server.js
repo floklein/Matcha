@@ -30,6 +30,6 @@ app.use('/api/notifs', require('./routes/api/notifs'));
 const port = 5000;
 
 let server = app.listen(port);
-let io = require('socket.io').listen(server);
+global.io = require('socket.io').listen(server);
 
 require("./sockets/socketIO")(io);

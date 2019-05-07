@@ -24,6 +24,7 @@ module.exports = {
       if (err) throw err;
       if (res.length)
         return;
+      io.sockets.to(`r${id}`).emit('new notif', {content, type});
       sql = "INSERT INTO notifs(user_id, type, content, notifier_name, time) " +
         `VALUES(${id}, "${type}", "${content}", "${notifier_name}", now());`;
       connection.query(sql, (err) => {

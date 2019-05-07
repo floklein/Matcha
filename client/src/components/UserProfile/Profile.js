@@ -12,8 +12,13 @@ import Error from '../Error';
 import ProfileMap from './ProfileMap';
 import BigPicture from './BigPicture';
 import VeryBadWindow from './VeryBadWindow';
+import io from 'socket.io-client';
 
 import './profile.css';
+const socket = io('http://localhost:5000');
+
+
+//TODO: debug problem big picture once you got out of big picture and back in
 
 class Profile extends Component {
   state = {
