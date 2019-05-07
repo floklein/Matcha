@@ -77,6 +77,10 @@
     font-size: 0.8rem;
     font-weight: 700;
     opacity: 0.5;
+    word-break: break-all;
+    white-space: nowrap;
+    max-width: 5rem;
+    overflow: hidden;
 }
 
 .preview__button {
