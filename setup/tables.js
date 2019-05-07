@@ -10,7 +10,7 @@ let connection = mysql.createConnection({
 })
 
 connection.connect((err) => {
-  if (err) throw err
+  if (err) throw err;
   console.log('You are now connected...');
 
   const sql = "CREATE TABLE IF NOT EXISTS users (" +
@@ -30,7 +30,8 @@ connection.connect((err) => {
     "profile_pic VARCHAR(256) DEFAULT '/photos/default.png', " +
     "popularity INT NOT NULL," +
     "latitude FLOAT(12,8), " +
-    "longitude FLOAT(12,8));" +
+    "longitude FLOAT(12,8), " +
+    "address_modified BOOLEAN DEFAULT 0);" +
     "" +
     "CREATE TABLE IF NOT EXISTS verified(" +
     "user_id INT NOT NULL," +
