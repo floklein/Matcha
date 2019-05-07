@@ -415,6 +415,21 @@ router.post('/update', (req, res) => {
   let response = {};
   let error = false;
 
+  if (typeof request.sexuality == 'undefined' || (request.sexuality != "bisexual" && request.sexuality != "heterosexual" && request.sexuality != "homosexual")) {
+    response = {
+      ...response,
+      sexuality: "La sexualité est incorrecte"
+    };
+    error = true
+  }
+  if (typeof request.age == 'undefined' || request.age == "" || isNaN(request.age)) {
+    response = {
+      ...response,
+      age: "L'age est incorrect"
+    };
+    error = true
+  }
+
   //Check if username is unique and different from previous
   let sql = `SELECT username from users WHERE username = "${request.username} AND id != ${user.id}";`;
   connection.query(sql, (err, result) => {
@@ -479,6 +494,8 @@ router.post('/update', (req, res) => {
       };
       error = true;
     }
+
+
 
     //Send json if there is an error and quit
     if (error === true) {
