@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
     const visited_id = req.query.visited;
     let response = {};
 
-    if (typeof visited_id === 'undefined' || visited_id == 0) {
+    if (typeof visited_id === 'undefined' || visited_id == 0 || visited_id === 'undefined') {
         response = {
             ...response,
             profile: "L'ID de l'utilisateur est requis"
@@ -40,6 +40,7 @@ router.get('/', (req, res) => {
     }
 
     let sql = `SELECT id FROM users WHERE id = ${visited_id};`;
+    console.log(sql);
     connection.query(sql, (err, resp) => {
         if (err) throw err;
         if (!res) {
