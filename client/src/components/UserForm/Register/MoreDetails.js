@@ -14,12 +14,10 @@ export class MoreDetails extends Component {
     const {values} = this.props;
 
     axios.post('/api/user/register', values)
-      .then(res => {
-        console.log(res.data);
+      .then(() => {
         this.props.nextStep();
       })
       .catch(err => {
-        console.log(err.response.data);
         this.setState({errors: err.response.data});
       });
   };

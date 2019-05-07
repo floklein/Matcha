@@ -40,7 +40,6 @@ router.get('/', (req, res) => {
     }
 
     let sql = `SELECT id FROM users WHERE id = ${visited_id};`;
-    console.log(sql);
     connection.query(sql, (err, resp) => {
         if (err) throw err;
         if (!res) {

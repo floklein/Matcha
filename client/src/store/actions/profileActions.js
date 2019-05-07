@@ -17,9 +17,7 @@ export const fetchProfile = (username) => dispatch => {
             }
           });
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch();
     })
     .catch(err => {
       dispatch({

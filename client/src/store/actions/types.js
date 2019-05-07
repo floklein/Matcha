@@ -20,3 +20,4 @@ export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
 export const CHANGE_INFOS = 'CHANGE_INFOS';
 // NOTIFICATIONS
 export const GET_NOTIFS = 'GET_NOTIFS';
+export const NEW_NOTIF = 'NEW_NOTIF';

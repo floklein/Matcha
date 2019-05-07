@@ -8,7 +8,7 @@ import axios from 'axios';
 import {logoutUser} from '../../store/actions/authActions';
 import {getNotifs} from '../../store/actions/notificationActions';
 
-import Notifications from './Notifications';
+import NotificationsPanel from '../Notifications/NotificationsPanel';
 import Account from './Account';
 
 import './navbar.css'
@@ -103,7 +103,7 @@ class Navbar extends Component {
               Notifications
               <button onClick={this.markAllAsRead}/>
             </div>
-            <Notifications filterBy={this.state.filterNotifsBy}/>
+            <NotificationsPanel filterBy={this.state.filterNotifsBy}/>
           </div>
         </div>
         <div className="nav-button account">

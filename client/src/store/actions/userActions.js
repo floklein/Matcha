@@ -11,11 +11,10 @@ export const uploadImage = (image) => dispatch => {
   fd.append('photo', image, image.name);
   axios.post('', fd, {
     onUploadProgress: (progress) => {
-      console.log('Chargement : ' + Math.round(progress.loaded / progress.total * 100) + '%');
+      // console.log('Chargement : ' + Math.round(progress.loaded / progress.total * 100) + '%');
     }
   })
     .then(res => {
-      console.log(res);
       dispatch({
         type: LOADING,
         payload: false
@@ -24,7 +23,6 @@ export const uploadImage = (image) => dispatch => {
     .catch(err => {
       // Remove setTimeout()
       setTimeout(() => {
-        console.log(err);
         dispatch({
           type: GET_ERRORS,
           payload: err.response.data
@@ -44,7 +42,6 @@ export const changeInfos = (infos) => dispatch => {
   });
   axios.post('/api/user/update', infos)
     .then(res => {
-      console.log(res);
       dispatch({
         type: LOADING,
         payload: false
@@ -55,7 +52,6 @@ export const changeInfos = (infos) => dispatch => {
       });
     })
     .catch(err => {
-      console.log(err);
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
