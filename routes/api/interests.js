@@ -34,7 +34,6 @@ router.get('/getAll', (req, res) => {
     })
 });
 
-
 //Create a new interest
 router.post('/new', (req, res) => {
 
@@ -61,6 +60,7 @@ router.post('/new', (req, res) => {
        })
    }
 });
+
 
 
 module.exports = router;

@@ -57,6 +57,9 @@ const tags = ["Voyages",
   "Lorie",
   "Beyonce",
   "MinilibX",
+  "Paris",
+  "Kubrick",
+  "Lecture",
   "PSG"];
 
 function create_tags(user_id) {
