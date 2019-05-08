@@ -5,6 +5,7 @@
     min-height: 40rem;
     background: url("../../assets/pic/home.jpg") no-repeat center;
     background-size: cover;
+    cursor: default;
 }
 
 #carousel > div {
@@ -51,6 +52,7 @@
     text-align: center;
     color: black;
     overflow: hidden;
+    cursor: default;
 }
 
 #carousel img {
@@ -102,6 +104,7 @@
 
 #triptych {
     background-color: whitesmoke;
+    cursor: default;
 }
 
 #triptych > div {

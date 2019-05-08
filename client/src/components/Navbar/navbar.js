@@ -147,7 +147,7 @@ class Navbar extends Component {
             {isAuthenticated ? authLinks : guestLinks}
           </div>
           <div className="logo">
-            <NavLink to="/"><img src={logo} alt="logo"/></NavLink>
+            <img src={logo} alt="logo"/>
           </div>
           <div className="rightButtons">
             {isAuthenticated ? authButtons : guestButtons}
