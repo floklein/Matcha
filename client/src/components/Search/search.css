@@ -192,11 +192,11 @@ body {
 
 .react-tags li {
     border-top: 2px solid lightgrey;
-    font-size: 1rem;
+    font-size: 0.9rem;
     height: 2.5rem;
-    padding: 0.7rem 1rem 0.8rem 1rem;
+    padding: 0.75rem 0.8rem 0.8rem 0.8rem;
     background-color: white;
-    transition: border 0.4s, background-color 0.4s;
+    transition: border 0.4s;
     cursor: pointer;
     text-transform: lowercase;
 }
@@ -207,15 +207,40 @@ body {
 
 .react-tags li::before {
     content: "#";
+    margin-right: 0.1rem;
 }
 
 .react-tags li :not(span) {
-    background-color: orange;
-    color: white;
-    border-radius: 0.2rem;
-    padding: 0 0.2rem;
-    margin-right: 0.1rem;
+    background: none;
+    color: black;
+    /*border-radius: 0.2rem;*/
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
 }
+
+/*OVERWRITING ReactGooglePlacesSuggest CLASSES*/
+.google-maps-input input:not(:last-child) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.google-maps-input > div:nth-child(2) > div:nth-child(2) {
+    border: 2px solid lightgrey;
+    border-top: none;
+    border-radius: 0 0 0.3rem 0.3rem;
+    background-color: white;
+    box-shadow: none;
+}
+
+.google-maps-input > div:nth-child(2) > div:nth-child(2) > div > div {
+    padding: 0.25rem 0.8rem;
+}
+
+.google-maps-input > div:nth-child(2) > div:nth-child(2) > div:not(:last-child) {
+    border-bottom: 2px solid lightgrey;
+}
+
 
 /*MAIN PANEL*/
 #search .main-panel {

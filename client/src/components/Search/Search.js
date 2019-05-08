@@ -6,6 +6,8 @@ import noUiSlider from 'nouislider';
 import ReactTags from 'react-tag-autocomplete';
 import wNumb from 'wnumb';
 import axios from 'axios';
+import GoogleMapLoader from 'react-google-maps-loader';
+import GooglePlacesSuggest from 'react-google-places-suggest';
 
 import {searchUsers} from "../../store/actions/searchActions";
 
@@ -13,6 +15,7 @@ import Preview from './Preview';
 
 import './search.css';
 import '../../css/nouislider.css';
+import {GMapiKey} from '../../config/GMapiKey';
 
 class Search extends Component {
   state = {
@@ -22,8 +25,8 @@ class Search extends Component {
     ageMin: 18,
     ageMax: 50,
     rangeAgeMax: 50,
-    latitude: 1,
-    longitude: 50,
+    latitude: 0,
+    longitude: 0,
     popularityMin: 10,
     popularityMax: 200,
     rangePopMax: 200,
@@ -31,6 +34,8 @@ class Search extends Component {
     to: 20,
     interests: [],
     suggestions: [],
+    gmSearch: '',
+    gmValue: ''
   };
 
   onScroll = () => {
@@ -65,7 +70,6 @@ class Search extends Component {
                   'max': this.state.rangePopMax
                 }
               });
-
             }, 1);
           });
       });
@@ -165,8 +169,24 @@ class Search extends Component {
     this.props.searchUsers(this.state);
   };
 
+  handleGMChange = e => {
+    this.setState({
+      gmSearch: e.target.value,
+      gmValue: e.target.value
+    });
+  };
+
+  handleSelectSuggest = (geocodedPrediction, originalPrediction) => {
+    this.setState({
+      gmSearch: '',
+      gmValue: geocodedPrediction.formatted_address,
+      latitude: geocodedPrediction.geometry.location.lat(),
+      longitude: geocodedPrediction.geometry.location.lng()
+    });
+  };
+
   render() {
-    const {users} = this.state;
+    const {users, gmSearch, gmValue} = this.state;
 
     return (
       <React.Fragment>
@@ -195,6 +215,27 @@ class Search extends Component {
               <div className="sidebar__filter">
                 <div className="sidebar__title-box">
                   <div className="sidebar__title">Filtrer par</div>
+                </div>
+                <div style={{marginBottom: '0.5rem'}} className="google-maps-input">
+                  <div className="sidebar__subtitle">Lieu</div>
+                  <GoogleMapLoader
+                    params={{
+                      key: GMapiKey,
+                      libraries: 'places,geocode'
+                    }}
+                    render={googleMaps => googleMaps && (
+                      <GooglePlacesSuggest
+                        googleMaps={googleMaps}
+                        autocompletionRequest={{
+                          input: gmSearch
+                        }}
+                        onSelectSuggest={this.handleSelectSuggest}
+                        textNoResults="Pas de résultats"
+                        displayPoweredByGoogle={false}>
+                        <input id="position" placeholder="ex: Lyon, 11 rue Féraud"
+                               value={gmValue} onChange={this.handleGMChange}/>
+                      </GooglePlacesSuggest>)}
+                  />
                 </div>
                 <div>
                   <div className="sidebar__subtitle">Âge</div>
