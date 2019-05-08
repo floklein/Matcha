@@ -495,7 +495,6 @@ router.post('/update', (req, res) => {
     interests: req.body.interests,
     age: req.body.age
   };
-
   let response = {};
   let error = false;
 
@@ -597,9 +596,11 @@ router.post('/update', (req, res) => {
           const sql_delete_interests = `DELETE FROM interests WHERE user_id = ${user.id};`;
           connection.query(sql_delete_interests, (err) => {
             if (err) throw err;
+            if (!request.interests.length)
+              return res.json();
             for (let i = 0; i < request.interests.length; i++) {
               let sql_add_interest = "INSERT INTO interests(user_id, tag)" +
-                ` VALUES(${user.id}, "${request.interests[i].tag}");`;
+                ` VALUES(${user.id}, "${request.interests[i].name}");`;
               connection.query(sql_add_interest, (err) => {
                 if (err) throw err;
                 if (i === request.interests.length -1) {
