@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import axios from 'axios';
 
-import {fetchProfile} from "../../store/actions/profileActions";
-import {uploadImage, changeInfos} from "../../store/actions/userActions";
+import {fetchProfile} from '../../store/actions/profileActions';
+import {uploadImage, changeInfos} from '../../store/actions/userActions';
 
 import Loading from '../Loading';
 import ProfileMap from './ProfileMap';
@@ -12,9 +13,22 @@ import ContentEditable from './ContentEditable'
 
 import './profile.css';
 import './edit.css';
+import ReactTags from "react-tag-autocomplete";
 
 class EditProfile extends Component {
-  state = {};
+  state = {
+    suggestions: []
+  };
+
+  componentWillMount() {
+    axios.get('/api/interests/getAll')
+      .then((res) => {
+        this.setState({
+          suggestions: res.data,
+        });
+      })
+      .catch();
+  }
 
   componentDidMount() {
     this.props.fetchProfile(this.props.me.id);
@@ -33,27 +47,14 @@ class EditProfile extends Component {
     }
   }
 
-  getGender = (gender) => {
-    switch (gender) {
-      case 'male':
-        return 'Homme';
-      case 'female':
-        return 'Femme';
-      default:
-        return 'Non binaire';
+  componentDidUpdate() {
+    if (this.state.rgb) {
+      const {r, g, b} = this.state.rgb;
+      document.querySelectorAll('.profile__cp-content.my.tags button').forEach(tag => {
+        tag.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+      });
     }
-  };
-
-  getSexuality = (sexuality) => {
-    switch (sexuality) {
-      case 'heterosexual':
-        return 'Hétéro';
-      case 'homosexual':
-        return 'Homo';
-      default:
-        return 'Bi';
-    }
-  };
+  }
 
   getPopularity = (popularity) => {
     switch (popularity.rank) {
@@ -126,9 +127,20 @@ class EditProfile extends Component {
     }
   };
 
+  handleDelete(i) {
+    const interests = this.state.interests.slice(0);
+    interests.splice(i, 1);
+    this.setState({interests});
+  }
+
+  handleAdd(interest) {
+    const interests = [].concat(this.state.interests, interest);
+    this.setState({interests});
+  }
+
   submitChanges = () => {
     this.props.changeInfos(this.state);
-  }
+  };
 
   render() {
     if (!this.props.profile)
@@ -221,10 +233,12 @@ class EditProfile extends Component {
                 <div className="profile__cp-title">
                   <h4>INTÉRÊTS</h4>
                 </div>
-                <div className="profile__cp-content tags">
-                  {profile.interests.map((interest, i) => (
-                    <div key={i} style={bgColor}>{interest.tag}</div>
-                  ))}
+                <div className="profile__cp-content my tags">
+                  <ReactTags tags={this.state.interests} suggestions={this.state.suggestions}
+                             minQueryLength={1}
+                             handleDelete={this.handleDelete.bind(this)}
+                             handleAddition={this.handleAdd.bind(this)}
+                             placeholder="ex: Paris, lecture, Kubrick..."/>
                 </div>
                 <div className="profile__cp-title">
                   <h4>PHOTOS</h4>
