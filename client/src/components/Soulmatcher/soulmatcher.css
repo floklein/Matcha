@@ -68,6 +68,7 @@
     font-weight: 700;
     font-size: 1rem;
     text-transform: uppercase;
+    cursor: default;
 }
 
 .sidebar__subtitle {
@@ -78,6 +79,7 @@
     font-size: 0.8rem;
     color: grey;
     text-transform: uppercase;
+    cursor: default;
 }
 
 .sidebar input, .sidebar select {
@@ -282,6 +284,7 @@ button.like:active {
     padding: 0 2rem;
     color: lightgrey;
     text-align: center;
+    cursor: default;
 }
 
 .no-cards h1 {

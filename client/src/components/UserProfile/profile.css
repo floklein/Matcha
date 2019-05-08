@@ -122,6 +122,7 @@
     font-size: 0.8rem;
     font-weight: 700;
     opacity: 0.2;
+    cursor: default;
 }
 
 .profile__sp-infos > div > *:last-child {
@@ -146,6 +147,7 @@
     flex-grow: 1;
     height: 2rem;
     margin: 0 1rem 4rem 0.5rem;
+    cursor: default;
 }
 
 .profile__middle-panel > div {
@@ -289,6 +291,7 @@
 
 .profile__cp-title h4 {
     margin: 0;
+    cursor: default;
 }
 
 .profile__cp-content.bio {

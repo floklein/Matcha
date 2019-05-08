@@ -209,7 +209,7 @@
     justify-content: center;
     opacity: 0.5;
     background-color: white !important;
-    cursor: unset;
+    cursor: default;
 }
 
 .item.no-notif:first-child:last-child {
