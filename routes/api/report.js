@@ -66,6 +66,7 @@ router.post('/', (req, res) => {
                     sql = `SELECT * FROM reports WHERE reporter_id = ${user.id} AND reported_id = ${infos.reported}`;
                     connection.query(sql, (err, result) => {
                         if (result && result.length !== 0) { //If already reported, do nothing
+                            res.end();
                         }
                         else {  //Else, report
                             sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${user.id}, ${infos.reported})`;
