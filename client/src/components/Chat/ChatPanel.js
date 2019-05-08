@@ -9,7 +9,7 @@ import {getMatches, getMessages, sendMessage} from "../../store/actions/chatActi
 
 import './chatpanel.css';
 
-const socket = io('http://localhost:5000');
+const socket = io("http://localhost:5000");
 
 class ChatPanel extends Component {
   state = {

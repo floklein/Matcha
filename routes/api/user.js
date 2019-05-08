@@ -77,7 +77,8 @@ router.post('/register', (req, res) => {
     lastName: req.body.lastName,
     gender: req.body.gender,
     password: req.body.password,
-    confirm: req.body.confirm
+    confirm: req.body.confirm,
+    nomail: req.body.nomail
   };
   let response = {};
   let error = false;
@@ -193,29 +194,34 @@ router.post('/register', (req, res) => {
         //Send an email if everything is alright
         connection.query(sql4, (err, result) => {
           if (err) throw err;
-          //send mail if everything went fine
-          let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'matcha.fk.tbd@gmail.com',
-              pass: 'Qwerty123-'
+          const sql5 = "INSERT INTO connection(user_id) " +
+            `VALUES(${id});`;
+          connection.query(sql5, (err) => {
+            if (err) throw err;
+            //send mail if everything went fine
+            if (!info.nomail) {
+              let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'matcha.fk.tbd@gmail.com',
+                  pass: 'Qwerty123-'
+                }
+              });
+              let mailOptions = {
+                from: 'Matcha <no-reply@matcha.com>',
+                to: info.email,
+                subject: 'Sending Email using Node.js',
+                text: link
+              };
+              transporter.sendMail(mailOptions);
             }
+            res.end(String(id));
           });
-          let mailOptions = {
-            from: 'Matcha <no-reply@matcha.com>',
-            to: info.email,
-            subject: 'Sending Email using Node.js',
-            text: link
-          };
-          transporter.sendMail(mailOptions);
-          res.end(String(id));
         });
       })
     })
   })
 });
-
-
 
 router.post('/login', (req, res) => {
   let info = {

@@ -10,12 +10,7 @@ let connection = mysql.createConnection({
 })
 
 connection.connect((err) => {
-<<<<<<< HEAD
-  if (err) throw err;
-  console.log('You are now connected...');
-=======
   if (err) throw err
->>>>>>> fk-dev
 
   const sql = "CREATE TABLE IF NOT EXISTS users (" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
@@ -60,7 +55,12 @@ connection.connect((err) => {
     "CREATE TABLE IF NOT EXISTS dislikes(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "disliker_id INT NOT NULL, " +
-    "disliked_id INT NOT NULL);" +
+    "disliked_id INT NOT NULL); " +
+    "" +
+    "CREATE TABLE IF NOT EXISTS connection(" +
+    "user_id INT NOT NULL, " +
+    "connected BOOLEAN DEFAULT 0, " +
+    "last_connection DATETIME); " +
     "" +
     "CREATE TABLE IF NOT EXISTS visits( " +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +

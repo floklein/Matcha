@@ -3,8 +3,6 @@ const router = express.Router();
 
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
-const io = require('socket.io-client');
-const socket = io('http://localhost:3000');
 
 //Connect to db
 let connection = mysql.createConnection({

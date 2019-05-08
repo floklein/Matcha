@@ -80,11 +80,7 @@ router.post('/', (req, res) => {
             connection.query(sql, (err) => {
               if (err) throw err;
               if (is_liked) {
-<<<<<<< HEAD
                 notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`, user.id, user.username);
-=======
-                notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous aime plus.`, user.id);
->>>>>>> fk-dev
               }
               return res.json({like: (is_liked ? "you" : "no")});
             });

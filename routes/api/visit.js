@@ -74,19 +74,13 @@ router.get('/', (req, res) => {
                         `WHERE visiter_id = ${user.id} AND visited_id = ${visited_id} AND time < (now() - INTERVAL 1 DAY);`;
                     connection.query(sql, (err, resp) => {
                         if (err) throw err;
-                        console.log(resp.affectedRows);
                         if (resp.affectedRows) {
                             sql = "UPDATE infos SET popularity = popularity + 1 " +
                                 `WHERE user_id = ${visited_id};`;
                             connection.query(sql, (err, resp) => {
                                 if (err) throw err;
                             });
-<<<<<<< HEAD
-                          console.log('send notif visit');
                           notifs.postNotif(visited_id, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
-=======
-                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil.`, user.id, user.username);
->>>>>>> fk-dev
                         }
                         return res.json('');
                     })
