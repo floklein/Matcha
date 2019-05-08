@@ -308,7 +308,7 @@
     word-break: break-word;
 }
 
-.profile__cp-content.tags {
+.profile__cp-content.tags:not(.my) {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -316,7 +316,7 @@
     margin-bottom: 0.5rem;
 }
 
-.profile__cp-content.tags > div {
+.profile__cp-content.tags:not(.my) > div {
     margin: 0 0 0.5rem 0.5rem;
     padding: 0.3rem 0.7rem;
     background: grey;
@@ -329,7 +329,7 @@
     cursor: default;
 }
 
-.profile__cp-content.tags > div::before {
+.profile__cp-content.tags:not(.my) > div::before {
     content: "#";
     opacity: 0.5;
     margin-right: 0.2rem;
