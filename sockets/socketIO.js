@@ -1,9 +1,7 @@
 module.exports = (io) => {
   io.sockets.on('connection', socket => {
-    console.log("Connected");
 
     socket.on('room', (room) => {
-      console.log(room);
       socket.join(room);
     });
 
@@ -12,7 +10,6 @@ module.exports = (io) => {
     });
 
     socket.on('disconnect', (data) => {
-      console.log("Disconnected");
     });
   })
 };

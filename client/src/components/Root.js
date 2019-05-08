@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import Sidebar from "./Sidebar/sidebar";
-import Navbar from "./Navbar/navbar";
-import Footer from "./Footer/footer";
-import ChatPanel from "./Chat/ChatPanel";
+import Sidebar from './Sidebar/sidebar';
+import Navbar from './Navbar/navbar';
+import Footer from './Footer/footer';
+import ChatPanel from './Chat/ChatPanel';
 import PopUp from './PopUp/PopUp';
+import Notifications from './Notifications/Notifications';
 
 class Root extends Component {
   render() {
@@ -17,6 +18,7 @@ class Root extends Component {
         <div id="wrapper">
           <Navbar/>
           <PopUp/>
+          <Notifications/>
           <div id="container">
             {this.props.children}
           </div>

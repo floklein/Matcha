@@ -95,7 +95,7 @@ class Search extends Component {
       }
     });
     noUiSlider.create(sliderPopularity, {
-      start: [10, 100],
+      start: [10, this.state.popularityMax],
       connect: true,
       range: {
         'min': 0,

@@ -82,11 +82,10 @@ class EditProfile extends Component {
 
   photoAction = (e) => {
     const position = e.clientY - e.target.offsetTop + window.scrollY;
-    console.log(position);
     if (position < 20) {
-      console.log('delete');
+      // console.log('delete');
     } else if (position > 75) {
-      console.log('profile');
+      // console.log('profile');
     }
   };
 

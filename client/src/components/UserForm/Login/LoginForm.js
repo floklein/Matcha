@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Spring, config} from 'react-spring/renderprops';
 import classnames from 'classnames';
+import axios from 'axios';
+
 import {loginUser} from '../../../store/actions/authActions';
-import io from "socket.io-client";
-const socket = io('http://localhost:5000');
 
 export class LoginForm extends Component {
   state = {
@@ -31,7 +31,27 @@ export class LoginForm extends Component {
       password: this.state.password
     };
 
-    this.props.loginUser(userData);
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.props.loginUser({
+        ...userData,
+        position: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        }
+      });
+    }, () => {
+      axios.get('http://ip-api.com/json/')
+        .then(res => {
+          this.props.loginUser({
+            ...userData,
+            position: {
+              latitude: res.data.lat,
+              longitude: res.data.lon
+            }
+          });
+        })
+        .catch();
+    });
   };
 
   onChange = (e) => {

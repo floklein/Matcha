@@ -2,14 +2,15 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import classnames from "classnames";
 import {NavLink} from 'react-router-dom';
+import io from "socket.io-client";
 
-import {getNotifs} from '../../store/actions/notificationActions';
+import {getNotifs, newNotif} from '../../store/actions/notificationActions';
 
 import noNotif from '../../assets/img/notif-none.svg';
-import io from "socket.io-client";
+
 const socket = io('http://localhost:5000');
 
-class Notifications extends Component {
+class NotificationsPanel extends Component {
   state = {
     list: [],
     filter: 'all'
@@ -17,8 +18,9 @@ class Notifications extends Component {
 
   componentDidMount() {
     this.props.getNotifs();
+    socket.emit('room', `r${this.props.userId}`);
     socket.on('new notif', (data) => {
-      console.log(data);
+      this.props.newNotif(data);
       this.props.getNotifs();
     });
   }
@@ -85,7 +87,8 @@ class Notifications extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  list: state.notifications.list
+  list: state.notifications.list,
+  userId: state.auth.user.id
 });
 
-export default connect(mapStateToProps, {getNotifs})(Notifications);
+export default connect(mapStateToProps, {getNotifs, newNotif})(NotificationsPanel);

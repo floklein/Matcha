@@ -16,7 +16,6 @@ let connection = mysql.createConnection({
 
 connection.connect(function (err) {
   if (err) throw err;
-  console.log('You are now connected...')
 });
 
 function calculateScore(request, result_i, tag_res, pos_res, user) {
@@ -50,10 +49,7 @@ function calculateScore(request, result_i, tag_res, pos_res, user) {
          };
          resolve(result_i);
        })
-       .catch((err) => {
-         console.log(err);
-       });
-
+       .catch();
  })
 }
 
@@ -87,7 +83,7 @@ router.post('/', (req, res) => {
   const sql = "SELECT age, bio, profile_pic from infos " +
     `WHERE user_id = ${user.id};`;
   connection.query(sql, (err, first_result) => {
-    if (err) console.log(err);
+    if (err) throw err;
     if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === null || first_result[0].bio === null) {
       res.status(400).json({
         user: "Vous devez compléter votre profil étendu"
@@ -158,13 +154,9 @@ router.post('/', (req, res) => {
                         }));
                       })
                   })
-                  .catch((err) => {
-                    console.log(err);
-                  })
+                  .catch()
               })
-              .catch((err) => {
-                console.log(err);
-              });
+              .catch();
           });
         });
       })
