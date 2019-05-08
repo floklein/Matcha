@@ -306,6 +306,82 @@ router.post('/login', (req, res) => {
 });
 
 
+router.patch('/settings', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+  let res_err = {};
+  let error = false;
+
+  const request = {
+    old_pw: req.body.old_pw,
+    new_pw: req.body.new_pw,
+    re_new: req.body.re_new,
+    new_mail: req.body.new_mail
+  };
+
+  if (typeof request.old_pw == 'undefined' || request.old_pw == '') {
+    return res.status(400).json({
+      old_pw: "Le mot de passe actuel est requis"
+    })
+  }
+  //Check if old pw is good
+  let sql = `SELECT password, email FROM users WHERE id = ${user.id};`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    if (result.length === 0) {
+      res_err = {
+        ...res_err,
+        login: "Login et/ou mot de passe invalides"
+      };
+      error = true;
+    }
+    //Check if password is wrong
+    else if (!pw_hash.verify(request.old_pw, result[0].password)) {
+      res_err = {
+        ...res_err,
+        login: "Login et/ou mot de passe invalides"
+      };
+      error = true;
+    }
+    if (error)
+      return res.status(400).json(res_err);
+    if (!request.new_mail)
+      request.new_mail = result[0].email;
+    if (!request.new_mail.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+      res_err = {
+        ...res_err,
+        new_mail: "Mail invalide"
+      };
+      error = true;
+    }
+
+    if (typeof request.new_pw === 'undefined' || !request.new_pw.match('^(?=.*[ a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
+      res_err = {
+        ...res_err,
+        new_pw: "8 caractères min. (dont 1 maj. et 1 chiffre)"
+      };
+      error = true;
+    }
+    if (request.new_pw !== request.re_new) {
+      res_err = {
+        ...res_err,
+        re_pw: "Les mots de passe ne sont pas identiques"
+      };
+      error = true;
+    }
+    if (!error) {
+      let hashed_pw = pw_hash.generate(request.new_pw);
+      sql = "UPDATE users " +
+        `SET password = ${hashed_pw}, email = ${request.new_mail};`;
+      connection.query(sql, (err) => {
+        if (err) throw err;
+        return res.json(res_err);
+      })
+    }
+  })
+});
 
 //Set user infos
 router.post('/infos/:id', (req, res) => {
