@@ -92,7 +92,7 @@ router.get('/:username', (req, res) => {
       connection.query(sql, (err, result3) => {
         if (err) throw err;
 
-        sql = "SELECT popularity, user_id FROM infos ORDER BY popularity";
+        let sql = "SELECT popularity, user_id FROM infos ORDER BY popularity";
         connection.query(sql, (err, result4) => {
           if (err) throw err;
 
@@ -100,7 +100,7 @@ router.get('/:username', (req, res) => {
           const nb_user = result4.length;
           let quart = Math.floor(4 * pos / nb_user) + 1;
 
-          sql = `SELECT liker_id, liked_id FROM likes WHERE (liker_id=${user.id} AND liked_id=${result[0].id}) OR (liker_id=${result[0].id} AND liked_id=${user.id})`;
+          let sql = `SELECT liker_id, liked_id FROM likes WHERE (liker_id=${user.id} AND liked_id=${result[0].id}) OR (liker_id=${result[0].id} AND liked_id=${user.id})`;
           connection.query(sql, (err, result5) => {
             if (err) throw err;
 
@@ -114,35 +114,48 @@ router.get('/:username', (req, res) => {
             } else if (result5[0].liked_id === user.id) {
               like = 'you'
             }
-            axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${result[0].latitude},${result[0].longitude}&key=${GMapiKey}`)
-              .then(res_api => {
-                result[0] = {
-                  ...result[0],
-                  photos: photos,
-                  popularity: {
-                    score: result[0].popularity,
-                    rank: quart
-                  },
-                  interests: result3,
-                  like: like,
-                  position: getAddressPart(res_api.data.results[0].address_components, "locality")
-                };
-                return res.json(result[0]);
-              })
-              .catch((err) => {
-                result[0] = {
-                  ...result[0],
-                  photos: photos,
-                  popularity: {
-                    score: result[0].popularity,
-                    rank: quart
-                  },
-                  interests: result3,
-                  like: like,
-                  position: "..."
-                };
-                return res.json(result[0]);
-              })
+
+            let sql = `SELECT blocker_id, blocked_id FROM blocks WHERE (blocker_id=${user.id} AND blocked_id=${result[0].id}) OR (blocker_id=${result[0].id} AND blocked_id=${user.id})`;
+            connection.query(sql, (err, result5) => {
+              if (err) throw err;
+
+              let isBlocked = ((result5[0] !== undefined && result5[0].blocker_id === user.id) || (result5[1] !== undefined && result5[1].blocker_id === user.id));
+              let amBlocked = ((result5[0] !== undefined && result5[0].blocked_id === user.id) || (result5[1] !== undefined && result5[1].blocked_id === user.id));
+
+              axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${result[0].latitude},${result[0].longitude}&key=${GMapiKey}`)
+                .then(res_api => {
+                  result[0] = {
+                    ...result[0],
+                    photos: photos,
+                    popularity: {
+                      score: result[0].popularity,
+                      rank: quart
+                    },
+                    interests: result3,
+                    like: like,
+                    position: getAddressPart(res_api.data.results[0].address_components, "locality"),
+                    isBlocked: isBlocked,
+                    amBlocked: amBlocked
+                  };
+                  return res.json(result[0]);
+                })
+                .catch((err) => {
+                  result[0] = {
+                    ...result[0],
+                    photos: photos,
+                    popularity: {
+                      score: result[0].popularity,
+                      rank: quart
+                    },
+                    interests: result3,
+                    like: like,
+                    position: "...",
+                    isBlocked: isBlocked,
+                    amBlocked: amBlocked
+                  };
+                  return res.json(result[0]);
+                });
+            });
           });
         });
       });

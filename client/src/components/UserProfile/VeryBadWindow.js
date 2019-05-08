@@ -18,12 +18,13 @@ class VeryBadWindow extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       step: nextProps.step,
-      opened: nextProps.step !== ''
+      opened: nextProps.step !== '',
+      isBlocked: this.state.isBlocked === undefined ? nextProps.isBlocked : this.state.isBlocked
     });
   }
 
   getContent = () => {
-    //TODO: Il faut d'autres cas si déjà report/block
+    const {isBlocked} = this.state;
     switch (this.state.step) {
       case 'report':
         return (
@@ -46,14 +47,14 @@ class VeryBadWindow extends Component {
           <div className="vbw__popup">
             <div className="vbw__title-bar">
               <div className="vbw__close" onClick={this.closePopup}/>
-              <h1>Bloquer ?</h1>
+              <h1>{isBlocked ? 'Débloquer ?': 'Bloquer ?'}</h1>
             </div>
             <div className="vbw__main">
               <img className="vbw__main-img" src={blockImg} alt="report or block"/>
               <div className="vbw__main-txt">
-                Êtes-vous sûr(e) de vouloir bloquer cet utilisateur ?
+                {isBlocked ? 'Voulez-vous débloquer cet utilisateur ?' : 'Êtes-vous sûr(e) de vouloir bloquer cet utilisateur ?'}
               </div>
-              <button className="blue vbw__main-button" onClick={this.onBlock}>Bloquer</button>
+              <button className="blue vbw__main-button" onClick={this.onBlock}>{isBlocked ? 'Débloquer' : 'Bloquer'}</button>
             </div>
           </div>
         );
@@ -67,9 +68,9 @@ class VeryBadWindow extends Component {
             <div className="vbw__main">
               <img className="vbw__main-img" src={reportedImg} alt="report or block"/>
               <div className="vbw__main-txt">
-                Vous avez bien signalé cet utilisateur. Souhaitez-vous aussi le bloquer ?
+                Vous avez bien signalé cet utilisateur.{isBlocked ? '' : ' Souhaitez-vous aussi le bloquer ?'}
               </div>
-              <button className="blue vbw__main-button" onClick={this.onBlock}>Bloquer</button>
+              {!isBlocked && (<button className="blue vbw__main-button" onClick={this.onBlock}>Bloquer</button>)}
             </div>
           </div>
         );
@@ -78,12 +79,12 @@ class VeryBadWindow extends Component {
           <div className="vbw__popup">
             <div className="vbw__title-bar">
               <div className="vbw__close" onClick={this.closePopup}/>
-              <h1>Bloqué.</h1>
+              <h1>{!isBlocked ? 'Débloqué.' : 'Bloqué.'}</h1>
             </div>
             <div className="vbw__main">
               <img className="vbw__main-img" src={blockedImg} alt="report or block"/>
               <div className="vbw__main-txt">
-                Vous avez bien bloqué cet utilisateur.
+                {!isBlocked ? 'Vous avez bien débloqué cet utilisateur.' : 'Vous avez bien bloqué cet utilisateur.'}
               </div>
             </div>
           </div>
@@ -100,14 +101,19 @@ class VeryBadWindow extends Component {
           step: 'report-success'
         });
       })
-      .catch();
+      .catch(() => {
+        this.setState({
+          step: 'report-success'
+        });
+      });
   };
 
   onBlock = () => {
     axios.post('/api/block', {blocked: this.props.userId})
       .then(() => {
         this.setState({
-          step: 'block-success'
+          step: 'block-success',
+          isBlocked: !this.state.isBlocked
         });
       })
       .catch();

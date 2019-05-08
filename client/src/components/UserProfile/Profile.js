@@ -103,7 +103,7 @@ class Profile extends Component {
   };
 
   whichPhoto = (elem) => {
-    for (var i = 0; (elem = elem.previousSibling); i++);
+    for (var i = 0; (elem = elem.previousSibling); i++) ;
     return i;
   };
 
@@ -143,6 +143,9 @@ class Profile extends Component {
                      errText="la page de profil à laquelle vous tentez d'accéder ne semble pas exister."/>);
     if (!this.props.profile)
       return (<Loading/>);
+    if (this.props.profile.amBlocked)
+      return (<Error errTitle="Vous êtes bloqué."
+                     errText="cet utilisateur vous a bloqué. Merci de votre compréhension."/>);
     const profile = this.props.profile;
     this.visitProfile(profile.id);
     const gender = this.getGender(profile.gender);
@@ -227,7 +230,8 @@ class Profile extends Component {
                     <div key={i} style={{backgroundImage: `url('${photo}')`}}
                          title="Cliquer pour agrandir" onClick={this.openPicture}/>
                   ))}
-                  {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
+                  {!profile.photos.length &&
+                  <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
                 </div>
                 <div className="profile__cp-title">
                   <h4>POSITION</h4>
@@ -240,7 +244,7 @@ class Profile extends Component {
                 <div className="profile__cp-buttons">
                   <button className="report" title="Signaler cet utilisateur" onClick={this.openReport}/>
                   <button className="block" title="Bloquer cet utilisateur" onClick={this.openBlock}/>
-                  <VeryBadWindow step={this.state.vbwStep} closeParent={this.closeVBW} userId={profile.id}/>
+                  <VeryBadWindow step={this.state.vbwStep} closeParent={this.closeVBW} userId={profile.id} isBlocked={profile.isBlocked}/>
                 </div>
               </div>
             </div>
