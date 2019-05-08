@@ -26,9 +26,9 @@ class Home extends Component {
             <div>
               <div className="intro">
                 <h1>Likez. Matchez. Aimez.</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aperiam aspernatur
-                  cupiditate
-                  dolor doloribus incidunt inventore natus similique sunt vitae!</p>
+                <p>Vous cherchez l'amour ? Vous êtes enfin au bon endroit.
+                  L'amour est au coin de votre rue et vous ne le saviez pas.
+                  Quelques clics vous suffiront et vous le trouverez.</p>
               </div>
             </div>
             <div>
@@ -43,17 +43,17 @@ class Home extends Component {
             <div>
               <img src={triCouple} alt="test"/>
               <h2>Trouvez votre soulmate</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex, fuga.</p>
+              <p>Notre algorithme vous aide à trouver la personne faite pour vous.</p>
             </div>
             <div>
               <img src={triMap} alt="test"/>
               <h2>Autour de vous</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex, fuga.</p>
+              <p>Nous vous faisons découvrir des matchs potentiels au plus près de vous.</p>
             </div>
             <div>
               <img src={triChat} alt="test"/>
               <h2>Matchez et chattez</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex, fuga.</p>
+              <p>Vous vous plaisez tous les deux ? Deux clics et la discussion s'engage.</p>
             </div>
           </div>
         </div>

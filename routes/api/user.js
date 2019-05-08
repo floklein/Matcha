@@ -77,7 +77,8 @@ router.post('/register', (req, res) => {
     lastName: req.body.lastName,
     gender: req.body.gender,
     password: req.body.password,
-    confirm: req.body.confirm
+    confirm: req.body.confirm,
+    nomail: req.body.nomail
   };
   let response = {};
   let error = false;
@@ -193,29 +194,34 @@ router.post('/register', (req, res) => {
         //Send an email if everything is alright
         connection.query(sql4, (err, result) => {
           if (err) throw err;
-          //send mail if everything went fine
-          let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'matcha.fk.tbd@gmail.com',
-              pass: 'Qwerty123-'
+          const sql5 = "INSERT INTO connection(user_id) " +
+            `VALUES(${id});`;
+          connection.query(sql5, (err) => {
+            if (err) throw err;
+            //send mail if everything went fine
+            if (!info.nomail) {
+              let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'matcha.fk.tbd@gmail.com',
+                  pass: 'Qwerty123-'
+                }
+              });
+              let mailOptions = {
+                from: 'Matcha <no-reply@matcha.com>',
+                to: info.email,
+                subject: 'Sending Email using Node.js',
+                text: link
+              };
+              transporter.sendMail(mailOptions);
             }
+            res.end(String(id));
           });
-          let mailOptions = {
-            from: 'Matcha <no-reply@matcha.com>',
-            to: info.email,
-            subject: 'Sending Email using Node.js',
-            text: link
-          };
-          transporter.sendMail(mailOptions);
-          res.end(String(id));
         });
       })
     })
   })
 });
-
-
 
 router.post('/login', (req, res) => {
   let info = {
@@ -248,7 +254,7 @@ router.post('/login', (req, res) => {
         let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}" OR email = "${info.username}";`;
         connection.query(sql, (err, result) => {
             if (err) throw err;
-            if (result.length == 0) {
+            if (result.length === 0) {
                 response = {
                     ...response,
                     login: "Login et/ou mot de passe invalides"
@@ -272,6 +278,13 @@ router.post('/login', (req, res) => {
           username: result[0].username
         };
 
+        const sql_pos = "UPDATE infos " +
+          `SET latitude=${info.position.latitude}, longitude=${info.position.longitude}` +
+          `WHERE user_id = ${result[0].id} AND address_modified=false;`;
+
+        connection.query(sql_pos, (err) => {
+          if (err) throw err;
+        });
         jwt.sign(payload, 'Mortparequipe', { expiresIn: 21600 }, (err, token) => {
           res.json({
               success: true,
@@ -293,6 +306,82 @@ router.post('/login', (req, res) => {
 });
 
 
+router.patch('/settings', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+  let res_err = {};
+  let error = false;
+
+  const request = {
+    old_pw: req.body.old_pw,
+    new_pw: req.body.new_pw,
+    re_new: req.body.re_new,
+    new_mail: req.body.new_mail
+  };
+
+  if (typeof request.old_pw == 'undefined' || request.old_pw == '') {
+    return res.status(400).json({
+      old_pw: "Le mot de passe actuel est requis"
+    })
+  }
+  //Check if old pw is good
+  let sql = `SELECT password, email FROM users WHERE id = ${user.id};`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    if (result.length === 0) {
+      res_err = {
+        ...res_err,
+        login: "Login et/ou mot de passe invalides"
+      };
+      error = true;
+    }
+    //Check if password is wrong
+    else if (!pw_hash.verify(request.old_pw, result[0].password)) {
+      res_err = {
+        ...res_err,
+        login: "Login et/ou mot de passe invalides"
+      };
+      error = true;
+    }
+    if (error)
+      return res.status(400).json(res_err);
+    if (!request.new_mail)
+      request.new_mail = result[0].email;
+    if (!request.new_mail.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+      res_err = {
+        ...res_err,
+        new_mail: "Mail invalide"
+      };
+      error = true;
+    }
+
+    if (typeof request.new_pw === 'undefined' || !request.new_pw.match('^(?=.*[ a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
+      res_err = {
+        ...res_err,
+        new_pw: "8 caractères min. (dont 1 maj. et 1 chiffre)"
+      };
+      error = true;
+    }
+    if (request.new_pw !== request.re_new) {
+      res_err = {
+        ...res_err,
+        re_pw: "Les mots de passe ne sont pas identiques"
+      };
+      error = true;
+    }
+    if (!error) {
+      let hashed_pw = pw_hash.generate(request.new_pw);
+      sql = "UPDATE users " +
+        `SET password = ${hashed_pw}, email = ${request.new_mail};`;
+      connection.query(sql, (err) => {
+        if (err) throw err;
+        return res.json(res_err);
+      })
+    }
+  })
+});
 
 //Set user infos
 router.post('/infos/:id', (req, res) => {
@@ -406,9 +495,23 @@ router.post('/update', (req, res) => {
     interests: req.body.interests,
     age: req.body.age
   };
-
   let response = {};
   let error = false;
+
+  if (typeof request.sexuality == 'undefined' || (request.sexuality != "bisexual" && request.sexuality != "heterosexual" && request.sexuality != "homosexual")) {
+    response = {
+      ...response,
+      sexuality: "La sexualité est incorrecte"
+    };
+    error = true
+  }
+  if (typeof request.age == 'undefined' || request.age == "" || isNaN(request.age)) {
+    response = {
+      ...response,
+      age: "L'age est incorrect"
+    };
+    error = true
+  }
 
   //Check if username is unique and different from previous
   let sql = `SELECT username from users WHERE username = "${request.username} AND id != ${user.id}";`;
@@ -475,6 +578,8 @@ router.post('/update', (req, res) => {
       error = true;
     }
 
+
+
     //Send json if there is an error and quit
     if (error === true) {
       res.status(400);
@@ -491,9 +596,11 @@ router.post('/update', (req, res) => {
           const sql_delete_interests = `DELETE FROM interests WHERE user_id = ${user.id};`;
           connection.query(sql_delete_interests, (err) => {
             if (err) throw err;
+            if (!request.interests.length)
+              return res.json();
             for (let i = 0; i < request.interests.length; i++) {
               let sql_add_interest = "INSERT INTO interests(user_id, tag)" +
-                ` VALUES(${user.id}, "${request.interests[i].tag}");`;
+                ` VALUES(${user.id}, "${request.interests[i].name}");`;
               connection.query(sql_add_interest, (err) => {
                 if (err) throw err;
                 if (i === request.interests.length -1) {
