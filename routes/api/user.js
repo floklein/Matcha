@@ -254,7 +254,7 @@ router.post('/login', (req, res) => {
         let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}" OR email = "${info.username}";`;
         connection.query(sql, (err, result) => {
             if (err) throw err;
-            if (result.length == 0) {
+            if (result.length === 0) {
                 response = {
                     ...response,
                     login: "Login et/ou mot de passe invalides"
@@ -278,6 +278,13 @@ router.post('/login', (req, res) => {
           username: result[0].username
         };
 
+        const sql_pos = "UPDATE infos " +
+          `SET latitude=${info.position.latitude}, longitude=${info.position.longitude}` +
+          `WHERE user_id = ${result[0].id} AND address_modified=false;`;
+
+        connection.query(sql_pos, (err) => {
+          if (err) throw err;
+        });
         jwt.sign(payload, 'Mortparequipe', { expiresIn: 21600 }, (err, token) => {
           res.json({
               success: true,
