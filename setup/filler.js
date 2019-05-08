@@ -42,7 +42,8 @@ function fill_db(data, pos_array) {
       username,
       password,
       confirm,
-      gender
+      gender,
+      nomail: true
     })
       .then(response => {
         const id = response.data;

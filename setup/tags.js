@@ -76,17 +76,9 @@ function create_tags(user_id) {
         `VALUES (${user_id}, "${tags[arr_tags[j]]}")`;
       connection.query(sql, (err, result) => {
         if (err) resolve(err);
-
-<<<<<<< HEAD
-        console.log(`User ID:${user_id} got 1 new interest : ${tags[arr_tags[j]]}`);
         if (j === arr_tags.length - 1)
           resolve(0);
       })
-=======
-        if (j = arr_tags.length - 1)
-          resolve(result);
-      });
->>>>>>> fk-dev
     }
     console.log(`User ID:${user_id} got ${nb_pics} new interests.`);
   });
