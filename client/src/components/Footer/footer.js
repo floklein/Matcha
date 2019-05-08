@@ -5,7 +5,6 @@ import './footer.css'
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {logoutUser} from "../../store/actions/authActions";
-import {getNotifs} from "../../store/actions/notificationActions";
 
 class Footer extends Component {
   onLogoutClick = () => {
@@ -69,8 +68,6 @@ class Footer extends Component {
     );
   }
 }
-
-
 
 Footer.propTypes = {
   logoutUser: PropTypes.func.isRequired,
