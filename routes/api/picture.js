@@ -17,7 +17,6 @@ connection.connect(function (err) {
 });
 
 router.delete('/:pic_nb', (req, res) =>{
-
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
     return res.status(401).json({error: 'unauthorized access'});
