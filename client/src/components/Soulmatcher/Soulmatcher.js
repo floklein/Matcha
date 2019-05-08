@@ -246,7 +246,8 @@ class Soulmatcher extends Component {
                              minQueryLength={1}
                              handleDelete={this.handleDelete.bind(this)}
                              handleAddition={this.handleAdd.bind(this)}
-                             placeholder="ex: Paris, lecture, Kubrick"/>
+                             placeholder="ex: Paris, lecture, Kubrick"
+                             autofocus={false}/>
                 </div>
                 <button className={classnames('sidebar__button blue', {
                   'loading': this.props.loading
