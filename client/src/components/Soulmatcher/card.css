@@ -145,6 +145,7 @@
 }
 
 .card__photos {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -164,7 +165,7 @@
     background-size: cover;
     background-position: center;
     border-radius: 1rem;
-    box-shadow: 0 0 16px -5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 12px -5px rgba(0, 0, 0, 0.5);
 }
 
 .card__photos .empty {
@@ -185,12 +186,11 @@
 .card__tags > div {
     margin: 0 0 0.5rem 0.5rem;
     padding: 0.3rem 0.7rem;
-    background: grey;
     border-radius: 1rem;
     color: white;
     background-color: white;
     font-size: 0.9rem;
-    box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 12px -4px rgba(0, 0, 0, 0.5);
     word-wrap: unset;
     text-transform: lowercase;
 }
