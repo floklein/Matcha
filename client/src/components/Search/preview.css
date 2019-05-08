@@ -24,7 +24,7 @@
 .preview__profile-pic {
     width: 4rem;
     height: 4rem;
-    margin: 1rem auto;
+    margin: 1.2rem auto 0.8rem auto;
     border-radius: 2rem;
     background-color: lightgrey;
     background-size: cover;
@@ -51,15 +51,17 @@
 
 .preview__infos {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 50% 50%;
     width: 90%;
-    margin: 1rem auto;
+    margin: 1.2rem auto 1rem auto;
+    cursor: default;
 }
 
 .preview__infos > div {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    align-items: center;
     text-align: center;
 }
 
@@ -81,6 +83,7 @@
     white-space: nowrap;
     max-width: 5rem;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .preview__button {
