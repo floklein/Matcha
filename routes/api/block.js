@@ -66,7 +66,7 @@ router.post('/', (req, res) => {
                     sql = `SELECT * FROM blocks WHERE blocker_id = ${user.id} AND blocked_id = ${infos.blocked}`;
                     connection.query(sql, (err, result) => {
                         if (result && result.length != 0) { //If already liked, unlike
-                            //Check if already liked
+                            //Check if already blocked
                             sql = `DELETE FROM blocks WHERE blocker_id = ${user.id} AND blocked_id = ${infos.blocked}`;
                             connection.query(sql, (err, result) => {
                                 res.end("");

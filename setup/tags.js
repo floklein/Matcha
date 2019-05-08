@@ -60,7 +60,7 @@ const tags = ["Voyages",
   "PSG"];
 
 function create_tags(user_id) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     //Chose nb of tags to add for given user
     const nb_pics = Math.floor(Math.random() * 15);
     const arr_tags = [];
@@ -69,15 +69,16 @@ function create_tags(user_id) {
       let r = Math.floor(Math.random() * tags.length);
       if (arr_tags.indexOf(r) === -1) arr_tags.push(r);
     }
+    if (!arr_tags.length)
+      resolve(0);
     for (let j = 0; j < arr_tags.length; j++) {
       let sql = "INSERT INTO INTERESTS(user_id, tag)" +
         `VALUES (${user_id}, "${tags[arr_tags[j]]}")`;
       connection.query(sql, (err, result) => {
-        if (err) throw err;
-
-        if (j = arr_tags.length - 1)
-          resolve(result);
-      });
+        if (err) resolve(err);
+        if (j === arr_tags.length - 1)
+          resolve(0);
+      })
     }
     console.log(`User ID:${user_id} got ${nb_pics} new interests.`);
   });
@@ -89,7 +90,7 @@ connection.connect((err) => {
   let promises = [];
   const sql = "SELECT COUNT(id) AS tot FROM users";
   connection.query(sql, (err, result) => {
-    for (let i = 0; i < result[0].tot; i++) {
+    for (let i = 1; i <= result[0].tot; i++) {
       promises.push(create_tags(i));
     }
 

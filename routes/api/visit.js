@@ -35,8 +35,10 @@ router.get('/', (req, res) => {
         };
         return res.status(400).json(response)
     }
-    if (visited_id === user.id) { //visiter self_visit, do nothing
-        return;
+
+    if (visited_id == user.id) { //visiter self_visit, do nothing
+        console.log("WFJFW");
+        return res.json({});
     }
 
     let sql = `SELECT id FROM users WHERE id = ${visited_id};`;
@@ -63,6 +65,7 @@ router.get('/', (req, res) => {
                             `WHERE user_id = ${visited_id};`;
                         connection.query(sql, (err, resp) => {
                             if (err) throw err;
+                          notifs.postNotif(visited_id, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
                             return res.json('');
                         })
                     })
@@ -79,7 +82,7 @@ router.get('/', (req, res) => {
                             connection.query(sql, (err, resp) => {
                                 if (err) throw err;
                             });
-                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil.`, user.id, user.username);
+                          notifs.postNotif(visited_id, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
                         }
                         return res.json('');
                     })
