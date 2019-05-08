@@ -16,7 +16,6 @@ let connection = mysql.createConnection({
 
 connection.connect(function (err) {
   if (err) throw err;
-  console.log('You are now connected...')
 });
 
 function calculateScore(request, result_i, tag_res, pos_res, user) {

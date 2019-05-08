@@ -21,7 +21,6 @@ class UserPic extends Component {
         });
       })
       .catch(err => {
-        console.log(err.response.data);
       });
   }
 

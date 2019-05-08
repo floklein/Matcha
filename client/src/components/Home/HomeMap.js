@@ -25,7 +25,6 @@ export class MapContainer extends Component {
         });
       })
       .catch(err => {
-        console.log(err.response.data);
       });
   }
 

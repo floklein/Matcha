@@ -9,6 +9,8 @@ import {likeUser, dislikeUser} from "../../store/actions/profileActions";
 
 import './card.css';
 
+let unmounted = false;
+
 class Card extends Component {
   state = {
     id: '',
@@ -31,23 +33,28 @@ class Card extends Component {
   };
 
   componentDidMount() {
+    unmounted = false;
     axios.get(`/api/profile/${this.props.userId}`)
       .then(res => {
         getAverageColor(res.data.profile_pic)
           .then(rgb => {
-            this.setState({
-              ...res.data,
-              rgb: rgb,
-              distance: (Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')
-            });
+            if (!unmounted) {
+              this.setState({
+                ...res.data,
+                rgb: rgb,
+                distance: (Math.round(this.props.distance / 100) / 10 + ' km').replace('.', ',')
+              });
+            }
           })
-          .catch((err) => {
-            console.log('GAC error: ' + err);
+          .catch(err => {
           });
       })
       .catch(err => {
-        console.log('Axios error: ' + err);
       });
+  }
+
+  componentWillUnmount() {
+    unmounted = true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,18 +62,18 @@ class Card extends Component {
       .then(res => {
         getAverageColor(res.data.profile_pic)
           .then(rgb => {
-            this.setState({
-              ...res.data,
-              rgb: rgb,
-              distance: (Math.round(nextProps.distance / 100) / 10 + ' km').replace('.', ',')
-            });
+            if (!unmounted) {
+              this.setState({
+                ...res.data,
+                rgb: rgb,
+                distance: (Math.round(nextProps.distance / 100) / 10 + ' km').replace('.', ',')
+              });
+            }
           })
-          .catch((err) => {
-            console.log('GAC error: ' + err);
+          .catch(err => {
           });
       })
       .catch(err => {
-        console.log('Axios error: ' + err);
       });
   }
 

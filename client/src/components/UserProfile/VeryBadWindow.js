@@ -67,8 +67,9 @@ class VeryBadWindow extends Component {
             <div className="vbw__main">
               <img className="vbw__main-img" src={reportedImg} alt="report or block"/>
               <div className="vbw__main-txt">
-                Vous avez bien signalé cet utilisateur.
+                Vous avez bien signalé cet utilisateur. Souhaitez-vous aussi le bloquer ?
               </div>
+              <button className="blue vbw__main-button" onClick={this.onBlock}>Bloquer</button>
             </div>
           </div>
         );

@@ -10,8 +10,12 @@ let connection = mysql.createConnection({
 })
 
 connection.connect((err) => {
+<<<<<<< HEAD
   if (err) throw err;
   console.log('You are now connected...');
+=======
+  if (err) throw err
+>>>>>>> fk-dev
 
   const sql = "CREATE TABLE IF NOT EXISTS users (" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +

@@ -101,7 +101,7 @@ class Soulmatcher extends Component {
       }
     });
     noUiSlider.create(sliderPopularity, {
-      start: [10, 200],
+      start: [10, this.state.popularityMax],
       connect: true,
       range: {
         'min': 0,

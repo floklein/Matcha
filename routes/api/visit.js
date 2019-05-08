@@ -40,7 +40,6 @@ router.get('/', (req, res) => {
     }
 
     let sql = `SELECT id FROM users WHERE id = ${visited_id};`;
-    console.log(sql);
     connection.query(sql, (err, resp) => {
         if (err) throw err;
         if (!res) {
@@ -82,8 +81,12 @@ router.get('/', (req, res) => {
                             connection.query(sql, (err, resp) => {
                                 if (err) throw err;
                             });
+<<<<<<< HEAD
                           console.log('send notif visit');
                           notifs.postNotif(visited_id, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
+=======
+                          notifs.postNotif(response.liked, 'visit', `${user.username} a visité votre profil.`, user.id, user.username);
+>>>>>>> fk-dev
                         }
                         return res.json('');
                     })

@@ -207,13 +207,7 @@ router.post('/register', (req, res) => {
             subject: 'Sending Email using Node.js',
             text: link
           };
-          transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          });
+          transporter.sendMail(mailOptions);
           res.end(String(id));
         });
       })
@@ -227,6 +221,7 @@ router.post('/login', (req, res) => {
   let info = {
     username: req.body.username,
     password: req.body.password,
+    position: req.body.position
   };
   let response = {};
   let error = false;
