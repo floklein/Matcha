@@ -35,8 +35,10 @@ router.get('/', (req, res) => {
         };
         return res.status(400).json(response)
     }
-    if (visited_id === user.id) { //visiter self_visit, do nothing
-        return;
+
+    if (visited_id == user.id) { //visiter self_visit, do nothing
+        console.log("WFJFW");
+        return res.json({});
     }
 
     let sql = `SELECT id FROM users WHERE id = ${visited_id};`;
