@@ -238,7 +238,9 @@ class EditProfile extends Component {
                              minQueryLength={1}
                              handleDelete={this.handleDelete.bind(this)}
                              handleAddition={this.handleAdd.bind(this)}
-                             placeholder="ex: Paris, lecture, Kubrick..."/>
+                             placeholder="ex: Paris, lecture, Kubrick..."
+                             autofocus={false}
+                             allowNew={true}/>
                 </div>
                 <div className="profile__cp-title">
                   <h4>PHOTOS</h4>

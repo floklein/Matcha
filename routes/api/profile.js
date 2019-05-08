@@ -88,7 +88,7 @@ router.get('/:username', (req, res) => {
         photos = [result2[0].pic1, result2[0].pic2, result2[0].pic3, result2[0].pic4, result2[0].pic5].filter((photo) => photo);
       }
 
-      let sql = `SELECT tag FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;
+      let sql = `SELECT interests.id, tag, tag AS name FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;
       connection.query(sql, (err, result3) => {
         if (err) throw err;
 
