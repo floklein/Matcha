@@ -77,11 +77,6 @@ class ChatPanel extends Component {
             <div className="chat__title-text">
               Discussion instantanée
             </div>
-            <div className="chat__title-notifs">
-              <div className="chat__notifs-div">
-                <p>10</p>
-              </div>
-            </div>
           </div>
           <div className="chat__interface" style={styleChat}>
             <div className="chat__users-bar">
