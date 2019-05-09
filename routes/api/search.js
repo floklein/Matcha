@@ -86,7 +86,6 @@ router.post('/', (req, res) => {
         user: "Vous devez compléter votre profil étendu"
       })
     }
-    let sort_function;
     const sql_getAll = "SELECT u.id, i.latitude, i.longitude, i.popularity " +
       `FROM users u INNER JOIN infos i on i.user_id = u.id WHERE u.id != ${user.id} AND ` +
       `i.age >= ${request.ageMin} AND i.age <= ${request.ageMax}  AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
@@ -102,37 +101,39 @@ router.post('/', (req, res) => {
         connection.query(sql_pos, (err, pos_res) => {
           if (err) throw err;
 
-          u_search.blocks_past(user.id, result)
+          u_search.filters_pos(request.latitude, request.longitude, result)
             .then((result) => {
-                u_search.filters_interests(request.interests, result)
-                  .then((result) => {
-                    if (result.length === 0)
-                      return res.json({});
-                      for (let i = 0; i < result.length; i++) {
-                        promises.push(calculateScore(request, result[i], tag_res, pos_res, user))
-                      }
-                      Promise.all(promises)
-                        .then((values) => {
-                          values.sort((first, second) => {
-                            if (request.order == "desc")
-                              return (second.matchScore.score - first.matchScore.score);
-                            else
-                              return (first.matchScore.score - second.matchScore.score)
-                          });
-                          return res.json(values.map((item) => {
-                            return ({
-                              id: item.id,
-                              matchScore: item.matchScore.score,
-                              dist: item.matchScore.dist
-                            })
-                          }).filter((item, i) => {
+              u_search.blocks_past(user.id, result)
+                .then((result) => {
+                    u_search.filters_interests(request.interests, result)
+                      .then((result) => {
+                        if (result.length === 0)
+                          return res.json({});
+                        for (let i = 0; i < result.length; i++) {
+                          promises.push(calculateScore(request, result[i], tag_res, pos_res, user))
+                        }
+                        Promise.all(promises)
+                          .then((values) => {
+                            values.sort((first, second) => {
+                              if (request.order == "desc")
+                                return (second.matchScore.score - first.matchScore.score);
+                              else
+                                return (first.matchScore.score - second.matchScore.score)
+                            });
+                            return res.json(values.map((item) => {
+                              return ({
+                                id: item.id,
+                                matchScore: item.matchScore.score,
+                                dist: item.matchScore.dist
+                              })
+                            }).filter((item, i) => {
                               return (i >= request.from && i < request.to);
-                          }));
-                    });
-                  })
-              }
-            );
-
+                            }));
+                          });
+                      })
+                  }
+                );
+            });
         });
       });
     })
