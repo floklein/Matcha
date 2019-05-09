@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const nodemailer = require('nodemailer');
 
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
@@ -50,9 +51,9 @@ router.post('/', (req, res) => {
         }
         else {
             //Check if reported exists
-            sql = `SELECT id from users WHERE id = ${infos.reported}`;
-            connection.query(sql, (err, result) => {
-                if (result && result.length == 0) {
+            sql = `SELECT id, username from users WHERE id = ${infos.reported}`;
+            connection.query(sql, (err, result0) => {
+                if (result0 && result0.length == 0) {
                     if (user.id === infos.reported) {
                         response = {
                             ...response,
@@ -62,7 +63,7 @@ router.post('/', (req, res) => {
                     }
                 }
                 else {
-                    //Check if already liked
+                    //Check if already reported
                     sql = `SELECT * FROM reports WHERE reporter_id = ${user.id} AND reported_id = ${infos.reported}`;
                     connection.query(sql, (err, result) => {
                         if (result && result.length !== 0) { //If already reported, do nothing
@@ -71,6 +72,21 @@ router.post('/', (req, res) => {
                         else {  //Else, report
                             sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${user.id}, ${infos.reported})`;
                             connection.query(sql, (err, result) => {
+                                content = `${user.username} has reported <a href="http://localhost:3000/profile/${infos.reported}">${result0[0].username}</a> for being a fake profile`;
+                                let transporter = nodemailer.createTransport({
+                                    service: 'gmail',
+                                    auth: {
+                                        user: 'matcha.fk.tbd@gmail.com',
+                                        pass: 'Qwerty123-'
+                                    }
+                                });
+                                let mailOptions = {
+                                    from: 'Matcha <no-reply@matcha.com>',
+                                    to: 'matcha.fk.tbd@gmail.com',
+                                    subject: 'Report',
+                                    html: content
+                                };
+                                transporter.sendMail(mailOptions);
                                 res.end();
                             })
                         }
