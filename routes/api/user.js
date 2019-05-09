@@ -276,7 +276,7 @@ router.post('/forgottenPw', (req, res) => {
     `WHERE email = ${request.body.email}`;
   connection.query(sql, (err, res) => {
     if (err) throw err;
-    const content = `Here is your link to reset your password : http://localhost:3000/forgottenPw?id=${res[0].id}&code=${res[0].code}`;
+    const content = `Veuillez cliquer sur <a href="http://localhost:3000/forgottenPw?id=${res[0].id}&code=${res[0].code}">ce lien</a> pour changer de mot de passe`;
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -288,7 +288,7 @@ router.post('/forgottenPw', (req, res) => {
       from: 'Matcha <no-reply@matcha.com>',
       to: res[0].email,
       subject: 'Forgotten password',
-      text: content
+      html: content
     };
     transporter.sendMail(mailOptions);
   });
