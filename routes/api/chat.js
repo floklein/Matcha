@@ -3,6 +3,7 @@ const router = express.Router();
 
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
+const notifs = require('../../utils/notifs');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -72,6 +73,7 @@ router.post('/', (req, res) => {
         `VALUES(${user.id}, ${match_id}, "${message}", now());`;
       connection.query(sql, (err, resp) => {
         if (err) throw err;
+        notifs.postNotif(match_id, 'message', `${user.username} vous a envoyé un nouveau message.`, user.id, user.username);
         return res.json({});
       })
     })
