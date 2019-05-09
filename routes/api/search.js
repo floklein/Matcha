@@ -100,7 +100,11 @@ router.post('/', (req, res) => {
           `WHERE user_id = ${user.id}`;
         connection.query(sql_pos, (err, pos_res) => {
           if (err) throw err;
-
+          if (request.latitude && request.longitude)
+            pos_res[0] = {
+              latitude: request.latitude,
+              longitude: request.longitude
+            };
           u_search.filters_pos(request.latitude, request.longitude, result)
             .then((result) => {
               u_search.blocks_past(user.id, result)
