@@ -276,7 +276,7 @@ router.post('/forgottenPw', (req, res) => {
     `WHERE email = ${request.body.email}`;
   connection.query(sql, (err, res) => {
     if (err) throw err;
-    const content = `Here is your link to reset your password : http://localhost:3000/forgottenPw?id=${res[0].id}&code=${res[0].code}`;
+    const content = `Veuillez cliquer sur <a href="http://localhost:3000/forgottenPw?id=${res[0].id}&code=${res[0].code}">ce lien</a> pour changer de mot de passe`;
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -288,7 +288,7 @@ router.post('/forgottenPw', (req, res) => {
       from: 'Matcha <no-reply@matcha.com>',
       to: res[0].email,
       subject: 'Forgotten password',
-      text: content
+      html: content
     };
     transporter.sendMail(mailOptions);
   });
@@ -556,6 +556,7 @@ router.post('/update', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
+  console.log(req.body);
   const request = {
     username: req.body.username,
     firstName: req.body.firstName,
@@ -564,7 +565,9 @@ router.post('/update', (req, res) => {
     sexuality: req.body.sexuality,
     gender: req.body.gender,
     interests: req.body.interests,
-    age: req.body.age
+    age: req.body.age,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude
   };
   let response = {};
   let error = false;
@@ -661,7 +664,11 @@ router.post('/update', (req, res) => {
       const sql_user_update = `UPDATE users SET username = "${request.username}" WHERE id = ${user.id};`;
       connection.query(sql_user_update, (err) => {
         if (err) throw err;
-        const sql_infos_update = `UPDATE infos SET gender = "${request.gender}", age=${request.age}, sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}" WHERE user_id = ${user.id};`;
+        let sql_infos_update;
+        if (request.latitude && request.longitude && !isNaN(request.latitude) && !isNaN(request.longitude)) {
+          sql_infos_update = `UPDATE infos SET gender = "${request.gender}", age=${request.age}, sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}", latitude=${request.latitude}, longitude=${request.longitude}, address_modified=1 WHERE user_id = ${user.id};`;}
+        else {
+          sql_infos_update = `UPDATE infos SET gender = "${request.gender}", age=${request.age}, sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}" WHERE user_id = ${user.id};`;}
         connection.query(sql_infos_update, (err) => {
           if (err) throw err;
           const sql_delete_interests = `DELETE FROM interests WHERE user_id = ${user.id};`;

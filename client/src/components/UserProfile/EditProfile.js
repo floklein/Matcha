@@ -138,8 +138,8 @@ class EditProfile extends Component {
   }
 
   submitChanges = () => {
-    const newLat = parseInt(document.getElementById('gm-lat').value);
-    const newLng = parseInt(document.getElementById('gm-lng').value);
+    const newLat = parseFloat(document.getElementById('gm-lat').value);
+    const newLng = parseFloat(document.getElementById('gm-lng').value);
     if (newLat === 0 || newLng === 0) {
       this.props.changeInfos(this.state);
     } else {
