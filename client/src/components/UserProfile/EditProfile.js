@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import axios from 'axios';
+import ReactTags from 'react-tag-autocomplete';
 
 import {fetchProfile} from '../../store/actions/profileActions';
 import {uploadImage, changeInfos} from '../../store/actions/userActions';
 
 import Loading from '../Loading';
-import ProfileMap from './ProfileMap';
 import ContentEditable from './ContentEditable'
 
 import './profile.css';
 import './edit.css';
-import ReactTags from "react-tag-autocomplete";
 
 class EditProfile extends Component {
   state = {
@@ -139,13 +138,23 @@ class EditProfile extends Component {
   }
 
   submitChanges = () => {
-    this.props.changeInfos(this.state);
+    const newLat = parseInt(document.getElementById('gm-lat').value);
+    const newLng = parseInt(document.getElementById('gm-lng').value);
+    if (newLat === 0 || newLng === 0) {
+      this.props.changeInfos(this.state);
+    } else {
+      this.props.changeInfos({
+        ...this.state,
+        latitude: newLat,
+        longitude: newLng
+      });
+    }
   };
 
   render() {
     if (!this.props.profile)
       return (<Loading/>);
-    const profile = this.props.profile;
+    const {profile} = this.props;
     const popularity = this.getPopularity(profile.popularity);
     const {r, g, b} = profile.rgb;
     const bgPhoto = {backgroundImage: `url('${profile.profile_pic}')`};
@@ -261,9 +270,11 @@ class EditProfile extends Component {
                   <h4>POSITION</h4>
                 </div>
                 <div className="profile__cp-content map">
-                  <ProfileMap
-                    position={{lat: profile.latitude, lng: profile.longitude}}
-                    gender={profile.gender}/>
+                  <input id="gm-input" type="text" placeholder="ex: Lyon, 11 rue Féraud"/>
+                  <input hidden id="gm-lat" type="text"/>
+                  <input hidden id="gm-lng" type="text"/>
+                  <div id="gm-map"/>
+                  <div className="no-map">Please refresh</div>
                 </div>
               </div>
             </div>
