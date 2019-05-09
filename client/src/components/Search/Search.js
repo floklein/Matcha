@@ -172,7 +172,9 @@ class Search extends Component {
   handleGMChange = e => {
     this.setState({
       gmSearch: e.target.value,
-      gmValue: e.target.value
+      gmValue: e.target.value,
+      latitude: 0,
+      longitude: 0
     });
   };
 
