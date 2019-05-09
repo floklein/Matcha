@@ -223,6 +223,77 @@ router.post('/register', (req, res) => {
   })
 });
 
+router.post('/modifyPw', (req, res) => {
+  const request = {
+    password: req.body.password,
+    re_pw: req.body.re_pw,
+    code: req.body.code,
+    id: req.body.id
+  };
+  if (typeof request.code == 'undefined' || request.code === '' || typeof request.id == 'undefined' || request.password === 0) {
+    return res.status(400).json({
+      link: "Le lien est erroné, veuillez vérifier votre email ou contacter le Webmaster."
+    })
+  }
+
+  if ( typeof request.password == 'undefined' || request.password === '' || typeof request.re_pw == 'undefined' || request.re_pw === '') {
+    return res.status(400).json({
+      password: "Les mots de passe sont requis"
+    })
+  }
+
+  if (request.password != request.re_pw) {
+   return res.status(400).json({
+     re_pw: "Les deux mots de passe ne sont pas identiques"
+   })
+  }
+
+  if (!request.password.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
+    return res.status(400).json({
+      password: "8 caractères min. (dont 1 maj. et 1 chiffre)"
+    })
+  }
+
+  let sql = "SELECT user_id from verified " +
+    `WHERE code = ${request.code} AND user_id = ${request.id};`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    if (!result.length)
+      return res.status(400).json({
+        link: "Le lien est erroné, veuillez vérifier votre email ou contacter le Webmaster"
+      });
+    let hashed_pw = pw_hash.generate(request.password);
+    sql = `UPDATE users set password = ${hashed_pw} WHERE id = ${request.id};`;
+    connection.query(sql, err => {
+      if (err) throw err;
+      return res.json();
+    })
+  })
+});
+
+router.post('/forgottenPw', (req, res) => {
+  const sql = "SELECT v.code, u.email from verified v INNER JOIN users u on v.user_id = u.id " +
+    `WHERE user_id = ${request.body.id}`;
+  connection.query(sql, (err, res) => {
+    if (err) throw err;
+    const content = `Here is your link to reset your password : http://localhost:3000/forgottenPw?id=${request.body.id}&code=${res[0].code}`;
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'matcha.fk.tbd@gmail.com',
+        pass: 'Qwerty123-'
+      }
+    });
+    let mailOptions = {
+      from: 'Matcha <no-reply@matcha.com>',
+      to: res[0].email,
+      subject: 'Forgotten password',
+      text: content
+    };
+    transporter.sendMail(mailOptions);
+  });
+});
+
 router.post('/login', (req, res) => {
   let info = {
     username: req.body.username,
