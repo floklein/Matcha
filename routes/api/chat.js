@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
     return res.status(400).json({error: "L'id est requis"});
   const sql = "SELECT id, sender_id, receiver_id, message , DATE_FORMAT(`time`, '%k:%i') AS `date` FROM messages " +
     `WHERE (sender_id = ${match_id} AND receiver_id = ${user.id}) OR (sender_id = ${user.id} AND receiver_id = ${match_id}) ` +
-    "ORDER BY time DESC LIMIT 20;";
+    "ORDER BY time DESC;";
   connection.query(sql, (err, resp) => {
     if (err) throw err;
     resp.map((message) => {
