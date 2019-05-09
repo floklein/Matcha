@@ -78,12 +78,12 @@ export class LoginForm extends Component {
                      type="text" name="username" placeholder="Votre pseudo ou votre email"
                      title="Votre pseudo ou votre email" required minLength="1" maxLength="64"
                      value={this.state.username} onChange={this.onChange}/>
-              <p>{errors.username}&nbsp;</p>
+              <p>{errors.username}{errors.password}{errors.login}&nbsp;</p>
               <input className={classnames('', {'invalid': errors.password || errors.login})}
                      type="password" name="password" placeholder="Votre mot de passe"
                      title="Votre mot de passe" required minLength="8" maxLength="64"
                      value={this.state.password} onChange={this.onChange}/>
-              <p>{errors.password}{errors.login}&nbsp;</p>
+              <p className="forgot-password" onClick={this.props.gotoForgotPassword}>Mot de passe oublié&nbsp;</p>
               <button className="green" type="submit">Connexion</button>
             </form>
           </div>}
