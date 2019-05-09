@@ -189,40 +189,33 @@ module.exports = {
   })
 },
 
-  isBlocked: function isBlocked(id, user) {
+  isBlocked: function isBlocked(id, user, i) {
     return new Promise(resolve => {
       let sql = "SELECT id from blocks " +
         `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
       connection.query(sql, (err, res) => {
         if (err) throw err;
-        resolve(res.length);
+        resolve(res.length ? i : -1);
       })
     })
   },
 
   blocks_past: async function blocks_past(id, result) {
     return new Promise(resolve => {
-      let to_remove = [];
+      let promises = [];
       if (result.length == 0)
         resolve(result);
       for (let i = 0; i < result.length; i++) {
-        this.isBlocked(id, result[i])
-          .then(res => {
-            if (res) { //splicing more than 1 element changes indexes, need to store it and splice in reverse order
-              to_remove.push(i);
-            }
-            if (i == result.length - 1) {
-              to_remove.sort((a, b) => {
-                return (a - b)
-              });
-              for (let j = to_remove.length - 1; j >= 0; j--) {
-                result.splice(to_remove[j], 1);
-              }
-              resolve(result);
-            }
-          });
-      }
-    })
+        promises.push(this.isBlocked(id, result[i]), i)}
+      Promise.all(promises)
+        .then((values) => {
+          values = values.sort((a, b) => {return (b - a);}).filter((val) => {return (val !== -1);});
+          for (let j = 0; j < values.length; j++) {
+            result.splice(values[j], 1);
+          }
+          resolve(result);
+        })
+      })
   },
 
 get_and_filter_dist: async function get_and_filter_dist(infos, resI, i) {
@@ -259,15 +252,11 @@ filters_pos: async function filter_pos(latitude, longitude, result) {
     })
 },
 
-filters_interests: async function filters_interests(tags_array, result) {
-  return new Promise((resolve => {
-    if (result.length == 0 || !tags_array || tags_array.length == 0)
-      resolve(result);
-    let to_remove = [];
-    let tags_array_filtered = [];
-    for (let i = 0; i < result.length; i++) {
+get_rid_interests: async function get_rid_interests(resI, tags_array, i) {
+  return new Promise (resolve => {
+      let tags_array_filtered = [];
       const sql = "select tag from interests " +
-        `Where user_id = ${result[i].id}`;
+        `Where user_id = ${resI.id}`;
       connection.query(sql, (err, res) => {
         if (err) throw err;
         tags_array_filtered = tags_array.filter((tag) => {
@@ -277,17 +266,28 @@ filters_interests: async function filters_interests(tags_array, result) {
           }
           return false;
         });
-        if (tags_array_filtered.length < tags_array.length) {
-          to_remove.push(i);
+        resolve(tags_array_filtered.length < tags_array.length ? i : -1);
+    })
+  })
+},
+
+
+filters_interests: async function filters_interests(tags_array, result) {
+  return new Promise((resolve => {
+    promises = [];
+    if (result.length == 0 || !tags_array || tags_array.length == 0)
+      resolve(result);
+    for (let i = 0; i < result.length; i++) {
+      promises.push(this.get_rid_interests(result[i], tags_array, i));}
+    Promise.all(promises)
+      .then((values) => {
+        console.log(values);
+        values = values.sort((a, b) => {return (b - a);}).filter((val) => {return (val !== -1);});
+        for (let j = 0; j < values.length; j++) {
+          result.splice(values[j], 1);
         }
-        if (i == result.length - 1) {
-          for (let j = to_remove.length - 1; j >= 0; j--) {
-            result.splice(to_remove[j], 1);
-          }
-          resolve(result);
-        }
+        resolve(result);
       })
-    }
   }))
 }
 };
