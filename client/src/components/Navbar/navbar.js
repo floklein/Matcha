@@ -99,6 +99,7 @@ class Navbar extends Component {
                 <option value="like">Likes</option>
                 <option value="unlike">Unlikes</option>
                 <option value="match">Matches</option>
+                <option value="message">Messages</option>
               </select>
               Notifications
               <button onClick={this.markAllAsRead}/>
