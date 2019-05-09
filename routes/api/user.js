@@ -223,28 +223,28 @@ router.post('/register', (req, res) => {
   })
 });
 
-router.post('/modifyPw', (req, res) => {
+router.post('/resetPassword', (req, res) => {
   const request = {
     password: req.body.password,
-    re_pw: req.body.re_pw,
+    confirm: req.body.confirm,
     code: req.body.code,
     id: req.body.id
   };
   if (typeof request.code == 'undefined' || request.code === '' || typeof request.id == 'undefined' || request.password === 0) {
     return res.status(400).json({
-      link: "Le lien est erroné, veuillez vérifier votre email ou contacter le Webmaster."
+      password: "Le lien est invalide, veuillez vérifier votre email"
     })
   }
 
-  if ( typeof request.password == 'undefined' || request.password === '' || typeof request.re_pw == 'undefined' || request.re_pw === '') {
+  if ( typeof request.password == 'undefined' || request.password === '' || typeof request.confirm == 'undefined' || request.confirm === '') {
     return res.status(400).json({
       password: "Les mots de passe sont requis"
     })
   }
 
-  if (request.password != request.re_pw) {
+  if (request.password != request.confirm) {
    return res.status(400).json({
-     re_pw: "Les deux mots de passe ne sont pas identiques"
+     confirm: "Les mots de passe sont différents"
    })
   }
 
@@ -260,7 +260,7 @@ router.post('/modifyPw', (req, res) => {
     if (err) throw err;
     if (!result.length)
       return res.status(400).json({
-        link: "Le lien est erroné, veuillez vérifier votre email ou contacter le Webmaster"
+        password: "Le lien est invalide, veuillez vérifier votre email"
       });
     let hashed_pw = pw_hash.generate(request.password);
     sql = `UPDATE users set password = ${hashed_pw} WHERE id = ${request.id};`;
@@ -271,12 +271,14 @@ router.post('/modifyPw', (req, res) => {
   })
 });
 
-router.post('/forgottenPw', (req, res) => {
+router.post('/forgotPassword', (request, result) => {
   const sql = "SELECT v.code, u.email, u.id from verified v INNER JOIN users u on v.user_id = u.id " +
-    `WHERE email = ${request.body.email}`;
+    `WHERE email = "${request.body.email}";`;
   connection.query(sql, (err, res) => {
+    if (!res.length)
+      return result.json();
     if (err) throw err;
-    const content = `Veuillez cliquer sur <a href="http://localhost:3000/forgottenPw?id=${res[0].id}&code=${res[0].code}">ce lien</a> pour changer de mot de passe`;
+    const content = `Veuillez cliquer sur <a href="http://localhost:3000?action=forgot-password&id=${res[0].id}&code=${res[0].code}">ce lien</a> pour changer de mot de passe`;
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -291,6 +293,7 @@ router.post('/forgottenPw', (req, res) => {
       html: content
     };
     transporter.sendMail(mailOptions);
+    return result.json();
   });
 });
 
