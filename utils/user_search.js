@@ -225,6 +225,40 @@ module.exports = {
     })
   },
 
+get_and_filter_dist: async function get_and_filter_dist(infos, resI, i) {
+  return new Promise(resolve => {
+    let sql = "SELECT latitude, longitude FROM infos " +
+      `WHERE user_id = ${resI.id};`;
+    connection.query(sql, (err, res) => {
+      if (err) throw err;
+      let dist = this.syncDistanceScore(0, infos, 0, res);
+      resolve(dist > 50000 ? i : -1);
+    })
+  });
+},
+
+filters_pos: async function filter_pos(latitude, longitude, result) {
+  return new Promise((resolve) => {
+    let promises = [];
+    if (!latitude || ! longitude || !result.length)
+      resolve(result);
+    const infos = {
+      latitude,
+      longitude
+    };
+    for (let i = 0; i < result.length; i++) {
+      promises.push(this.get_and_filter_dist(infos, result[i], i));}
+    Promise.all(promises)
+      .then((values) => {
+        values = values.sort((a, b) => {return (b - a);}).filter((val) => {return (val !== -1);});
+        for (let j = 0; j < values.length; j++) {
+          result.splice(values[j], 1);
+        }
+        resolve(result);
+      })
+    })
+},
+
 filters_interests: async function filters_interests(tags_array, result) {
   return new Promise((resolve => {
     if (result.length == 0 || !tags_array || tags_array.length == 0)
