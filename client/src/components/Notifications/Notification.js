@@ -16,6 +16,8 @@ class Notification extends Component {
         return 'Ça nous brise le cœur...';
       case 'match':
         return 'C\'est un match !';
+      case 'message':
+        return 'Tu as un message !';
       default:
         return 'Bonjour !';
     }
