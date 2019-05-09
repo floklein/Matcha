@@ -21,7 +21,7 @@ export class ForgotPassword extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('/api/user/forgottenPw', {email: this.state.email})
+    axios.post('/api/user/forgotPassword', {email: this.state.email})
       .then(() => {
         this.setState({
           step: 1

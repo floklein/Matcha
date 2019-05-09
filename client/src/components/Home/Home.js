@@ -33,7 +33,7 @@ class Home extends Component {
             </div>
             <div>
               <div className="login">
-                <UserForm/>
+                <UserForm location={this.props.location}/>
               </div>
             </div>
           </div>
