@@ -53,7 +53,7 @@ class Navbar extends Component {
       .then(res => {
         this.props.getNotifs();
       })
-      .catch();
+      .catch(err => {});
   };
 
   handleFilterChange = (e) => {

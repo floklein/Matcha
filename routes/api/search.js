@@ -83,7 +83,7 @@ router.post('/', (req, res) => {
     if (err) throw err;
     if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === null || first_result[0].bio === null) {
       return res.status(400).json({
-        user: "Vous devez compléter votre profil étendu"
+        user: "Veuillez compléter votre profil avant d'utiliser la recherche"
       })
     }
     const sql_getAll = "SELECT u.id, i.latitude, i.longitude, i.popularity " +

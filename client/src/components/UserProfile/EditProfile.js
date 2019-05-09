@@ -26,7 +26,7 @@ class EditProfile extends Component {
           suggestions: res.data,
         });
       })
-      .catch();
+      .catch(err => {});
   }
 
   componentDidMount() {
@@ -206,7 +206,7 @@ class EditProfile extends Component {
                     <div>ÂGE</div>
                     <div className="select-wrapper age">
                       <input type="number" className="editable age-input" name="age"
-                             defaultValue={profile.age} max="99" min="18" placeholder="âge"
+                             defaultValue={profile.age} max="99" min="18" placeholder="?"
                              onChange={this.handleChange}/>
                     </div>
                   </div>
