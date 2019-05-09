@@ -50,7 +50,7 @@ export class LoginForm extends Component {
             }
           });
         })
-        .catch();
+        .catch(err => {});
     });
   };
 

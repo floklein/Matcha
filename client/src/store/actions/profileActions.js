@@ -1,7 +1,9 @@
 import {FETCH_PROFILE, GET_ERRORS, LIKE_USER} from "./types";
 import axios from 'axios';
 import Faker from "faker";
-import getAverageColor from "get-average-color";
+import getAverageColor from 'get-average-color';
+
+import {getMatches} from './chatActions';
 
 export const fetchProfile = (username) => dispatch => {
   axios.get(`/api/profile/${username}`)
@@ -17,7 +19,7 @@ export const fetchProfile = (username) => dispatch => {
             }
           });
         })
-        .catch();
+        .catch(err => {});
     })
     .catch(err => {
       dispatch({
@@ -34,6 +36,7 @@ export const likeUser = (userId) => dispatch => {
                 type: LIKE_USER,
                 payload: res.data.like
             });
+            dispatch(getMatches());
         })
         .catch(err => {
           dispatch({

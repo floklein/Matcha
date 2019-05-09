@@ -27,6 +27,7 @@ class ChatPanel extends Component {
     this.setState({
       shown: !shown
     });
+    this.props.getMatches();
   };
 
   componentWillReceiveProps(nextProps) {

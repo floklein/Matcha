@@ -11,13 +11,13 @@ class Notification extends Component {
       case 'visit':
         return 'Admirateur ou admiratrice ?';
       case 'like':
-        return 'Super nouvelle !';
+        return 'Love is in the air!';
       case 'unlike':
         return 'Ça nous brise le cœur...';
       case 'match':
-        return 'C\'est un match !';
+        return 'Faits l\'un pour l\'autre.';
       case 'message':
-        return 'Tu as un message !';
+        return 'C\'est l\'facteur !';
       default:
         return 'Bonjour !';
     }
