@@ -272,11 +272,11 @@ router.post('/modifyPw', (req, res) => {
 });
 
 router.post('/forgottenPw', (req, res) => {
-  const sql = "SELECT v.code, u.email from verified v INNER JOIN users u on v.user_id = u.id " +
-    `WHERE user_id = ${request.body.id}`;
+  const sql = "SELECT v.code, u.email, u.id from verified v INNER JOIN users u on v.user_id = u.id " +
+    `WHERE email = ${request.body.email}`;
   connection.query(sql, (err, res) => {
     if (err) throw err;
-    const content = `Here is your link to reset your password : http://localhost:3000/forgottenPw?id=${request.body.id}&code=${res[0].code}`;
+    const content = `Here is your link to reset your password : http://localhost:3000/forgottenPw?id=${res[0].id}&code=${res[0].code}`;
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
