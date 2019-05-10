@@ -37,7 +37,6 @@ router.get('/', (req, res) => {
     }
 
     if (visited_id == user.id) { //visiter self_visit, do nothing
-        console.log("WFJFW");
         return res.json({});
     }
 

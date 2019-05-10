@@ -25,6 +25,7 @@ class Profile extends Component {
   };
 
   componentDidMount() {
+    document.title = 'Profil';
     this.props.fetchProfile(this.props.match.params.username);
   }
 
@@ -152,6 +153,7 @@ class Profile extends Component {
       return (<Error errTitle="Vous êtes bloqué."
                      errText="cet utilisateur vous a bloqué. Merci de votre compréhension."/>);
     const profile = this.props.profile;
+    document.title = profile.firstName + ' ' + profile.lastName;
     this.visitProfile(profile.id);
     const gender = this.getGender(profile.gender);
     const sexuality = this.getSexuality(profile.sexuality);

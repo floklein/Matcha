@@ -16,6 +16,7 @@ class Home extends Component {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push('/soulmatcher');
     }
+    document.title = 'Soulmatch';
   }
 
   render() {
