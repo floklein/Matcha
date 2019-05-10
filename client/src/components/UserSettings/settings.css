@@ -10,7 +10,7 @@
 .settings__top-bar_links {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     width: fit-content;
