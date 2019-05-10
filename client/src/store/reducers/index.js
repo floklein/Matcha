@@ -7,6 +7,7 @@ import searchReducer from './searchReducer';
 import chatReducer from './chatReducer';
 import userReducer from './userReducer';
 import notificationReducer from './notificationReducer';
+import settingsReducer from './settingsReducer';
 
 export default combineReducers({
   profile: profileReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
   search: searchReducer,
   chat: chatReducer,
   user: userReducer,
-  notifications: notificationReducer
+  notifications: notificationReducer,
+  settings: settingsReducer
 });
