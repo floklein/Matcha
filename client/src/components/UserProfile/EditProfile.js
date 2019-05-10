@@ -30,6 +30,7 @@ class EditProfile extends Component {
   }
 
   componentDidMount() {
+    document.title = 'Éditer mon profil';
     this.props.fetchProfile(this.props.me.id);
   }
 

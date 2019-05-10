@@ -559,7 +559,6 @@ router.post('/update', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
-  console.log(req.body);
   const request = {
     username: req.body.username,
     firstName: req.body.firstName,
