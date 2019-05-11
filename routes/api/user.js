@@ -359,13 +359,13 @@ router.post('/login', (req, res) => {
           username: result[0].username
         };
 
-        // const sql_pos = "UPDATE infos " +
-        //   `SET latitude=${info.position.latitude}, longitude=${info.position.longitude}` +
-        //   `WHERE user_id = ${result[0].id} AND address_modified=false;`;
-        //
-        // connection.query(sql_pos, (err) => {
-        //   if (err) throw err;
-        // });
+        const sql_pos = "UPDATE infos " +
+          `SET latitude=${info.position.latitude}, longitude=${info.position.longitude}` +
+          `WHERE user_id = ${result[0].id} AND address_modified=false;`;
+
+        connection.query(sql_pos, (err) => {
+          if (err) throw err;
+        });
         jwt.sign(payload, 'Mortparequipe', { expiresIn: 21600 }, (err, token) => {
           res.json({
               success: true,
@@ -387,7 +387,7 @@ router.post('/login', (req, res) => {
 });
 
 
-router.patch('/settings', (req, res) => {
+router.patch('/password', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
     return res.status(401).json({error: 'unauthorized access'});
@@ -399,12 +399,12 @@ router.patch('/settings', (req, res) => {
     old_pw: req.body.old_pw,
     new_pw: req.body.new_pw,
     re_new: req.body.re_new,
-    new_mail: req.body.new_mail
   };
 
   if (typeof request.old_pw == 'undefined' || request.old_pw == '') {
     return res.status(400).json({
-      old_pw: "Le mot de passe actuel est requis"
+      outcome: "error",
+      message: "Le mot de passe actuel est requis"
     })
   }
   //Check if old pw is good
@@ -412,55 +412,43 @@ router.patch('/settings', (req, res) => {
   connection.query(sql, (err, result) => {
     if (err) throw err;
     if (result.length === 0) {
-      res_err = {
-        ...res_err,
-        login: "Login et/ou mot de passe invalides"
-      };
-      error = true;
+      return res.status(400).json({
+        outcome: "error",
+        message: "Mot de passe invalide"
+      });
     }
     //Check if password is wrong
     else if (!pw_hash.verify(request.old_pw, result[0].password)) {
-      res_err = {
-        ...res_err,
-        login: "Login et/ou mot de passe invalides"
-      };
-      error = true;
+      return res.status(400).json({
+        outcome: "error",
+        message: "Mot de passe invalide"
+      });
     }
     if (error)
       return res.status(400).json(res_err);
-    if (!request.new_mail)
-      request.new_mail = result[0].email;
-    if (!request.new_mail.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
-      res_err = {
-        ...res_err,
-        new_mail: "Mail invalide"
-      };
-      error = true;
-    }
 
     if (typeof request.new_pw === 'undefined' || !request.new_pw.match('^(?=.*[ a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
-      res_err = {
-        ...res_err,
-        new_pw: "8 caractères min. (dont 1 maj. et 1 chiffre)"
-      };
-      error = true;
+      return res.status(400).json({
+        outcome: "error",
+        message: "8 caractères min. (dont 1 maj. et 1 chiffre)"
+      });
     }
     if (request.new_pw !== request.re_new) {
-      res_err = {
-        ...res_err,
-        re_pw: "Les mots de passe ne sont pas identiques"
-      };
-      error = true;
+      return res.status(400).json({
+        outcome: "error",
+        message: "Les mots de passe ne sont pas identiques"
+      });
     }
-    if (!error) {
       let hashed_pw = pw_hash.generate(request.new_pw);
       sql = "UPDATE users " +
-        `SET password = ${hashed_pw}, email = ${request.new_mail};`;
+        `SET password = ${hashed_pw};`;
       connection.query(sql, (err) => {
         if (err) throw err;
-        return res.json(res_err);
+        return res.json({
+          outcome: "success",
+          message: "Mot de passe modifié"
+        });
       })
-    }
   })
 });
 
