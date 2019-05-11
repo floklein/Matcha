@@ -84,20 +84,25 @@ router.patch('/settings', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
+  console.log(req.body);
   const request = {
-    visit: req.body.visit,
-    like: req.body.like,
-    unlike: req.body.unlike,
-    match: req.body.match,
-    message: req.body.message,
+    visit: req.body.notifVisit,
+    like: req.body.notifLike,
+    unlike: req.body.notifUnlike,
+    match: req.body.notifMatch,
+    message: req.body.notifMessage,
   };
+  //TODO check if not empty
 
-  const sql = "UPDATE settings" +
-    `SET visit = ${request.visit}, like = ${request.like}, unlike = ${request.unlike}, match = ${request.match}, message = ${request.match} `+
+  const sql = "UPDATE settings " +
+    `SET visit = ${request.visit}, ` + "`like`" + ` = ${request.like}, unlike = ${request.unlike}, \`match\` = ${request.match}, message = ${request.message} `+
     `WHERE user_id = ${user.id};`;
   connection.query(sql, (err) => {
     if (err) throw err;
-    return res.json();
+    return res.json({
+      outcome: "success",
+      message: "Préférences modifiées"
+    });
   })
 });
 
@@ -112,7 +117,13 @@ router.get('/settings', (req, res) => {
       `WHERE user_id = ${user.id};`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
-    return res.json(result);
+    return res.json({
+      notifVisit: result[0].visit,
+      notifLike: result[0].like,
+      notifUnlike: result[0].unlike,
+      notifMatch: result[0].match,
+      notifMessage: result[0].message
+    });
   })
 });
 

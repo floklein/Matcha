@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import axios from 'axios';
 
 import {changeEmail, changeNotifs, changePassword} from '../../store/actions/settingsActions';
 
 class Panels extends Component {
   state = {
     errors: {},
-    values: {},
     email: '',
     password: '',
     oldPassword: '',
@@ -20,6 +20,16 @@ class Panels extends Component {
     notifMessage: true,
     sure: false
   };
+
+  componentWillMount() {
+    axios.get('/api/notifs/settings')
+      .then(res => {
+        this.setState({
+            ...res.data
+          });
+      })
+      .catch(err => {})
+  }
 
   submitEmail = (e) => {
     this.props.changeEmail(this.state);
@@ -53,12 +63,14 @@ class Panels extends Component {
     this.setState({
       [e.target.name]: !this.state[e.target.name]
     });
-    this.props.changeNotifs(this.state);
+    setTimeout(() => {
+      this.props.changeNotifs(this.state);
+    }, 100);
   };
 
   render() {
     const {
-      errors, values, email, sure, password, oldPassword, newPassword, newConfirm,
+      errors, email, sure, password, oldPassword, newPassword, newConfirm,
       notifVisit, notifLike, notifUnlike, notifMatch, notifMessage
     } = this.state;
 
@@ -80,7 +92,6 @@ class Panels extends Component {
                 minLength="1"
                 maxLength="64"
                 value={email}
-                defaultValue={values.email}
                 onChange={this.handleChange}
                 onBlur={this.submitEmail}/>
             </form>
@@ -112,7 +123,6 @@ class Panels extends Component {
                   type="checkbox"
                   id="notifVisit"
                   name="notifVisit"
-                  defaultChecked={values.notifVisit}
                   checked={notifVisit}
                   onChange={this.handleToggle}/>
                 <div/>
@@ -123,7 +133,6 @@ class Panels extends Component {
                   type="checkbox"
                   id="notifLike"
                   name="notifLike"
-                  defaultChecked={values.notifLike}
                   checked={notifLike}
                   onChange={this.handleToggle}/>
                 <div/>
@@ -134,7 +143,6 @@ class Panels extends Component {
                   type="checkbox"
                   id="notifUnlike"
                   name="notifUnlike"
-                  defaultChecked={values.notifUnlike}
                   checked={notifUnlike}
                   onChange={this.handleToggle}/>
                 <div/>
@@ -145,7 +153,6 @@ class Panels extends Component {
                   type="checkbox"
                   id="notifMatch"
                   name="notifMatch"
-                  defaultChecked={values.notifMatch}
                   checked={notifMatch}
                   onChange={this.handleToggle}/>
                 <div/>
@@ -156,7 +163,6 @@ class Panels extends Component {
                   type="checkbox"
                   id="notifMessage"
                   name="notifMessage"
-                  defaultChecked={values.notifMessage}
                   checked={notifMessage}
                   onChange={this.handleToggle}/>
                 <div/>

@@ -25,25 +25,25 @@ export const changeEmail = (userData) => dispatch => {
 };
 
 export const changeNotifs = (userData) => dispatch => {
-  const worked = true;
-
-  if (worked) {
-    dispatch({
-      type: SET_RESPONSE,
-      payload: {
-        outcome: 'success',
-        message: 'Préférences modifiées !'
-      }
+  axios.patch('/api/notifs/settings', userData)
+    .then(res => {
+      dispatch({
+        type: SET_RESPONSE,
+        payload: {
+          outcome: res.data.outcome,
+          message: res.data.message
+        }
+      });
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_RESPONSE,
+        payload: {
+          outcome: err.response.data.outcome,
+          message: err.response.data.message
+        }
+      });
     });
-  } else {
-    dispatch({
-      type: SET_RESPONSE,
-      payload: {
-        outcome: 'error',
-        message: 'Erreur.'
-      }
-    });
-  }
 };
 
 export const changePassword = (userData) => dispatch => {
