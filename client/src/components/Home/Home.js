@@ -16,6 +16,7 @@ class Home extends Component {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push('/soulmatcher');
     }
+    document.title = 'Soulmatch';
   }
 
   render() {
@@ -33,7 +34,7 @@ class Home extends Component {
             </div>
             <div>
               <div className="login">
-                <UserForm/>
+                <UserForm location={this.props.location}/>
               </div>
             </div>
           </div>

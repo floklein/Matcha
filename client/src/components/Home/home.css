@@ -71,6 +71,11 @@
     color: #8A8DAA;
 }
 
+#carousel .login p.forgot-password {
+    color: #8A8DAA !important;
+    cursor: pointer;
+}
+
 #carousel .login p.subtitle {
     margin: 0 0 0.8rem 0;
     font-size: 1rem;

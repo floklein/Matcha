@@ -3,6 +3,8 @@ import {GET_NOTIFS, NEW_NOTIF, GET_ERRORS} from './types';
 import axios from 'axios';
 import uuid from 'uuid';
 
+import {getMatches} from './chatActions';
+
 export const getNotifs = () => dispatch => {
   axios.get('/api/notifs')
     .then(res => {
@@ -28,5 +30,8 @@ export const newNotif = (notification) => dispatch => {
         id: uuid.v4()
       }
     });
+    if (notification.type === 'match' || notification.type === 'unlike') {
+      dispatch(getMatches());
+    }
   }
 };

@@ -65,6 +65,7 @@ class Soulmatcher extends Component {
   }
 
   componentDidMount() {
+    document.title = 'Soulmatcher';
     let sliderAge = document.getElementById('age');
     let sliderDistance = document.getElementById('distance');
     let sliderPopularity = document.getElementById('popularity');

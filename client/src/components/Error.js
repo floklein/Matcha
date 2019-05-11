@@ -4,6 +4,10 @@ import {NavLink} from "react-router-dom";
 import brokenHeart from "../assets/img/heartbroken.png";
 
 class Error extends Component {
+  componentDidMount() {
+    document.title = 'Soulmatch - Erreur';
+  }
+
   getError = () => {
     return {
       errTitle: this.props.errTitle ? this.props.errTitle : 'Erreur 404.',
