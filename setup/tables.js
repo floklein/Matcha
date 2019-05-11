@@ -87,7 +87,7 @@ connection.connect((err) => {
     "`user_id` INT NOT NULL, " +
     "`visit` BOOLEAN DEFAULT 1, " +
     "`like` BOOLEAN DEFAULT 1, " +
-    "`unliked` BOOLEAN DEFAULT 1, " +
+    "`unlike` BOOLEAN DEFAULT 1, " +
     "`match` BOOLEAN DEFAULT 1, " +
     "`message` BOOLEAN DEFAULT 1); " +
     "" +

@@ -78,5 +78,27 @@ router.post('/', (req, res) => {
   })
 });
 
+router.patch('/settings', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  const request = {
+    visit: req.body.visit,
+    like: req.body.like,
+    unlike: req.body.unlike,
+    match: req.body.match,
+    message: req.body.message,
+  };
+
+  const sql = "UPDATE settings" +
+    `SET visit = ${request.visit}, like = ${request.like}, unlike = ${request.unlike}, match = ${request.match}, message = ${request.match} `+
+    `WHERE user_id = ${user.id};`;
+  connection.query(sql, (err) => {
+    if (err) throw err;
+    return res.json();
+  })
+});
 
 module.exports = router;
