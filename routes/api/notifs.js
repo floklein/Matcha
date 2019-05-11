@@ -101,4 +101,19 @@ router.patch('/settings', (req, res) => {
   })
 });
 
+
+router.get('/settings', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  const sql = "SELECT * from settings " +
+      `WHERE user_id = ${user.id};`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    return res.json(result);
+  })
+});
+
 module.exports = router;
