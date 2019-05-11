@@ -700,6 +700,39 @@ router.post('/update', (req, res) => {
   });
 });
 
+router.delete('/', (req, resp) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  const pw = req.body.password;
+  let sql = "Select password from users " +
+      `WHERE id = ${user.id};`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    if (!result || !result[0] || !result[0].password || !pw_hash.verify(pw, result[0].password))
+      return resp.status(400).json({
+        password: "Mauvais mot de passe"
+      });
+    sql = "DELETE users, infos, verified, likes, connection, photos, settings, interests " +
+        "FROM users " +
+        "LEFT JOIN infos ON users.id = infos.user_id " +
+        "LEFT JOIN verified ON users.id = verified.user_id " +
+        "LEFT JOIN likes ON users.id = likes.liker_id " +
+        "LEFT JOIN connection ON users.id = connection.user_id " +
+        "LEFT JOIN photos ON users.id = photos.user_id " +
+        "LEFT JOIN settings ON users.id = settings.user_id " +
+        "LEFT JOIN interests ON users.id = interests.user_id " +
+        `WHERE users.id = ${user.id};`;
+    console.log(sql);
+    connection.query(sql, (err) => {
+      if (err) throw err;
+      return resp.json();
+    })
+  })
+});
+
 router.get('/getMaxPopAndAge', (req, res) => {
   const sql = "SELECT MAX(popularity) as max_pop, Max(age) as max_age FROM infos";
   connection.query(sql, (err, resp) => {
