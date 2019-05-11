@@ -116,7 +116,7 @@ class VeryBadWindow extends Component {
           isBlocked: !this.state.isBlocked
         });
       })
-      .catch();
+      .catch(err => {});
   };
 
   closePopup = () => {

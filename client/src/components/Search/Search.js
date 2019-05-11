@@ -81,6 +81,7 @@ class Search extends Component {
   }
 
   componentDidMount() {
+    document.title = 'Recherche';
     let sliderAge = document.getElementById('age');
     let sliderPopularity = document.getElementById('popularity');
 

@@ -49,7 +49,7 @@ function calculateScore(request, result_i, tag_res, pos_res, user) {
          };
          resolve(result_i);
        })
-       .catch();
+       .catch(err => {});
  })
 }
 
@@ -86,7 +86,7 @@ router.post('/', (req, res) => {
     if (err) throw err;
     if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === null || first_result[0].bio === null) {
       res.status(400).json({
-        user: "Vous devez compléter votre profil étendu"
+        user: "Veuillez compléter votre profil avant d'utiliser Soulmatcher"
       });
       return res.end();
     }
@@ -154,9 +154,9 @@ router.post('/', (req, res) => {
                         }));
                       })
                   })
-                  .catch()
+                  .catch(err => {})
               })
-              .catch();
+              .catch(err => {});
           });
         });
       })

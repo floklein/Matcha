@@ -18,6 +18,7 @@ class MyProfile extends Component {
   };
 
   componentDidMount() {
+    document.title = 'Mon profil';
     this.props.fetchProfile(this.props.me.id);
   }
 

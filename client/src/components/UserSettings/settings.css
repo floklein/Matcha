@@ -1,0 +1,219 @@
+/*TOP BAR BUTTONS*/
+
+.settings__top-bar {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    margin: 1rem 0;
+}
+
+.settings__top-bar_links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    background-color: white;
+    box-shadow: 0 0 15px -6px rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+}
+
+.settings__top-bar_link {
+    box-sizing: border-box;
+    height: 1.8rem;
+    margin: 0.5rem 1rem;
+    padding: 0.5rem 0;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: #585a6d;
+    cursor: pointer;
+    border-bottom-color: transparent;
+    transition: border-bottom-color 0.2s;
+}
+
+.settings__top-bar_link.active {
+    border-bottom: 2px solid #8A8DAA !important;
+}
+
+.settings__top-bar_link:hover {
+    border-bottom: 2px solid #afb3d8;
+}
+
+/*CENTERING CONTAINER*/
+
+.settings__container {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+
+/*PANELS*/
+
+.settings__panel {
+    width: 20rem;
+    max-width: 95vw;
+    margin-bottom: 1rem;
+    background-color: white;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 1rem;
+    box-shadow: 0 0 15px -6px rgba(0, 0, 0, 0.2);
+    color: #585a6d;
+}
+
+/*REUSABLE COMPONENT*/
+
+.settings__component {
+    margin: 2rem 0 0 0;
+    padding-bottom: 2rem;
+    border-bottom: 1px dotted lightgrey;
+}
+
+.settings__component:first-child {
+    margin: 0;
+}
+
+.settings__component:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/*PANELS CONTENT*/
+
+.settings__panel > h1 {
+    color: #393b47;
+    cursor: default;
+}
+
+.settings__panel > form {
+ text-align: left;
+}
+
+.settings__panel > form > label {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+.settings__panel > form > input {
+    margin: 0.5rem 0 1rem 0;
+    width: 100%;
+}
+
+.settings__panel > form > input:last-child {
+    margin-bottom: 0.5rem;
+}
+
+.settings__panel > form > button {
+    position: relative;
+    width: 8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 1rem 0 0 0;
+}
+
+.settings__panel > form > button.delete {
+    background: #f45c43 linear-gradient(to right, #eb3349, rgba(0, 0, 0, 0));
+}
+
+.settings__panel > form > button.delete:hover {
+    background-color: #eb3349;
+}
+
+.settings__panel > form > button.delete:active {
+    background-color: #b92e3b;
+}
+
+/*CHECKBOX GROUP*/
+
+.checkbox-group {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-top: 0.4rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: #8A8DAA;
+    overflow: hidden;
+}
+
+.checkbox-group > input {
+    height: unset;
+    z-index: 2;
+}
+
+.checkbox-group > label {
+    margin-left: 0.5rem;
+    z-index: 2;
+    cursor: default;
+}
+
+.checkbox-group > label::selection {
+    color: inherit;
+    background-color: transparent;
+}
+
+.checkbox-group > div {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    border-radius: 0.5rem;
+}
+
+.checkbox-group > input:checked ~ div {
+    background-color: whitesmoke;
+    box-shadow: 0 0 0 1px lightgrey inset;
+}
+
+.checkbox-group > input:checked ~ span {
+    color: #585a6d;
+}
+
+/*RESPONSE DIV*/
+
+.settings__response {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 100%;
+    height: 4rem;
+    border-radius: 0.5rem;
+    border: 2px solid #c7e7c2 !important;
+    background-color: #e0f5de;
+    color: #65a26f;
+}
+
+.settings__response::before {
+    content: "";
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    margin: 1rem;
+    border-radius: 1.5rem;
+    border: 2px solid #65a26f;
+    background: url("../../assets/img/settings-success.svg") center no-repeat;
+    background-size: 1.5rem;
+}
+
+.settings__response.error {
+    border: 2px solid #f5c4bf !important;
+    background-color: #ffe1e1;
+    color: #d48a80;
+}
+
+.settings__response.error::before {
+    border: 2px solid #d48a80;
+    background: url("../../assets/img/settings-error.svg") center no-repeat;
+    background-size: 1.5rem;
+}

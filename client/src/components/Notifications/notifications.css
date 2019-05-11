@@ -73,6 +73,9 @@
     font-size: 0.8rem;
     white-space: nowrap;
     overflow: hidden;
+    /*hack to make overflow-y visible:*/
+    margin-bottom: -10px;
+    padding-bottom: 10px;
     text-overflow: ellipsis;
     text-align: right;
 }

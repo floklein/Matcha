@@ -1,12 +1,25 @@
 import React, {Component} from 'react';
+import queryString from 'query-string';
 
 import RegisterForm from './Register/RegisterForm';
 import LoginForm from './Login/LoginForm';
+import ForgotPassword from './Password/ForgotPassword';
+import ResetPassword from './Password/ResetPassword';
 
 export class UserForm extends Component {
   state = {
     step: 0
   };
+
+  componentWillMount() {
+    const params = queryString.parse(this.props.location.search);
+    if (params.action === 'forgot-password') {
+      this.setState({
+        step: 3,
+        params: params
+      });
+    }
+  }
 
   // Go to next step
   gotoLogin = () => {
@@ -22,6 +35,12 @@ export class UserForm extends Component {
     });
   };
 
+  gotoForgotPassword = () => {
+    this.setState({
+      step: 2
+    });
+  };
+
   render() {
     const {step} = this.state;
 
@@ -33,7 +52,15 @@ export class UserForm extends Component {
         );
       case 1:
         return (
-          <LoginForm gotoRegister={this.gotoRegister}/>
+          <LoginForm gotoRegister={this.gotoRegister} gotoForgotPassword={this.gotoForgotPassword}/>
+        );
+      case 2:
+        return (
+          <ForgotPassword gotoLogin={this.gotoLogin}/>
+        );
+      case 3:
+        return (
+          <ResetPassword params={this.state.params} gotoLogin={this.gotoLogin}/>
         );
     }
   }
