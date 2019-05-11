@@ -58,7 +58,7 @@ export class ForgotPassword extends Component {
                          title="Votre pseudo ou votre email" required minLength="1" maxLength="64"
                          value={this.state.email} onChange={this.onChange}/>
                   <p>&nbsp;</p>
-                  <button className="purple" type="submit">Valider</button>
+                  <button className="blue" type="submit">Valider</button>
                 </form>
               </div>}
             </Spring>

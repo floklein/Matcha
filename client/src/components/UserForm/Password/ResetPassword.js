@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {Spring, config} from 'react-spring/renderprops';
 import axios from 'axios';
 
-import imgSuccess from '../../../assets/img/email-sent.svg';
+import imgSuccess from '../../../assets/img/home-success.svg';
 import classnames from "classnames";
 
 export class ResetPassword extends Component {
@@ -71,7 +71,7 @@ export class ResetPassword extends Component {
                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,64}$" minLength="8" maxLength="64"
                          onChange={this.onChange}/>
                   <p>{errors.confirm}&nbsp;</p>
-                  <button className="pink" type="submit">Modifier</button>
+                  <button className="blue" type="submit">Modifier</button>
                 </form>
               </div>}
             </Spring>
@@ -90,7 +90,7 @@ export class ResetPassword extends Component {
                 <h2>Mot de passe modifié !</h2>
                 <p className="subtitle" style={{padding: '0 10%', marginBottom: '1.5rem', lineHeight: '1.4rem'}}>
                   Votre mot de passe a bien été changé. Vous pouvez vous connecter.</p>
-                <button className="pink" type="submit" onClick={this.props.gotoLogin}>Retour</button>
+                <button className="" type="submit" onClick={this.props.gotoLogin}>Retour</button>
               </div>}
             </Spring>
           </React.Fragment>

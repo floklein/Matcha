@@ -7,6 +7,7 @@ const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
 const jwt_check = require('../../utils/jwt_check');
 const nodemailer = require('nodemailer');
+const mail = require('../../template/email');
 
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
@@ -188,7 +189,7 @@ router.post('/register', (req, res) => {
       const id = result.insertId;
       connection.query(sql3, (err, result) => {
         const code = uuid.v4();
-        const link = `localhost:3000/verify?id=${id}&code=${code}`;
+        const content = mail.templateEmail(`Bonjour ${info.username},`, "Vérifier mon email", "Bienvenue sur Soulmatch !", "Merci pour votre inscription sur Soulmatch. Afin de pouvoir vous connecter, veuillez vérifier votre adresse email en cliquant sur le lien ci-dessous.", `http://localhost:3000?action=verify-email&id=${id}&code=${code}`);
         const sql4 = "INSERT INTO verified(user_id, code, status)" +
           `VALUES (${id}, "${code}", false);`;
         //Send an email if everything is alright
@@ -214,8 +215,8 @@ router.post('/register', (req, res) => {
                 let mailOptions = {
                   from: 'Matcha <no-reply@matcha.com>',
                   to: info.email,
-                  subject: 'Sending Email using Node.js',
-                  text: link
+                  subject: 'Vérification de compte',
+                  html: content
                 };
                 transporter.sendMail(mailOptions);
               }
@@ -277,13 +278,13 @@ router.post('/resetPassword', (req, res) => {
 });
 
 router.post('/forgotPassword', (request, result) => {
-  const sql = "SELECT v.code, u.email, u.id from verified v INNER JOIN users u on v.user_id = u.id " +
+  const sql = "SELECT v.code, u.email, u.username, u.id from verified v INNER JOIN users u on v.user_id = u.id " +
     `WHERE email = "${request.body.email}";`;
   connection.query(sql, (err, res) => {
     if (!res.length)
       return result.json();
     if (err) throw err;
-    const content = `Veuillez cliquer sur <a href="http://localhost:3000?action=forgot-password&id=${res[0].id}&code=${res[0].code}">ce lien</a> pour changer de mot de passe`;
+    const content = mail.templateEmail(`Bonjour ${res[0].username},`, "Changer mot de passe", "Réinitialiser votre mot de passe ?", "Vous avez demandé à réinitialiser votre mot de passe. Veuillez cliquer sur le bouton ci-dessous. Si vous n'êtes pas à l'origine de cette demande, contactez immédiatement un webmestre.", `http://localhost:3000?action=forgot-password&id=${res[0].id}&code=${res[0].code}`);
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -294,7 +295,7 @@ router.post('/forgotPassword', (request, result) => {
     let mailOptions = {
       from: 'Matcha <no-reply@matcha.com>',
       to: res[0].email,
-      subject: 'Forgotten password',
+      subject: 'Mot de passe oublié',
       html: content
     };
     transporter.sendMail(mailOptions);
