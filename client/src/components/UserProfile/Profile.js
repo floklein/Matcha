@@ -211,7 +211,10 @@ class Profile extends Component {
                   'you': profile.like === 'you',
                   'me': profile.like === 'me'
                 })}>{likeStatus}</div>
-                <div className="connected">En ligne</div>
+                <div className={classnames('', {
+                  'connected': profile.connection.status === 'online',
+                  'disconnected': profile.connection.status === 'offline'
+                })}>{profile.connection.message}</div>
                 {popularity}
               </div>
               <div className="profile__center-panel">

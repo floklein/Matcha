@@ -59,7 +59,6 @@ connection.connect((err) => {
     "" +
     "CREATE TABLE IF NOT EXISTS connection(" +
     "user_id INT NOT NULL, " +
-    "connected BOOLEAN DEFAULT 0, " +
     "last_connection DATETIME); " +
     "" +
     "CREATE TABLE IF NOT EXISTS visits( " +
