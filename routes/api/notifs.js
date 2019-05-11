@@ -92,7 +92,13 @@ router.patch('/settings', (req, res) => {
     match: req.body.notifMatch,
     message: req.body.notifMessage,
   };
-  //TODO check if not empty
+
+  if (!request || request.visit === null || request.like === null || request.unlike === null || request.match === null || request.message === null) {
+    return res.json({
+      outcome: "error",
+      message: "Valeur manquante"
+    })
+  }
 
   const sql = "UPDATE settings " +
     `SET visit = ${request.visit}, ` + "`like`" + ` = ${request.like}, unlike = ${request.unlike}, \`match\` = ${request.match}, message = ${request.message} `+

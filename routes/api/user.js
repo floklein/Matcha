@@ -311,7 +311,10 @@ router.post('/login', (req, res) => {
   let response = {};
   let error = false;
 
-  //TODO : Check if position there and good
+  if (!info.position || !info.position.latitude || !info.position.longitude || isNaN(info.position.latitude) || isNaN(info.position.longitude)) {
+    return res.status(400).json({
+      position: "Erreur de position"
+    });}
 
   //Check if password and username are not empty and defined
     if (typeof info.username == 'undefined' || info.username == "") {
