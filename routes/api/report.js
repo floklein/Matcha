@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
+const mail = require('../../template/email');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -72,7 +73,8 @@ router.post('/', (req, res) => {
                         else {  //Else, report
                             sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${user.id}, ${infos.reported})`;
                             connection.query(sql, (err, result) => {
-                                content = `${user.username} has reported <a href="http://localhost:3000/profile/${infos.reported}">${result0[0].username}</a> for being a fake profile`;
+                                const content = mail.templateEmail(`Bonjour Florent et Tanguy,`, "Voir l'utilisateur", "Signalement d'un faux compte", `${user.username} a signalé ${result0[0].username} comme étant un faux utilisateur.`, `http://localhost:3000/profile/${infos.reported}`);
+
                                 let transporter = nodemailer.createTransport({
                                     service: 'gmail',
                                     auth: {
@@ -83,7 +85,7 @@ router.post('/', (req, res) => {
                                 let mailOptions = {
                                     from: 'Matcha <no-reply@matcha.com>',
                                     to: 'matcha.fk.tbd@gmail.com',
-                                    subject: 'Report',
+                                    subject: 'Signalement',
                                     html: content
                                 };
                                 transporter.sendMail(mailOptions);
