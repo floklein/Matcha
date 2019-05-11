@@ -396,19 +396,19 @@ router.patch('/password', (req, res) => {
   let error = false;
 
   const request = {
-    old_pw: req.body.old_pw,
-    new_pw: req.body.new_pw,
-    re_new: req.body.re_new,
+    old_pw: req.body.oldPassword,
+    new_pw: req.body.newPassword,
+    re_new: req.body.newConfirm,
   };
 
   if (typeof request.old_pw == 'undefined' || request.old_pw == '') {
     return res.status(400).json({
       outcome: "error",
-      message: "Le mot de passe actuel est requis"
+      message: "Mot de passe requis"
     })
   }
   //Check if old pw is good
-  let sql = `SELECT password, email FROM users WHERE id = ${user.id};`;
+  let sql = `SELECT password FROM users WHERE id = ${user.id};`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
     if (result.length === 0) {
@@ -430,23 +430,23 @@ router.patch('/password', (req, res) => {
     if (typeof request.new_pw === 'undefined' || !request.new_pw.match('^(?=.*[ a-z])(?=.*[A-Z])(?=.*\\d).{8,64}$')) {
       return res.status(400).json({
         outcome: "error",
-        message: "8 caractères min. (dont 1 maj. et 1 chiffre)"
+        message: "Mot de passe invalide"
       });
     }
     if (request.new_pw !== request.re_new) {
       return res.status(400).json({
         outcome: "error",
-        message: "Les mots de passe ne sont pas identiques"
+        message: "Mots de passe différents"
       });
     }
       let hashed_pw = pw_hash.generate(request.new_pw);
       sql = "UPDATE users " +
-        `SET password = ${hashed_pw};`;
+        `SET password = "${hashed_pw}";`;
       connection.query(sql, (err) => {
         if (err) throw err;
         return res.json({
           outcome: "success",
-          message: "Mot de passe modifié"
+          message: "Mot de passe modifié !"
         });
       })
   })
