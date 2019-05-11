@@ -2,6 +2,8 @@ import {SET_RESPONSE} from './types';
 
 import axios from 'axios';
 
+import {logoutUser} from './authActions';
+
 export const changeEmail = (userData) => dispatch => {
   const worked = true;
 
@@ -56,6 +58,29 @@ export const changePassword = (userData) => dispatch => {
           message: res.data.message
         }
       });
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_RESPONSE,
+        payload: {
+          outcome: err.response.data.outcome,
+          message: err.response.data.message
+        }
+      });
+    });
+};
+
+export const deleteAccount = (userData) => dispatch => {
+  axios.post('/api/user/delete', userData)
+    .then(res => {
+      dispatch({
+        type: SET_RESPONSE,
+        payload: {
+          outcome: res.data.outcome,
+          message: res.data.message
+        }
+      });
+      dispatch(logoutUser());
     })
     .catch(err => {
       dispatch({
