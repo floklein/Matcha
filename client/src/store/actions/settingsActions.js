@@ -7,23 +7,25 @@ import {logoutUser} from './authActions';
 export const changeEmail = (userData) => dispatch => {
   const worked = true;
 
-  if (worked) {
-    dispatch({
-      type: SET_RESPONSE,
-      payload: {
-        outcome: 'success',
-        message: 'Email mis à jour !'
-      }
+  axios.patch('/api/user/email', userData)
+    .then(res => {
+      dispatch({
+        type: SET_RESPONSE,
+        payload: {
+          outcome: res.data.outcome,
+          message: res.data.message
+        }
+      });
+    })
+    .catch(err => {
+      dispatch({
+        type: SET_RESPONSE,
+        payload: {
+          outcome: err.response.data.outcome,
+          message: err.response.data.message
+        }
+      });
     });
-  } else {
-    dispatch({
-      type: SET_RESPONSE,
-      payload: {
-        outcome: 'error',
-        message: 'Email invalide.'
-      }
-    });
-  }
 };
 
 export const changeNotifs = (userData) => dispatch => {

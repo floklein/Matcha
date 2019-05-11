@@ -312,7 +312,10 @@ router.post('/login', (req, res) => {
   let response = {};
   let error = false;
 
-  //TODO : Check if position there and good
+  if (!info.position || !info.position.latitude || !info.position.longitude || isNaN(info.position.latitude) || isNaN(info.position.longitude)) {
+    return res.status(400).json({
+      position: "Erreur de position"
+    });}
 
   //Check if password and username are not empty and defined
     if (typeof info.username == 'undefined' || info.username == "") {
@@ -333,7 +336,7 @@ router.post('/login', (req, res) => {
     //If both fields are full, keep going with the connection
     if (!error) {
         //Check if username matches a user
-        let sql = `SELECT username, password, id, email FROM users WHERE username = "${info.username}" OR email = "${info.username}";`;
+        let sql = `SELECT u.username, u.password, u.id, u.email, v.status FROM users u INNER JOIN verified v ON u.id = v.user_id WHERE username = "${info.username}" OR email = "${info.username}";`;
         connection.query(sql, (err, result) => {
             if (err) throw err;
             if (result.length === 0) {
@@ -342,6 +345,13 @@ router.post('/login', (req, res) => {
                     login: "Login et/ou mot de passe invalides"
                 };
                 error = true;
+            }
+            else if (!result[0].status) {
+              response = {
+                ...response,
+                login: "Votre compte n'a pas été vérifié"
+              };
+              error = true;
             }
             //Check if password is wrong
             else if (!pw_hash.verify(info.password, result[0].password)) {
@@ -442,7 +452,7 @@ router.patch('/password', (req, res) => {
     }
       let hashed_pw = pw_hash.generate(request.new_pw);
       sql = "UPDATE users " +
-        `SET password = "${hashed_pw}";`;
+        `SET password = "${hashed_pw} WHERE id = ${user.id}";`;
       connection.query(sql, (err) => {
         if (err) throw err;
         return res.json({
@@ -549,6 +559,33 @@ router.post('/infos/:id', (req, res) => {
   })
 });
 
+router.patch('/email', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  const new_email = req.body.email;
+
+  //Check if email has right format
+  if (typeof new_email === 'undefined' || !new_email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+    return res.status(400).json({
+      outcome: "error",
+      message: "Adresse email invalide."
+    });
+  }
+
+  const sql = "UPDATE users " +
+    `SET email = "${new_email}" WHERE id = ${user.id};`;
+  connection.query(sql, (err) => {
+    if (err) throw err;
+    return res.json({
+      outcome: "success",
+      message: "Adresse email modifiée."
+    })
+  })
+});
+
 router.post('/update', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
@@ -649,8 +686,6 @@ router.post('/update', (req, res) => {
       };
       error = true;
     }
-
-
 
     //Send json if there is an error and quit
     if (error === true) {
