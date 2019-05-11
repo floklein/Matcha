@@ -198,23 +198,28 @@ router.post('/register', (req, res) => {
             `VALUES(${id});`;
           connection.query(sql5, (err) => {
             if (err) throw err;
-            //send mail if everything went fine
-            if (!info.nomail) {
-              let transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                  user: 'matcha.fk.tbd@gmail.com',
-                  pass: 'Qwerty123-'
-                }
-              });
-              let mailOptions = {
-                from: 'Matcha <no-reply@matcha.com>',
-                to: info.email,
-                subject: 'Sending Email using Node.js',
-                text: link
-              };
-              transporter.sendMail(mailOptions);
-            }
+            const sql6 = "INSERT INTO settings(user_id) " +
+              `VALUES(${id});`;
+            connection.query(sql6, (err) => {
+              if (err) throw err;
+              //send mail if everything went fine
+              if (!info.nomail) {
+                let transporter = nodemailer.createTransport({
+                  service: 'gmail',
+                  auth: {
+                    user: 'matcha.fk.tbd@gmail.com',
+                    pass: 'Qwerty123-'
+                  }
+                });
+                let mailOptions = {
+                  from: 'Matcha <no-reply@matcha.com>',
+                  to: info.email,
+                  subject: 'Sending Email using Node.js',
+                  text: link
+                };
+                transporter.sendMail(mailOptions);
+              }
+            });
             res.end(String(id));
           });
         });

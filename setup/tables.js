@@ -83,6 +83,14 @@ connection.connect((err) => {
     "message VARCHAR(256) NOT NULL, " +
     "`time` DATETIME NOT NULL); " +
     "" +
+    "CREATE TABLE IF NOT EXISTS settings(" +
+    "`user_id` INT NOT NULL, " +
+    "`visit` BOOLEAN DEFAULT 1, " +
+    "`like` BOOLEAN DEFAULT 1, " +
+    "`unliked` BOOLEAN DEFAULT 1, " +
+    "`match` BOOLEAN DEFAULT 1, " +
+    "`message` BOOLEAN DEFAULT 1); " +
+    "" +
     "CREATE TABLE IF NOT EXISTS notifs(" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
     "user_id INT NOT NULL, " +
