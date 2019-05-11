@@ -441,7 +441,7 @@ router.patch('/password', (req, res) => {
     }
       let hashed_pw = pw_hash.generate(request.new_pw);
       sql = "UPDATE users " +
-        `SET password = "${hashed_pw}";`;
+        `SET password = "${hashed_pw} WHERE id = ${user.id}";`;
       connection.query(sql, (err) => {
         if (err) throw err;
         return res.json({
@@ -548,6 +548,33 @@ router.post('/infos/:id', (req, res) => {
   })
 });
 
+router.patch('/email', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  const new_email = req.body.email;
+
+  //Check if email has right format
+  if (typeof new_email === 'undefined' || !new_email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+    return res.status(400).json({
+      outcome: "error",
+      message: "Adresse email invalide."
+    });
+  }
+
+  const sql = "UPDATE users " +
+    `SET email = "${new_email}" WHERE id = ${user.id};`;
+  connection.query(sql, (err) => {
+    if (err) throw err;
+    return res.json({
+      outcome: "success",
+      message: "Adresse email modifiée."
+    })
+  })
+});
+
 router.post('/update', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
@@ -648,8 +675,6 @@ router.post('/update', (req, res) => {
       };
       error = true;
     }
-
-
 
     //Send json if there is an error and quit
     if (error === true) {
