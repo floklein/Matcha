@@ -206,7 +206,7 @@ module.exports = {
       if (result.length == 0)
         resolve(result);
       for (let i = 0; i < result.length; i++) {
-        promises.push(this.isBlocked(id, result[i]), i)}
+        promises.push(this.isBlocked(id, result[i], i))}
       Promise.all(promises)
         .then((values) => {
           values = values.sort((a, b) => {return (b - a);}).filter((val) => {return (val !== -1);});
@@ -281,7 +281,6 @@ filters_interests: async function filters_interests(tags_array, result) {
       promises.push(this.get_rid_interests(result[i], tags_array, i));}
     Promise.all(promises)
       .then((values) => {
-        console.log(values);
         values = values.sort((a, b) => {return (b - a);}).filter((val) => {return (val !== -1);});
         for (let j = 0; j < values.length; j++) {
           result.splice(values[j], 1);
