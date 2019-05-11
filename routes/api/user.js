@@ -690,7 +690,7 @@ router.post('/update', (req, res) => {
   });
 });
 
-router.delete('/', (req, resp) => {
+router.post('/delete', (req, resp) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
     return res.status(401).json({error: 'unauthorized access'});
@@ -703,7 +703,8 @@ router.delete('/', (req, resp) => {
     if (err) throw err;
     if (!result || !result[0] || !result[0].password || !pw_hash.verify(pw, result[0].password))
       return resp.status(400).json({
-        password: "Mauvais mot de passe"
+        outcome: "error",
+        message: "Mauvais mot de passe"
       });
     sql = "DELETE users, infos, verified, likes, connection, photos, settings, interests " +
         "FROM users " +
@@ -718,7 +719,10 @@ router.delete('/', (req, resp) => {
     console.log(sql);
     connection.query(sql, (err) => {
       if (err) throw err;
-      return resp.json();
+      return resp.json({
+        outcome: "success",
+        message: "Au revoir"
+      });
     })
   })
 });

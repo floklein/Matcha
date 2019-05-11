@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import axios from 'axios';
 
-import {changeEmail, changeNotifs, changePassword} from '../../store/actions/settingsActions';
+import {changeEmail, changeNotifs, changePassword, deleteAccount} from '../../store/actions/settingsActions';
 
 class Panels extends Component {
   state = {
@@ -39,7 +39,7 @@ class Panels extends Component {
     e.preventDefault();
 
     if (this.state.sure) {
-      console.log('delete');
+      this.props.deleteAccount(this.state);
     } else {
       this.setState({
         sure: true
@@ -222,4 +222,4 @@ class Panels extends Component {
   }
 }
 
-export default connect(null, {changeEmail, changeNotifs, changePassword})(Panels);
+export default connect(null, {changeEmail, changeNotifs, changePassword, deleteAccount})(Panels);
