@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
-  const sql = "UPDATE connection SET connected=1, last_connection=NOW()" +
+  const sql = "UPDATE connection SET last_connection=NOW()" +
     `WHERE user_id = ${user.id};`;
   connection.query(sql, (err) => {
     if (err) throw err;

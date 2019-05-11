@@ -2,9 +2,13 @@ import React, {Component} from 'react';
 import {Route, Redirect} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 class ProtectedRoute extends Component {
   render() {
+    axios.post('/api/connection')
+      .then(res => {})
+      .catch(err => {});
     const {component, ...rest} = this.props;
     return (
       <Route {...rest} render={() => {
