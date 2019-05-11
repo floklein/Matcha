@@ -198,6 +198,18 @@ input.invalid:focus, select.invalid:focus {
     border-color: #f5aea9;
 }
 
+input:not(:focus).invalid, select.invalid {
+    border-color: #ffe1e1 !important;
+    background-color: #ffe1e1 !important;
+}
+
+input:not(:focus).invalid:hover, select.invalid:hover {
+    border-color: #f5c4bf !important;
+}
+
+input:not(:focus).invalid:focus, select.invalid:focus {
+    border-color: #f5aea9 !important;
+}
 
 /*BODY CSS*/
 

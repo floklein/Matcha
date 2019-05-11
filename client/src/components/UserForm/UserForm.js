@@ -5,6 +5,7 @@ import RegisterForm from './Register/RegisterForm';
 import LoginForm from './Login/LoginForm';
 import ForgotPassword from './Password/ForgotPassword';
 import ResetPassword from './Password/ResetPassword';
+import VerifyEmail from './VerifiyEmail/VerifyEmail';
 
 export class UserForm extends Component {
   state = {
@@ -16,6 +17,11 @@ export class UserForm extends Component {
     if (params.action === 'forgot-password') {
       this.setState({
         step: 3,
+        params: params
+      });
+    } else if (params.action === 'verify-email') {
+      this.setState({
+        step: 4,
         params: params
       });
     }
@@ -61,6 +67,10 @@ export class UserForm extends Component {
       case 3:
         return (
           <ResetPassword params={this.state.params} gotoLogin={this.gotoLogin}/>
+        );
+      case 4:
+        return (
+          <VerifyEmail params={this.state.params} gotoLogin={this.gotoLogin}/>
         );
     }
   }

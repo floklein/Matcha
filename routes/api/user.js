@@ -260,7 +260,7 @@ router.post('/resetPassword', (req, res) => {
   }
 
   let sql = "SELECT user_id from verified " +
-    `WHERE code = ${request.code} AND user_id = ${request.id};`;
+    `WHERE code = "${request.code}" AND user_id = ${request.id};`;
   connection.query(sql, (err, result) => {
     if (err) throw err;
     if (!result.length)
@@ -268,7 +268,7 @@ router.post('/resetPassword', (req, res) => {
         password: "Le lien est invalide, veuillez vérifier votre email"
       });
     let hashed_pw = pw_hash.generate(request.password);
-    sql = `UPDATE users set password = ${hashed_pw} WHERE id = ${request.id};`;
+    sql = `UPDATE users set password = "${hashed_pw}" WHERE id = ${request.id};`;
     connection.query(sql, err => {
       if (err) throw err;
       return res.json();

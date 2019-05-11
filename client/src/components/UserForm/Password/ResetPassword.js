@@ -26,15 +26,15 @@ export class ResetPassword extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    // axios.post('/api/user/resetPassword', this.state)
-    //   .then(() => {
+    axios.post('/api/user/resetPassword', this.state)
+      .then(() => {
         this.setState({
           step: 1
         });
-      // })
-      // .catch(() => {
-      //   this.setState({errors: err.response.data});
-      // });
+      })
+      .catch(err => {
+        this.setState({errors: err.response.data});
+      });
   };
 
   onChange = (e) => {
