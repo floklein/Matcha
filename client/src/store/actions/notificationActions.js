@@ -23,6 +23,9 @@ export const getNotifs = () => dispatch => {
 
 export const newNotif = (notification) => dispatch => {
   if (notification !== {}) {
+    axios.post('/api/connection')
+      .then(res => {})
+      .catch(err => {});
     dispatch({
       type: NEW_NOTIF,
       payload: {

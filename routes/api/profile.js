@@ -7,6 +7,7 @@ const router = express.Router();
 
 const mysql = require('mysql');
 const jwt_check = require('../../utils/jwt_check');
+const hd = require('humanize-duration');
 
 // CONNECT TO DATABASE
 let connection = mysql.createConnection({
@@ -122,16 +123,13 @@ router.get('/:username', (req, res) => {
               let isBlocked = ((result5[0] !== undefined && result5[0].blocker_id === user.id) || (result5[1] !== undefined && result5[1].blocker_id === user.id));
               let amBlocked = ((result5[0] !== undefined && result5[0].blocked_id === user.id) || (result5[1] !== undefined && result5[1].blocked_id === user.id));
 
-              let sql = `SELECT UNIX_TIMESTAMP(last_connection) as time, UNIX_TIMESTAMP(Now()) as now, DATE_FORMAT(last_connection, '%e %M à %k:%i') as formatted FROM connection WHERE user_id=${result[0].id};`;
-              console.log(sql);
+              let sql = `SELECT UNIX_TIMESTAMP(last_connection) as time, UNIX_TIMESTAMP(Now()) as now FROM connection WHERE user_id=${result[0].id};`;
               connection.query(sql, (err, result6) => {
                 if (err) throw err;
-                console.log(result6);
-
                 let diff = result6[0].now - result6[0].time;
                 let status = diff > 300 ? 'offline' : 'online';
-                let formatted = result6[0].formatted.replace('January', 'Jan.').replace('February', 'Fév.').replace('March', 'Mars').replace('Avril', 'Avril').replace('May', 'Mai').replace('June', 'Juin').replace('July', 'Juillet').replace('August', 'Août').replace('September', 'Sept.').replace('October', 'Oct.').replace('November', 'Nov.').replace('December', 'Déc.');
-                let message = ((status === 'online') ? "En ligne " : ((result6[0].time === null) ?  "Jamais connecté" : `Hors ligne depuis le ${formatted}`)) ;
+                let formatted = hd(diff * 1000 , {language: 'fr', round: true, largest: 1});
+                let message = ((status === 'online') ? "En ligne " : ((result6[0].time === null) ?  "Jamais connecté" : `Hors ligne depuis ${formatted}`)) ;
 
                 axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${result[0].latitude},${result[0].longitude}&key=${GMapiKey}`)
                   .then(res_api => {
