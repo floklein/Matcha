@@ -311,6 +311,8 @@ router.post('/login', (req, res) => {
   let response = {};
   let error = false;
 
+  //TODO : Check if position there and good
+
   //Check if password and username are not empty and defined
     if (typeof info.username == 'undefined' || info.username == "") {
         response = {
@@ -357,13 +359,13 @@ router.post('/login', (req, res) => {
           username: result[0].username
         };
 
-        const sql_pos = "UPDATE infos " +
-          `SET latitude=${info.position.latitude}, longitude=${info.position.longitude}` +
-          `WHERE user_id = ${result[0].id} AND address_modified=false;`;
-
-        connection.query(sql_pos, (err) => {
-          if (err) throw err;
-        });
+        // const sql_pos = "UPDATE infos " +
+        //   `SET latitude=${info.position.latitude}, longitude=${info.position.longitude}` +
+        //   `WHERE user_id = ${result[0].id} AND address_modified=false;`;
+        //
+        // connection.query(sql_pos, (err) => {
+        //   if (err) throw err;
+        // });
         jwt.sign(payload, 'Mortparequipe', { expiresIn: 21600 }, (err, token) => {
           res.json({
               success: true,
