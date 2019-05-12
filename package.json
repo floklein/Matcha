@@ -8,6 +8,8 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
+    "init": "node setup/init.js && node setup/tables.js",
+    "seeder": "node setup/filler.js && node setup/tags.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Brad Traversy",
