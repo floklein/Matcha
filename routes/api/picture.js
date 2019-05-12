@@ -18,6 +18,9 @@ let connection = mysql.createConnection({
 const multer = require('multer');
 const upload = multer({
                                 dest: 'client/public/photos',
+                                limits: {
+                                  fileSize:5000000
+                                },
                                 fileFilter: function(req, file, cb)  {
                                   if (path.extname(file.originalname) !== ".png" && path.extname(file.originalname) !== ".jpg" && path.extname(file.originalname) !== ".jpeg")
                                     cb(null, false);
@@ -67,6 +70,13 @@ router.post('/', upload.single('picture'), (req, res) => {
   }
 
   if(req.file) {
+    const magicNb = fs.readFileSync(req.file.path).toString('hex', 0, 4);
+    if (magicNb !== "ffd8ffe0" && magicNb !== "89504e47") {
+      fs.unlink(req.file.path, () => {});
+      return res.status(400).json({
+        photo: "La photo doit être au format jpg ou png"
+      })
+    }
     photos.moveLeftPhotos(user.id)
       .then (pic_nb => {
         if (pic_nb > 5)
@@ -81,8 +91,8 @@ router.post('/', upload.single('picture'), (req, res) => {
         })
       });
   }
-  else return res.json({
-    photo: "No photo selected"
+  else return res.status(400).json({
+    photo: "Erreur de photo"
   });
 });
 
