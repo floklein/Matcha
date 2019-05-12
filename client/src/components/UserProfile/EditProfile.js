@@ -21,9 +21,9 @@ class EditProfile extends Component {
 
   componentWillMount() {
     axios.get('/api/interests/getAll')
-      .then((res) => {
+      .then(res => {
         this.setState({
-          suggestions: res.data,
+          suggestions: res.data
         });
       })
       .catch(err => {});
@@ -95,9 +95,7 @@ class EditProfile extends Component {
           console.log('uodate');
           this.props.fetchProfile(this.props.me.id);
         })
-        .catch(err => {
-
-        });
+        .catch(err => {});
     }
   };
 
