@@ -157,7 +157,7 @@ class MyProfile extends Component {
                 </div>
                 <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo}')`}}
+                    <div key={i} style={{backgroundImage: `url('${photo.url}')`}}
                     onClick={this.openPicture} title="Cliquer pour agrandir"/>
                   ))}
                   {!profile.photos.length && <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}

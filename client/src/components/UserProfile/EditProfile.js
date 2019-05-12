@@ -84,9 +84,20 @@ class EditProfile extends Component {
   photoAction = (e) => {
     const position = e.clientY - e.target.offsetTop + window.scrollY;
     if (position < 20) {
-      // console.log('delete');
-    } else if (position > 75) {
-      // console.log('profile');
+      axios.delete(`/api/picture/${e.target.id}`)
+        .then(() => {
+          this.props.fetchProfile(this.props.me.id);
+        })
+        .catch(err => {});
+    } else if (position > 70) {
+      axios.post(`/api/picture/profile_pic/${e.target.id}`)
+        .then(() => {
+          console.log('uodate');
+          this.props.fetchProfile(this.props.me.id);
+        })
+        .catch(err => {
+
+        });
     }
   };
 
@@ -257,7 +268,7 @@ class EditProfile extends Component {
                 </div>
                 <div className="profile__cp-content my photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>
+                    <div key={i} style={{backgroundImage: `url('${photo.url}')`}} onClick={this.photoAction} id={photo.n}/>
                   ))}
                   {!profile.photos.length &&
                   <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
