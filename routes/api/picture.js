@@ -4,6 +4,7 @@ const jwt_check = require('../../utils/jwt_check');
 const mysql = require('mysql');
 const path = require('path');
 const photos = require('../../utils/photos');
+const fs = require('fs');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -46,6 +47,8 @@ router.delete('/:pic_nb', (req, res) =>{
     if (err) throw err;
     sql = `UPDATE photos set pic${req.params.pic_nb} = NULL WHERE user_id = ${user.id};`;
     connection.query(sql, (err) => {
+      if (pic[0].pic.substring(0, 1) === '/')
+        fs.unlink('client/public' + pic[0].pic, () => {});
       if (err) throw err;
       let pic_to_del = pic[0].pic;
       sql = `UPDATE infos set profile_pic = '/photos/default.png' WHERE user_id = ${user.id} and profile_pic = "${pic_to_del}";`;
