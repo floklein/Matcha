@@ -43,6 +43,10 @@
     cursor: pointer;
 }
 
+.profile__cp-content.my.photos > div.add-photo:not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)):not(:nth-child(5)):not(:nth-child(6)) {
+    display: none;
+}
+
 .profile__cp-content.my.photos > div.add-photo:hover {
     opacity: 1;
 }

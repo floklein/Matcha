@@ -130,7 +130,6 @@ class EditProfile extends Component {
   };
 
   handleNewPhoto = (e) => {
-    //TODO: Image validation
     if (e.target.files[0]) {
       this.props.uploadImage(e.target.files[0]);
     }
