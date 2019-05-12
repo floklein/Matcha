@@ -778,4 +778,20 @@ router.get('/getMaxPopAndAge', (req, res) => {
   })
 });
 
+router.get('/email', (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  let sql = `SELECT email FROM users WHERE users.id=${user.id}`;
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+
+    return res.json({
+      email: result[0].email
+    });
+  });
+});
+
 module.exports = router;

@@ -28,11 +28,28 @@ class Panels extends Component {
             ...res.data
           });
       })
-      .catch(err => {})
+      .catch(err => {});
+    axios.get('/api/user/email')
+      .then(res => {
+        this.setState({
+          email: res.data.email
+        });
+      })
+      .catch(err => {});
   }
 
   submitEmail = (e) => {
-    this.props.changeEmail(this.state);
+    if (e.target.value.length) {
+      this.props.changeEmail(this.state);
+    } else {
+      axios.get('/api/user/email')
+        .then(res => {
+          this.setState({
+            email: res.data.email
+          });
+        })
+        .catch(err => {});
+    }
   };
 
   deleteAccount = (e) => {
