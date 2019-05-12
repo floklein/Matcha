@@ -86,7 +86,28 @@ router.get('/:username', (req, res) => {
 
       let photos = [];
       if (result2.length !== 0) {
-        photos = [result2[0].pic1, result2[0].pic2, result2[0].pic3, result2[0].pic4, result2[0].pic5].filter((photo) => photo);
+        photos = [
+          {
+            n: 1,
+            url: result2[0].pic1
+          },
+          {
+            n: 2,
+            url: result2[0].pic2
+          },
+          {
+            n: 3,
+            url: result2[0].pic3
+          },
+          {
+            n: 4,
+            url: result2[0].pic4
+          },
+          {
+            n: 5,
+            url: result2[0].pic5
+          }
+          ].filter((photo) => photo.url);
       }
 
       let sql = `SELECT interests.id, tag, tag AS name FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;

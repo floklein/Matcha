@@ -237,7 +237,7 @@ class Profile extends Component {
                 </div>
                 <div className="profile__cp-content photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo}')`}}
+                    <div key={i} style={{backgroundImage: `url('${photo.url}')`}}
                          title="Cliquer pour agrandir" onClick={this.openPicture}/>
                   ))}
                   {!profile.photos.length &&

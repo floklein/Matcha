@@ -207,7 +207,7 @@ class Card extends Component {
           </div>
           <div className="card__photos">
             {photos.map((photo, i) => (
-              <div key={i} style={{backgroundImage: `url('${photo}')`}} onClick={this.photoAction}/>
+              <div key={i} style={{backgroundImage: `url('${photo.url}')`}} onClick={this.photoAction}/>
             ))}
             <div className="empty"/>
           </div>
