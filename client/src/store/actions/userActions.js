@@ -2,7 +2,9 @@ import {CHANGE_INFOS, LOADING, GET_ERRORS} from './types';
 
 import axios from 'axios';
 
-export const uploadImage = (image) => dispatch => {
+import {fetchProfile} from './profileActions';
+
+export const uploadImage = (image, userId) => dispatch => {
   dispatch({
     type: LOADING,
     payload: true
@@ -57,30 +59,28 @@ export const uploadImage = (image) => dispatch => {
     output.onload = () => {
       console.log('uploading');
       const fd = new FormData();
-      fd.append('photo', image, image.name);
-      axios.post('test', fd, {
+      fd.append('picture', image, image.name);
+      axios.post('/api/picture', fd, {
         onUploadProgress: (progress) => {
           // console.log('Chargement : ' + Math.round(progress.loaded / progress.total * 100) + '%');
         }
       })
         .then(res => {
+          dispatch(fetchProfile(userId));
           dispatch({
             type: LOADING,
             payload: false
           });
         })
         .catch(err => {
-          //TODO: Remove setTimeout()
-          setTimeout(() => {
-            dispatch({
-              type: GET_ERRORS,
-              payload: err.response.data
-            });
-            dispatch({
-              type: LOADING,
-              payload: false
-            });
-          }, 2000);
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+          });
+          dispatch({
+            type: LOADING,
+            payload: false
+          });
         });
     }
   };

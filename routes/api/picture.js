@@ -57,7 +57,7 @@ router.delete('/:pic_nb', (req, res) =>{
   })
 });
 
-router.post('/:pic_nb', upload.single('picture'), (req, res) => {
+router.post('/', upload.single('picture'), (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
     return res.status(401).json({error: 'unauthorized access'});
@@ -71,9 +71,10 @@ router.post('/:pic_nb', upload.single('picture'), (req, res) => {
             picture: "Pas plus de 5 photos"
           });
         const sql = "UPDATE photos " +
-          `SET pic${pic_nb} = "/photos/${req.file.filename}" WHERE user_id = ${user.id};`;
+          `SET pic${pic_nb + 1} = "/photos/${req.file.filename}" WHERE user_id = ${user.id};`;
         connection.query(sql, (err) => {
           if (err) throw err;
+          return res.json();
         })
       });
   }
