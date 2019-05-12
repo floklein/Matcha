@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const jwt_check = require('../../utils/jwt_check');
 const mysql = require('mysql');
+const path = require('path');
+const photos = require('../../utils/photos');
 
 //Connect to db
 let connection = mysql.createConnection({
@@ -12,9 +14,22 @@ let connection = mysql.createConnection({
   database: 'matcha'
 });
 
+const multer = require('multer');
+const upload = multer({
+                                dest: 'client/public/photos',
+                                fileFilter: function(req, file, cb)  {
+                                  if (path.extname(file.originalname) !== ".png" && path.extname(file.originalname) !== ".jpg" && path.extname(file.originalname) !== ".jpeg")
+                                    cb(null, false);
+                                  else
+                                    cb(null, true);
+                                }
+                              });
+const uuid = require('uuid');
+
 connection.connect(function (err) {
   if (err) throw err;
 });
+
 
 router.delete('/:pic_nb', (req, res) =>{
   const user = jwt_check.getUsersInfos(req.headers.authorization);
@@ -40,6 +55,31 @@ router.delete('/:pic_nb', (req, res) =>{
       })
     })
   })
+});
+
+router.post('/:pic_nb', upload.single('picture'), (req, res) => {
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
+
+  if(req.file) {
+    photos.moveLeftPhotos(user.id)
+      .then (pic_nb => {
+        if (pic_nb > 5)
+          return res.json({
+            picture: "Pas plus de 5 photos"
+          });
+        const sql = "UPDATE photos " +
+          `SET pic${pic_nb} = "/photos/${req.file.filename}" WHERE user_id = ${user.id};`;
+        connection.query(sql, (err) => {
+          if (err) throw err;
+        })
+      });
+  }
+  else return res.json({
+    photo: "No photo selected"
+  });
 });
 
 router.post('/profile_pic/:pic_nb', (req, res) => {
