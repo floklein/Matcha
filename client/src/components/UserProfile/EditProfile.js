@@ -131,7 +131,7 @@ class EditProfile extends Component {
 
   handleNewPhoto = (e) => {
     if (e.target.files[0]) {
-      this.props.uploadImage(e.target.files[0]);
+      this.props.uploadImage(e.target.files[0], this.props.me.id);
     }
   };
 
