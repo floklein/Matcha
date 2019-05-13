@@ -40,13 +40,6 @@
 <div id="root"></div>
 </body>
 <script>
-  console.error = (arg) => {
-    if (arg === 'You have included the Google Maps JavaScript API multiple times on this page. This may cause unexpected errors.') {
-      return;
-    }
-    console.warn(arg);
-  };
-
   window.onscroll = () => {
     if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
       document.getElementById("navbar").style.height = "3rem";
@@ -76,6 +69,13 @@
         overlay.style.opacity = '0';
         body.style.overflow = 'auto';
       };
+  };
+  const myFunction = console.error;
+  console.error = (arg) => {
+    if (arg === 'You have included the Google Maps JavaScript API multiple times on this page. This may cause unexpected errors.') {
+      return;
+    }
+    myFunction(arg);
   };
 </script>
 <script>

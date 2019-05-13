@@ -10,6 +10,7 @@ import BigPicture from './BigPicture';
 
 import './profile.css';
 import './edit.css';
+import {NavLink} from "react-router-dom";
 
 class MyProfile extends Component {
   state = {
@@ -108,7 +109,7 @@ class MyProfile extends Component {
               </div>
               <div className="profile__sp-content">
                 <div>
-                  <a href="/account/profile/edit"><button>MODIFIER</button></a>
+                  <NavLink to="/account/profile/edit"><button>MODIFIER</button></NavLink>
                 </div>
                 <div>
                   <h1>{`${profile.firstName} ${profile.lastName}`}</h1>
