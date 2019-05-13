@@ -63,8 +63,8 @@ router.get('/:username', (req, res) => {
     return res.json(response);
   }
 
-  let sql = `SELECT id, username, email, firstName, lastName, age, gender, sexuality, bio, profile_pic, popularity, latitude, longitude FROM users JOIN infos ON users.id = infos.user_id WHERE username = "${username}" OR id = "${username}";`;
-  connection.query(sql, (err, result) => {
+  let sql = `SELECT id, username, email, firstName, lastName, age, gender, sexuality, bio, profile_pic, popularity, latitude, longitude FROM users JOIN infos ON users.id = infos.user_id WHERE username = ? OR id = ?;`;
+  connection.query(sql, [username, username], (err, result) => {
     if (err) throw err;
 
     if (result.length === 0) {
@@ -80,8 +80,8 @@ router.get('/:username', (req, res) => {
       return res.json(response);
     }
 
-    let sql = `SELECT pic1, pic2, pic3, pic4, pic5 FROM photos JOIN users ON users.id = photos.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;
-    connection.query(sql, (err, result2) => {
+    let sql = `SELECT pic1, pic2, pic3, pic4, pic5 FROM photos JOIN users ON users.id = photos.user_id WHERE users.username = ? OR users.id = ?;`;
+    connection.query(sql, [username, username], (err, result2) => {
       if (err) throw err;
 
       let photos = [];
@@ -110,8 +110,8 @@ router.get('/:username', (req, res) => {
           ].filter((photo) => photo.url);
       }
 
-      let sql = `SELECT interests.id, tag, tag AS name FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;
-      connection.query(sql, (err, result3) => {
+      let sql = `SELECT interests.id, tag, tag AS name FROM interests JOIN users ON users.id = interests.user_id WHERE users.username = ? OR users.id = ?;`;
+      connection.query(sql, [username, username], (err, result3) => {
         if (err) throw err;
 
         let sql = "SELECT popularity, user_id FROM infos ORDER BY popularity";
@@ -122,8 +122,8 @@ router.get('/:username', (req, res) => {
           const nb_user = result4.length;
           let quart = Math.floor(4 * pos / nb_user) + 1;
 
-          let sql = `SELECT liker_id, liked_id FROM likes WHERE (liker_id=${user.id} AND liked_id=${result[0].id}) OR (liker_id=${result[0].id} AND liked_id=${user.id})`;
-          connection.query(sql, (err, result5) => {
+          let sql = `SELECT liker_id, liked_id FROM likes WHERE (liker_id=? AND liked_id=?) OR (liker_id=? AND liked_id=?)`;
+          connection.query(sql, [user.id, result[0].id, result[0].id, user.id], (err, result5) => {
             if (err) throw err;
 
             let like;
@@ -137,15 +137,15 @@ router.get('/:username', (req, res) => {
               like = 'you'
             }
 
-            let sql = `SELECT blocker_id, blocked_id FROM blocks WHERE (blocker_id=${user.id} AND blocked_id=${result[0].id}) OR (blocker_id=${result[0].id} AND blocked_id=${user.id})`;
-            connection.query(sql, (err, result5) => {
+            let sql = `SELECT blocker_id, blocked_id FROM blocks WHERE (blocker_id=? AND blocked_id=?) OR (blocker_id=? AND blocked_id=?)`;
+            connection.query(sql, [user.id, result[0].id, result[0].id, user.id], (err, result5) => {
               if (err) throw err;
 
               let isBlocked = ((result5[0] !== undefined && result5[0].blocker_id === user.id) || (result5[1] !== undefined && result5[1].blocker_id === user.id));
               let amBlocked = ((result5[0] !== undefined && result5[0].blocked_id === user.id) || (result5[1] !== undefined && result5[1].blocked_id === user.id));
 
-              let sql = `SELECT UNIX_TIMESTAMP(last_connection) as time, UNIX_TIMESTAMP(Now()) as now FROM connection WHERE user_id=${result[0].id};`;
-              connection.query(sql, (err, result6) => {
+              let sql = `SELECT UNIX_TIMESTAMP(last_connection) as time, UNIX_TIMESTAMP(Now()) as now FROM connection WHERE user_id=?;`;
+              connection.query(sql, [result[0].id], (err, result6) => {
                 if (err) throw err;
                 let diff = result6[0].now - result6[0].time;
                 let status = diff > 300 ? 'offline' : 'online';

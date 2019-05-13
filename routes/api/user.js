@@ -85,8 +85,8 @@ router.post('/register', (req, res) => {
   let error = false;
 
   //Check if username is unique
-  let sql = `SELECT username from users WHERE username = "${info.username}";`;
-  connection.query(sql, (err, result) => {
+  let sql = `SELECT username from users WHERE username = ?;`;
+  connection.query(sql, [info.username],(err, result) => {
     if (err) throw err;
     if (result.length !== 0) {
       response = {
@@ -180,32 +180,44 @@ router.post('/register', (req, res) => {
 
     //insert user in db
     const sql2 = "INSERT INTO users(username, email, password) " +
-      `VALUES("${info.username}", "${info.email}", "${hashed_pw}");`;
+      `VALUES(?, ?, ?);`;
 
-    connection.query(sql2, (err, result) => {
+    connection.query(sql2, [
+      info.username,
+      info.email,
+      hashed_pw
+    ],(err, result) => {
       if (err) throw err;
       const sql3 = "INSERT INTO infos(gender, user_id, popularity, firstName, lastName)" +
-        `VALUES("${info.gender}", ${result.insertId}, 0, "${info.firstName}", "${info.lastName}")`;
+        `VALUES(?, ?, 0, ?, ?)`;
       const id = result.insertId;
-      connection.query(sql3, (err, result) => {
+      connection.query(sql3, [
+        info.gender,
+        result.insertId,
+        info.firstName,
+        info.lastName
+      ],(err, result) => {
         const code = uuid.v4();
         const content = mail.templateEmail(`Bonjour ${info.username},`, "Vérifier mon email", "Bienvenue sur Soulmatch !", "Merci pour votre inscription sur Soulmatch. Afin de pouvoir vous connecter, veuillez vérifier votre adresse email en cliquant sur le lien ci-dessous.", `http://localhost:3000?action=verify-email&id=${id}&code=${code}`);
         const sql4 = "INSERT INTO verified(user_id, code, status)" +
-          `VALUES (${id}, "${code}", false);`;
+          `VALUES (?, ?, false);`;
         //Send an email if everything is alright
-        connection.query(sql4, (err, result) => {
+        connection.query(sql4, [
+          id,
+          code
+        ],(err, result) => {
           if (err) throw err;
           const sql5 = "INSERT INTO connection(user_id) " +
-            `VALUES(${id});`;
-          connection.query(sql5, (err) => {
+            `VALUES(?);`;
+          connection.query(sql5, [id],(err) => {
             if (err) throw err;
             const sql6 = "INSERT INTO settings(user_id) " +
-              `VALUES(${id});`;
-            connection.query(sql6, (err) => {
+              `VALUES(?);`;
+            connection.query(sql6, [id], (err) => {
               if (err) throw err;
               const sql7 = "INSERT INTO photos(user_id) " +
-                `VALUES(${id});`;
-              connection.query(sql7, (err) => {
+                `VALUES(?);`;
+              connection.query(sql7, [id], (err) => {
                 if (err) throw err;
                 //send mail if everything went fine
                 if (!info.nomail) {
@@ -266,16 +278,22 @@ router.post('/resetPassword', (req, res) => {
   }
 
   let sql = "SELECT user_id from verified " +
-    `WHERE code = "${request.code}" AND user_id = ${request.id};`;
-  connection.query(sql, (err, result) => {
+    `WHERE code = ? AND user_id = ?;`;
+  connection.query(sql, [
+    request.code,
+    request.id
+  ],(err, result) => {
     if (err) throw err;
     if (!result.length)
       return res.status(400).json({
         password: "Le lien est invalide, veuillez vérifier votre email"
       });
     let hashed_pw = pw_hash.generate(request.password);
-    sql = `UPDATE users set password = "${hashed_pw}" WHERE id = ${request.id};`;
-    connection.query(sql, err => {
+    sql = `UPDATE users set password = ? WHERE id = ?;`;
+    connection.query(sql, [
+      hashed_pw,
+      request.id
+    ],err => {
       if (err) throw err;
       return res.json();
     })
@@ -284,8 +302,10 @@ router.post('/resetPassword', (req, res) => {
 
 router.post('/forgotPassword', (request, result) => {
   const sql = "SELECT v.code, u.email, u.username, u.id from verified v INNER JOIN users u on v.user_id = u.id " +
-    `WHERE email = "${request.body.email}";`;
-  connection.query(sql, (err, res) => {
+    `WHERE email = ?;`;
+  connection.query(sql, [
+    request.body.email
+  ],(err, res) => {
     if (!res.length)
       return result.json();
     if (err) throw err;
@@ -341,8 +361,11 @@ router.post('/login', (req, res) => {
     //If both fields are full, keep going with the connection
     if (!error) {
         //Check if username matches a user
-        let sql = `SELECT u.username, u.password, u.id, u.email, v.status FROM users u INNER JOIN verified v ON u.id = v.user_id WHERE username = "${info.username}" OR email = "${info.username}";`;
-        connection.query(sql, (err, result) => {
+        let sql = `SELECT u.username, u.password, u.id, u.email, v.status FROM users u INNER JOIN verified v ON u.id = v.user_id WHERE username = ? OR email = ?;`;
+        connection.query(sql, [
+          info.username,
+          info.username
+        ],(err, result) => {
             if (err) throw err;
             if (result.length === 0) {
                 response = {
@@ -376,10 +399,14 @@ router.post('/login', (req, res) => {
         };
 
         const sql_pos = "UPDATE infos " +
-          `SET latitude=${info.position.latitude}, longitude=${info.position.longitude}` +
-          `WHERE user_id = ${result[0].id} AND address_modified=false;`;
+          `SET latitude= ?, longitude= ? ` +
+          `WHERE user_id = ? AND address_modified=false;`;
 
-        connection.query(sql_pos, (err) => {
+        connection.query(sql_pos, [
+          info.position.latitude,
+          info.position.longitude,
+          result[0].id
+        ], (err) => {
           if (err) throw err;
         });
         jwt.sign(payload, 'Mortparequipe', { expiresIn: 21600 }, (err, token) => {
@@ -424,8 +451,8 @@ router.patch('/password', (req, res) => {
     })
   }
   //Check if old pw is good
-  let sql = `SELECT password FROM users WHERE id = ${user.id};`;
-  connection.query(sql, (err, result) => {
+  let sql = `SELECT password FROM users WHERE id = ?;`;
+  connection.query(sql, [user.id], (err, result) => {
     if (err) throw err;
     if (result.length === 0) {
       return res.status(400).json({
@@ -457,8 +484,11 @@ router.patch('/password', (req, res) => {
     }
       let hashed_pw = pw_hash.generate(request.new_pw);
       sql = "UPDATE users " +
-        `SET password = "${hashed_pw}" WHERE id = ${user.id};`;
-      connection.query(sql, (err) => {
+        `SET password = ? WHERE id = ?;`;
+      connection.query(sql, [
+        hashed_pw,
+        user.id
+      ],(err) => {
         if (err) throw err;
         return res.json({
           outcome: "success",
@@ -485,8 +515,11 @@ router.patch('/email', (req, res) => {
   }
 
   const sql = "UPDATE users " +
-    `SET email = "${new_email}" WHERE id = ${user.id};`;
-  connection.query(sql, (err) => {
+    `SET email = ? WHERE id = ?;`;
+  connection.query(sql, [
+    new_email,
+    user.id
+  ],(err) => {
     if (err) throw err;
     return res.json({
       outcome: "success",
@@ -551,8 +584,11 @@ router.post('/update', (req, res) => {
   }
 
   //Check if username is unique and different from previous
-  let sql = `SELECT username from users WHERE username = "${request.username} AND id != ${user.id}";`;
-  connection.query(sql, (err, result) => {
+  let sql = `SELECT username from users WHERE username = ? AND id != ?;`;
+  connection.query(sql, [
+    request.username,
+    user.id
+  ],(err, result) => {
     if (err) throw err;
     if (result.length !== 0) {
       response = {
@@ -622,25 +658,39 @@ router.post('/update', (req, res) => {
       return;
     }
     else {
-      const sql_user_update = `UPDATE users SET username = "${request.username}" WHERE id = ${user.id};`;
-      connection.query(sql_user_update, (err) => {
+      const sql_user_update = `UPDATE users SET username = ? WHERE id = ?;`;
+      connection.query(sql_user_update, [
+        request.username,
+        user.id
+      ],(err) => {
         if (err) throw err;
         let sql_infos_update;
         if (request.latitude && request.longitude && !isNaN(request.latitude) && !isNaN(request.longitude)) {
-          sql_infos_update = `UPDATE infos SET gender = "${request.gender}", age=${request.age}, sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}", latitude=${request.latitude}, longitude=${request.longitude}, address_modified=1 WHERE user_id = ${user.id};`;}
+          sql_infos_update = `UPDATE infos SET gender = ?, age=?, sexuality = ?, bio = ?, firstName = ?, lastName =?, latitude=${request.latitude}, longitude=${request.longitude}, address_modified=1 WHERE user_id = ?;`;}
         else {
-          sql_infos_update = `UPDATE infos SET gender = "${request.gender}", age=${request.age}, sexuality = "${request.sexuality}", bio = "${request.bio}", firstName = "${request.firstName}", lastName ="${request.lastName}" WHERE user_id = ${user.id};`;}
-        connection.query(sql_infos_update, (err) => {
+          sql_infos_update = `UPDATE infos SET gender = ?, age=?, sexuality = ?, bio = ?, firstName = ?, lastName =? WHERE user_id = ?;`;}
+        connection.query(sql_infos_update, [
+          request.gender,
+          request.age,
+          request.sexuality,
+          request.bio,
+          request.firstName,
+          request.lastName,
+          user.id
+        ],(err) => {
           if (err) throw err;
-          const sql_delete_interests = `DELETE FROM interests WHERE user_id = ${user.id};`;
-          connection.query(sql_delete_interests, (err) => {
+          const sql_delete_interests = `DELETE FROM interests WHERE user_id = ?;`;
+          connection.query(sql_delete_interests, [user.id],(err) => {
             if (err) throw err;
             if (!request.interests.length)
               return res.json();
             for (let i = 0; i < request.interests.length; i++) {
               let sql_add_interest = "INSERT INTO interests(user_id, tag)" +
-                ` VALUES(${user.id}, "${request.interests[i].name}");`;
-              connection.query(sql_add_interest, (err) => {
+                ` VALUES(?, ?);`;
+              connection.query(sql_add_interest, [
+                user.id,
+                request.interests[i].name
+              ],(err) => {
                 if (err) throw err;
                 if (i === request.interests.length -1) {
                   return res.json();
@@ -662,8 +712,8 @@ router.post('/delete', (req, resp) => {
 
   const pw = req.body.password;
   let sql = "Select password from users " +
-      `WHERE id = ${user.id};`;
-  connection.query(sql, (err, result) => {
+      `WHERE id = ?;`;
+  connection.query(sql, [user.id],(err, result) => {
     if (err) throw err;
     if (!result || !result[0] || !result[0].password || !pw_hash.verify(pw, result[0].password))
       return resp.status(400).json({
@@ -679,8 +729,8 @@ router.post('/delete', (req, resp) => {
         "LEFT JOIN photos ON users.id = photos.user_id " +
         "LEFT JOIN settings ON users.id = settings.user_id " +
         "LEFT JOIN interests ON users.id = interests.user_id " +
-        `WHERE users.id = ${user.id};`;
-    connection.query(sql, (err) => {
+        `WHERE users.id = ?;`;
+    connection.query(sql, [user.id],(err) => {
       if (err) throw err;
       return resp.json({
         outcome: "success",
@@ -711,8 +761,8 @@ router.get('/email', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
-  let sql = `SELECT email FROM users WHERE users.id=${user.id}`;
-  connection.query(sql, (err, result) => {
+  let sql = `SELECT email FROM users WHERE users.id=?`;
+  connection.query(sql, [user.id],(err, result) => {
     if (err) throw err;
 
     return res.json({
