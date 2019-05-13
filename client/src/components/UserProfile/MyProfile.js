@@ -47,6 +47,11 @@ class MyProfile extends Component {
   };
 
   getPopularity = (popularity) => {
+    if (!popularity) {
+      return (<div className="popularity p1">Nouveau
+        <div>- {0}</div>
+      </div>);
+    }
     switch (popularity.rank) {
       case 1:
         return (<div className="popularity p1">Nouveau

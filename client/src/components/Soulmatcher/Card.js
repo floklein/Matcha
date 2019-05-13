@@ -87,6 +87,9 @@ class Card extends Component {
       return;
     }
     const div = document.querySelector('.card.u' + this.props.userId);
+    if (!div) {
+      return;
+    }
     let Ox, Oy;
     document.onmousemove = (event) => {
       Ox = event.pageX;
@@ -103,15 +106,21 @@ class Card extends Component {
         div.classList.add('disliking');
         div.style.boxShadow = `0 10px 40px -8px rgba(0, 0, 0, 0.3), 0 0 0 0.4rem rgb(${r}, ${g}, ${b}) inset,
         0 0 0 0.8rem white inset`;
-        document.querySelector(`.card.u${this.props.userId} .after`).style.background = `linear-gradient(to top right,
-        rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`;
+        let card = document.querySelector(`.card.u${this.props.userId} .after`);
+        if (card) {
+          card.style.background = `linear-gradient(to top right,
+          rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`;
+        }
       } else if (this.dx > 150) {
         div.style.transition = 'box-shadow 0.4s, background-color 1s';
         div.classList.add('liking');
         div.style.boxShadow = `0 10px 40px -8px rgba(0, 0, 0, 0.3), 0 0 0 0.4rem rgb(${r}, ${g}, ${b}) inset,
         0 0 0 0.8rem white inset`;
-        document.querySelector(`.card.u${this.props.userId} .after`).style.background = `linear-gradient(to top left,
-        rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`;
+        let card = document.querySelector(`.card.u${this.props.userId} .after`);
+        if (card) {
+          card.style.background = `linear-gradient(to top left,
+          rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgb(${r}, ${g}, ${b}), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))`;
+        }
       } else {
         div.style.transition = 'background-color 1s';
         div.classList.remove('disliking', 'liking');
