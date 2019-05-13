@@ -753,7 +753,6 @@ router.post('/delete', (req, resp) => {
         "LEFT JOIN settings ON users.id = settings.user_id " +
         "LEFT JOIN interests ON users.id = interests.user_id " +
         `WHERE users.id = ${user.id};`;
-    console.log(sql);
     connection.query(sql, (err) => {
       if (err) throw err;
       return resp.json({

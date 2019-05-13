@@ -5,8 +5,6 @@ import axios from 'axios';
 import {logoutUser} from './authActions';
 
 export const changeEmail = (userData) => dispatch => {
-  const worked = true;
-
   axios.patch('/api/user/email', userData)
     .then(res => {
       dispatch({
