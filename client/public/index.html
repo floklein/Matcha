@@ -73,7 +73,7 @@
   const myFunction = console.error;
   console.error = (arg) => {
     if (arg === 'You have included the Google Maps JavaScript API multiple times on this page. This may cause unexpected errors.'
-    || arg.match('Uncaught TypeError:')) {
+    || arg.match('/Uncaught TypeError:/g')) {
       return;
     }
     myFunction(arg);

@@ -93,8 +93,13 @@ class ChatPanel extends Component {
             <form onSubmit={this.onSendMessage}>
               <div className="chat__input-bar">
                 <div className="chat__input">
-                  <input type="text" name="message" placeholder="Écrivez votre message..."
-                         onChange={this.handleChange} value={this.state.message}/>
+                  <input type="text"
+                         name="message"
+                         minLength="1"
+                         maxLength="250"
+                         placeholder="Écrivez votre message..."
+                         onChange={this.handleChange}
+                         value={this.state.message}/>
                 </div>
                 <div className="chat__submit">
                   <button type="submit" className="chat__button"/>

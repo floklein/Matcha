@@ -152,6 +152,9 @@ body {
     all: unset;
     margin: 0 0.5rem 0.5rem 0;
     padding: 0.3rem 0.7rem;
+    max-width: 7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-radius: 1rem;
     color: white;
     font-size: 0.9rem;
