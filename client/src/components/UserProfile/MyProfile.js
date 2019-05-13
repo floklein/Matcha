@@ -15,7 +15,8 @@ import {NavLink} from "react-router-dom";
 class MyProfile extends Component {
   state = {
     images: [],
-    current: 0
+    current: 0,
+    bigPicture: false
   };
 
   componentDidMount() {
@@ -79,7 +80,14 @@ class MyProfile extends Component {
     const current = this.whichPhoto(e.target);
     this.setState({
       images: this.props.profile.photos,
-      current: current
+      current: current,
+      bigPicture: true
+    });
+  };
+
+  closeBigPicture = () => {
+    this.setState({
+      bigPicture: false
     });
   };
 
@@ -96,7 +104,7 @@ class MyProfile extends Component {
 
     return (
       <React.Fragment>
-        <BigPicture images={this.state.images} current={this.state.current}/>
+        <BigPicture images={this.state.images} current={this.state.current} shown={this.state.bigPicture} closeBigPicture={this.closeBigPicture}/>
         <div className="profile__top">
           <div className="profile__top-img" style={bgPhoto}/>
         </div>
