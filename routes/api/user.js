@@ -203,25 +203,30 @@ router.post('/register', (req, res) => {
               `VALUES(${id});`;
             connection.query(sql6, (err) => {
               if (err) throw err;
-              //send mail if everything went fine
-              if (!info.nomail) {
-                let transporter = nodemailer.createTransport({
-                  service: 'gmail',
-                  auth: {
-                    user: 'matcha.fk.tbd@gmail.com',
-                    pass: 'Qwerty123-'
-                  }
-                });
-                let mailOptions = {
-                  from: 'Matcha <no-reply@matcha.com>',
-                  to: info.email,
-                  subject: 'Vérification de compte',
-                  html: content
-                };
-                transporter.sendMail(mailOptions);
-              }
+              const sql7 = "INSERT INTO photos(user_id) " +
+                `VALUES(${id});`;
+              connection.query(sql7, (err) => {
+                if (err) throw err;
+                //send mail if everything went fine
+                if (!info.nomail) {
+                  let transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user: 'matcha.fk.tbd@gmail.com',
+                      pass: 'Qwerty123-'
+                    }
+                  });
+                  let mailOptions = {
+                    from: 'Matcha <no-reply@matcha.com>',
+                    to: info.email,
+                    subject: 'Vérification de compte',
+                    html: content
+                  };
+                  transporter.sendMail(mailOptions);
+                }
+                res.end(String(id));
+              });
             });
-            res.end(String(id));
           });
         });
       })
@@ -602,7 +607,7 @@ router.post('/update', (req, res) => {
       error = true;
     }
 
-    else if (typeof request.bio === 'undefined' || request.bio.length === 0 || request.bio.length > 460) {
+    else if (typeof request.bio === 'undefined' || !request.bio || request.bio.length === 0 || request.bio.length > 460) {
       response = {
         ...response,
         bio: "Bio invalide."
