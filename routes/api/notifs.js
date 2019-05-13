@@ -60,24 +60,6 @@ router.patch('/readAll', (req, res) => {
   })
 });
 
-router.post('/', (req, res) => {
-  const user = jwt_check.getUsersInfos(req.headers.authorization);
-  if (user.id === -1) {
-    return res.status(401).json({error: 'unauthorized access'});
-  }
-  const request = {
-    type: req.body.type,
-    content: req.body.content,
-  };
-
-  const sql = "INSERT INTO notifs(user_id, type, content, time) " +
-    `VALUES(${user.id}, "${request.type}", "${request.content}", now());`;
-  connection.query(sql, (err) => {
-    if (err) throw err;
-    res.json({});
-  })
-});
-
 router.patch('/settings', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
