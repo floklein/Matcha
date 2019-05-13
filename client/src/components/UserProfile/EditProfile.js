@@ -100,7 +100,6 @@ class EditProfile extends Component {
     script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyArQlFt5ykqFyeAts_GhwHNldoOv8XzkkM&libraries=places';
     script.type = 'text/javascript';
     document.getElementsByTagName('head')[0].appendChild(script);
-
     executeGoogleMaps();
 
     axios.get('/api/interests/getAll')
@@ -131,7 +130,7 @@ class EditProfile extends Component {
     }
     if (nextProps.submitOutcome !== this.props.submitOutcome) {
       if (nextProps.submitOutcome === true) {
-        window.location.href = '/account/profile';
+        // window.location.href = '/account/profile';
       }
     }
   }
