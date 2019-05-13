@@ -81,7 +81,7 @@ router.post('/', (req, res) => {
     `WHERE user_id = ${user.id};`;
   connection.query(sql, (err, first_result) => {
     if (err) throw err;
-    if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === null || first_result[0].bio === null) {
+    if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === "/photos/default.png" || first_result[0].bio === null) {
       return res.status(400).json({
         user: "Veuillez compléter votre profil avant d'utiliser la recherche"
       })
