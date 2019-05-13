@@ -99,7 +99,7 @@ function additional_infos(id, bio, sexuality, age, latitude, longitude, populari
         resolve(res_err);
       }
       else {
-        const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}, profile_pic = "${info.profilePic}"` +
+        const sql2 = `UPDATE infos SET bio = "${info.bio}", address_modified = 1, sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}, profile_pic = "${info.profilePic}"` +
           `WHERE user_id = ${id}`;
         connection.query(sql2, (err) => {
           if (err) throw (err);
