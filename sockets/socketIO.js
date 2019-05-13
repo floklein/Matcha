@@ -27,6 +27,7 @@ module.exports = (io) => {
     });
 
     socket.on('disconnect', (data) => {
+      socket.disconnect();
     });
   })
 };
