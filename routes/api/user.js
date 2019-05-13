@@ -133,7 +133,7 @@ router.post('/register', (req, res) => {
     }
 
     //Check if both names are incorrect
-    if ((typeof info.firstName === 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof info.lastName === 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$'))) {
+    if ((typeof info.firstName === 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof info.lastName === 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$') || info.firstName.length > 30 || info.lastName.length > 30)) {
       response = {
         ...response,
         name: "Prénom et nom invalides."
@@ -142,7 +142,7 @@ router.post('/register', (req, res) => {
     }
 
     //Check if firstname is correct
-    else if (typeof info.firstName === 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+    else if (typeof info.firstName === 'undefined' || !info.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$') || info.firstName.length > 30) {
       response = {
         ...response,
         firstName: "Prénom invalide."
@@ -151,7 +151,7 @@ router.post('/register', (req, res) => {
     }
 
     //Check if lastname is correct
-    else if (typeof info.lastName === 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+    else if (typeof info.lastName === 'undefined' || !info.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$') || info.lastName.length > 30) {
       response = {
         ...response,
         lastName: "Nom invalide."
@@ -160,7 +160,7 @@ router.post('/register', (req, res) => {
     }
 
     //Check if email has right format
-    if (typeof info.email === 'undefined' || !info.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+    if (typeof info.email === 'undefined' || !info.email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$') || info.email.length > 50) {
       response = {
         ...response,
         email: "Adresse email invalide."
@@ -203,25 +203,30 @@ router.post('/register', (req, res) => {
               `VALUES(${id});`;
             connection.query(sql6, (err) => {
               if (err) throw err;
-              //send mail if everything went fine
-              if (!info.nomail) {
-                let transporter = nodemailer.createTransport({
-                  service: 'gmail',
-                  auth: {
-                    user: 'matcha.fk.tbd@gmail.com',
-                    pass: 'Qwerty123-'
-                  }
-                });
-                let mailOptions = {
-                  from: 'Matcha <no-reply@matcha.com>',
-                  to: info.email,
-                  subject: 'Vérification de compte',
-                  html: content
-                };
-                transporter.sendMail(mailOptions);
-              }
+              const sql7 = "INSERT INTO photos(user_id) " +
+                `VALUES(${id});`;
+              connection.query(sql7, (err) => {
+                if (err) throw err;
+                //send mail if everything went fine
+                if (!info.nomail) {
+                  let transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user: 'matcha.fk.tbd@gmail.com',
+                      pass: 'Qwerty123-'
+                    }
+                  });
+                  let mailOptions = {
+                    from: 'Matcha <no-reply@matcha.com>',
+                    to: info.email,
+                    subject: 'Vérification de compte',
+                    html: content
+                  };
+                  transporter.sendMail(mailOptions);
+                }
+                res.end(String(id));
+              });
             });
-            res.end(String(id));
           });
         });
       })
@@ -312,11 +317,10 @@ router.post('/login', (req, res) => {
   let response = {};
   let error = false;
 
-  // if (!info.position || !info.position.latitude || !info.position.longitude || isNaN(info.position.latitude) || isNaN(info.position.longitude)) {
-  //   return res.status(400).json({
-  //     position: "Erreur de position"
-  //   });}
-
+  if (!info.position || !info.position.latitude || !info.position.longitude || isNaN(info.position.latitude) || isNaN(info.position.longitude)) {
+    return res.status(400).json({
+      position: "Erreur de position"
+    });}
 
   //Check if password and username are not empty and defined
     if (typeof info.username == 'undefined' || info.username == "") {
@@ -453,7 +457,7 @@ router.patch('/password', (req, res) => {
     }
       let hashed_pw = pw_hash.generate(request.new_pw);
       sql = "UPDATE users " +
-        `SET password = "${hashed_pw} WHERE id = ${user.id}";`;
+        `SET password = "${hashed_pw}" WHERE id = ${user.id};`;
       connection.query(sql, (err) => {
         if (err) throw err;
         return res.json({
@@ -461,102 +465,6 @@ router.patch('/password', (req, res) => {
           message: "Mot de passe modifié !"
         });
       })
-  })
-});
-
-//Set user infos
-router.post('/infos/:id', (req, res) => {
-  let info = {
-    bio: req.body.bio,
-    sexuality: req.body.sexuality,
-    age: req.body.age,
-    latitude: req.body.latitude,
-    longitude: req.body.longitude,
-    popularity: req.body.popularity,
-    profilePic: req.body.profilePic
-  };
-  let res_err = {};
-  let error = false;
-
-  const sql = `SELECT id from users WHERE id = ${req.params.id}`;
-  connection.query(sql, (err, result) => {
-    if (result && result.length == 0) {
-        res_err = {
-            ...res_err,
-            id: "Utilisateur non trouvé"
-        };
-        return res.status(400).json(res_err);
-    }
-    else {
-      if (typeof info.bio == 'undefined' || info.bio == "") {
-          res_err = {
-              ...res_err,
-              bio: "La bio est requise"
-          };
-          error = true
-      }
-      else if (info.bio.length > 420) {
-          res_err = {
-              ...res_err,
-              bio: "La bio doit faire moins de 420 caractères"
-          };
-          error = true
-      }
-    }
-    if (typeof info.sexuality == 'undefined' || (info.sexuality != "bisexual" && info.sexuality != "heterosexual" && info.sexuality != "homosexual")) {
-        res_err = {
-            ...res_err,
-            sexuality: "La sexualité est incorrecte"
-        };
-        error = true
-    }
-    if (typeof info.age == 'undefined' || info.age == "" || isNaN(info.age)) {
-        res_err = {
-            ...res_err,
-            age: "L'age est incorrect"
-        };
-        error = true
-    }
-      if (typeof info.latitude == 'undefined' || info.latitude == "") {
-          res_err = {
-              ...res_err,
-              latitude: "La latitude est incorrecte"
-          };
-          error = true
-      }
-      if (typeof info.longitude == 'undefined' || info.longitude == "") {
-          res_err = {
-              ...res_err,
-              longitude: "La longitude est incorrecte"
-          };
-          error = true
-      }
-      if (typeof info.popularity == 'undefined' || info.popularity == "") {
-          res_err = {
-              ...res_err,
-              popularity: "La popularité est incorrecte"
-          };
-          error = true
-      }
-      if (typeof info.profilePic == 'undefined' || info.profilePic == "") {
-          res_err = {
-              ...res_err,
-              profilePic: "La photo de profil est requise"
-          };
-          error = true
-      }
-    if (error) {
-      res.status(400);
-      res.status(400).json(res_err);
-    }
-    else {
-      const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}, profile_pic = "${info.profilePic}"` +
-        `WHERE user_id = ${req.params.id}`;
-      connection.query(sql2, (err) => {
-        if (err) throw (err);
-      })
-    }
-    res.end(req.params.id);
   })
 });
 
@@ -569,7 +477,7 @@ router.patch('/email', (req, res) => {
   const new_email = req.body.email;
 
   //Check if email has right format
-  if (typeof new_email === 'undefined' || !new_email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$')) {
+  if (typeof new_email === 'undefined' || !new_email.match('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$') || new_email.length > 50) {
     return res.status(400).json({
       outcome: "error",
       message: "Adresse email invalide."
@@ -615,7 +523,26 @@ router.post('/update', (req, res) => {
     };
     error = true
   }
-  if (typeof request.age == 'undefined' || request.age == "" || isNaN(request.age)) {
+
+  if (typeof request.interests == 'undefined') {
+    response = {
+      ...response,
+      interests: "Erreur avec les tags"
+    };
+    error = true
+  }
+
+  for (let i = 0; i < request.interests.length; i++) {
+    if (request.interests[i].name.length > 24) {
+      response = {
+        ...response,
+        interests: "Les tags doivent faire moins de 24 characteres"
+      };
+      error = true
+    }
+  }
+
+  if (typeof request.age == 'undefined' || request.age == "" || isNaN(request.age) || request.age < 18 || request.age > 99) {
     response = {
       ...response,
       age: "L'age est incorrect"
@@ -654,7 +581,7 @@ router.post('/update', (req, res) => {
     }
 
     //Check if both names are incorrect
-    if ((typeof request.firstName === 'undefined' || !request.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof request.lastName === 'undefined' || !request.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$'))) {
+    if ((typeof request.firstName === 'undefined' || !request.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) && (typeof request.lastName === 'undefined' || !request.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) || (request.lastName.length > 30 && request.firstName.length > 30)) {
       response = {
         ...response,
         name: "Prénom et nom invalides."
@@ -663,7 +590,7 @@ router.post('/update', (req, res) => {
     }
 
     //Check if firstname is correct
-    else if (typeof request.firstName === 'undefined' || !request.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+    else if (typeof request.firstName === 'undefined' || !request.firstName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$') || request.firstName.length > 30) {
       response = {
         ...response,
         firstName: "Prénom invalide."
@@ -672,7 +599,7 @@ router.post('/update', (req, res) => {
     }
 
     //Check if lastname is correct
-    else if (typeof request.lastName === 'undefined' || !request.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$')) {
+    else if (typeof request.lastName === 'undefined' || !request.lastName.match('^([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+([-]([a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+(( |\')[a-zA-Zàáâäçèéêëìíîïñòóôöùúûü]+)*)+)*$') || request.lastName.length > 30) {
       response = {
         ...response,
         lastName: "Nom invalide."
@@ -680,7 +607,7 @@ router.post('/update', (req, res) => {
       error = true;
     }
 
-    else if (typeof request.bio === 'undefined' || request.bio.length === 0 || request.bio.length > 460) {
+    else if (typeof request.bio === 'undefined' || !request.bio || request.bio.length === 0 || request.bio.length > 460) {
       response = {
         ...response,
         bio: "Bio invalide."

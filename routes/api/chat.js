@@ -53,6 +53,9 @@ router.post('/', (req, res) => {
   let message = req.body.message;
   let room = 'r' + (user.id > req.body.id ? (user.id + '-' + match_id) : (match_id + '-' + user.id));
 
+  if (message.length > 256)
+    return res.status(400).json({error: "Le message est trop long"});
+
   if (typeof match_id === 'undefined' || isNaN(match_id) || match_id == 0 || typeof message === 'undefined' ||  message === '')
     return res.status(400).json({error: "L'id et le message sont requis"});
 
