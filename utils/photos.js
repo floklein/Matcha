@@ -18,21 +18,21 @@ module.exports = {
     return new Promise(resolve => {
       let res_filtered = [];
       let sql = "SELECT pic1 from photos " +
-        `WHERE user_id = ${user_id};`;
-      connection.query(sql, (err, pic1) => {
+        `WHERE user_id = ?;`;
+      connection.query(sql, [user_id],(err, pic1) => {
         if (err) throw err;
         sql = "SELECT pic2 from photos " +
-          `WHERE user_id = ${user_id};`;
-        connection.query(sql, (err, pic2) => {
+          `WHERE user_id = ?;`;
+        connection.query(sql, [user_id],(err, pic2) => {
           sql ="SELECT pic3 from photos " +
-            `WHERE user_id = ${user_id};`;
-          connection.query(sql, (err, pic3) => {
+            `WHERE user_id = ?;`;
+          connection.query(sql, [user_id], (err, pic3) => {
             sql = "SELECT pic4 from photos " +
-              `WHERE user_id = ${user_id};`;
-            connection.query(sql, (err, pic4) => {
+              `WHERE user_id = ?;`;
+            connection.query(sql, [user_id],(err, pic4) => {
               sql = "SELECT pic5 from photos " +
-                `WHERE user_id = ${user_id};`;
-              connection.query(sql, (err, pic5) => {
+                `WHERE user_id = ?;`;
+              connection.query(sql, [user_id], (err, pic5) => {
                 const tab = [pic1[0].pic1, pic2[0].pic2, pic3[0].pic3, pic4[0].pic4, pic5[0].pic5];
                 res_filtered = tab.filter(pic => {
                   return pic;});
