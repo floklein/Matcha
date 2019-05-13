@@ -123,7 +123,7 @@ function fill_db(data, pos_array) {
     const sexuality = (Math.random() > 0.8 ? "bisexual" : Math.random() > 0.8 ? "homosexual" : "heterosexual");
     const age = Math.floor(Math.random() * 40) + 18;
     const popularity = Math.random() * 100;
-    const profilePic = faker.image.avatar();
+    const profilePic = data.picture.large;
     const pic2 = faker.image.avatar();
     const pic3 = faker.image.avatar();
     const pic4 = faker.image.avatar();

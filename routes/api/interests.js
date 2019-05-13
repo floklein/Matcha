@@ -36,12 +36,10 @@ router.get('/getAll', (req, res) => {
 
 //Create a new interest
 router.post('/new', (req, res) => {
-
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
     return res.status(401).json({error: 'unauthorized access'});
   }
-
     let response = {
        tag: req.body.tag
    };
@@ -51,8 +49,14 @@ router.post('/new', (req, res) => {
        };
        return res.status(400).json(res_err);
    }
+   else if (response.tag.length > 24) {
+     const res_err = {
+       tag: "Le tag doit faire moins de 24 charactères"
+     };
+     return res.status(400).json(res_err);
+   }
    else {
-       sql = "INSERT INTO interests(user_id, tag)" +
+       const sql = "INSERT INTO interests(user_id, tag)" +
            `VALUES(${user.id}, "${response.tag}")`;
        connection.query(sql, (err, result) => {
            if (err) throw err;
@@ -60,7 +64,6 @@ router.post('/new', (req, res) => {
        })
    }
 });
-
 
 
 module.exports = router;

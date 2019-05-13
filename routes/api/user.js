@@ -518,6 +518,25 @@ router.post('/update', (req, res) => {
     };
     error = true
   }
+
+  if (typeof request.interests == 'undefined') {
+    response = {
+      ...response,
+      interests: "Erreur avec les tags"
+    };
+    error = true
+  }
+
+  for (let i = 0; i < request.interests.length; i++) {
+    if (request.interests[i].name.length > 24) {
+      response = {
+        ...response,
+        interests: "Les tags doivent faire moins de 24 characteres"
+      };
+      error = true
+    }
+  }
+
   if (typeof request.age == 'undefined' || request.age == "" || isNaN(request.age)) {
     response = {
       ...response,
