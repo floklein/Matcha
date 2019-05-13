@@ -9,12 +9,11 @@ export const uploadImage = (image, userId) => dispatch => {
     type: LOADING,
     payload: true
   });
-  console.log(image);
   if (image.type !== 'image/png' && image.type !== 'image/jpeg') {
     dispatch({
       type: GET_ERRORS,
       payload: {
-        profile: 'Seuls les formats PNG, JPG et JPEG sont supportés'
+        profile: 'Seules les images au format PNG ou JPEG sont acceptées'
       }
     });
     dispatch({
@@ -27,7 +26,7 @@ export const uploadImage = (image, userId) => dispatch => {
     dispatch({
       type: GET_ERRORS,
       payload: {
-        profile: 'Seules les images de taille inférieure à 5Mo sont supportées'
+        profile: 'Seules les images de taille inférieure à 5Mo sont acceptées'
       }
     });
     dispatch({
@@ -43,11 +42,10 @@ export const uploadImage = (image, userId) => dispatch => {
     output.src = reader.result;
 
     output.onerror = () => {
-      console.log('error');
       dispatch({
         type: GET_ERRORS,
         payload: {
-          profile: 'L\'image semble corrompue'
+          profile: 'L\'image ne semble pas être un vrai fichier d\'image'
         }
       });
       dispatch({
@@ -57,7 +55,6 @@ export const uploadImage = (image, userId) => dispatch => {
     };
 
     output.onload = () => {
-      console.log('uploading');
       const fd = new FormData();
       fd.append('picture', image, image.name);
       axios.post('/api/picture', fd, {
@@ -101,6 +98,10 @@ export const changeInfos = (infos) => dispatch => {
       dispatch({
         type: CHANGE_INFOS,
         payload: true
+      });
+      dispatch({
+        type: CHANGE_INFOS,
+        payload: false
       });
     })
     .catch(err => {

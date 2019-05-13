@@ -84,7 +84,6 @@ router.patch('/settings', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
 
-  console.log(req.body);
   const request = {
     visit: req.body.notifVisit,
     like: req.body.notifLike,
