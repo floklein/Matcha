@@ -82,6 +82,7 @@ router.get('/:username', (req, res) => {
 
     let sql = `SELECT pic1, pic2, pic3, pic4, pic5 FROM photos JOIN users ON users.id = photos.user_id WHERE users.username = "${username}" OR users.id = "${username}";`;
     connection.query(sql, (err, result2) => {
+      console.log(result2);
       if (err) throw err;
 
       let photos = [];
@@ -150,7 +151,7 @@ router.get('/:username', (req, res) => {
                 let diff = result6[0].now - result6[0].time;
                 let status = diff > 300 ? 'offline' : 'online';
                 let formatted = hd(diff * 1000 , {language: 'fr', round: true, largest: 1});
-                let message = ((status === 'online') ? "En ligne " : ((result6[0].time === null) ?  "Jamais connecté" : `Hors ligne depuis ${formatted}`)) ;
+                let message = ((status === 'online') ? "En ligne " : ((result6[0].time === null) ?  "Jamais connecté" + (result[0].gender === "female" ? "e" : "" ) : `Hors ligne depuis ${formatted}`)) ;
 
                 axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${result[0].latitude},${result[0].longitude}&key=${GMapiKey}`)
                   .then(res_api => {
