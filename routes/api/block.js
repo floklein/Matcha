@@ -63,18 +63,18 @@ router.post('/', (req, res) => {
                 }
                 else {
                     //Check if already liked
-                    sql = `SELECT * FROM blocks WHERE blocker_id = ${user.id} AND blocked_id = ${infos.blocked}`;
-                    connection.query(sql, (err, result) => {
+                    sql = `SELECT * FROM blocks WHERE blocker_id = ? AND blocked_id = ?`;
+                    connection.query(sql, [user.id, infos.blocked], (err, result) => {
                         if (result && result.length != 0) { //If already liked, unlike
                             //Check if already blocked
-                            sql = `DELETE FROM blocks WHERE blocker_id = ${user.id} AND blocked_id = ${infos.blocked}`;
-                            connection.query(sql, (err, result) => {
+                            sql = `DELETE FROM blocks WHERE blocker_id = ? AND blocked_id = ?`;
+                            connection.query(sql, [user.id, infos.blocked], (err, result) => {
                                 res.end("");
                             })
                         }
                         else {  //Else, like
-                            sql = `INSERT INTO blocks(blocker_id, blocked_id) VALUES(${user.id}, ${infos.blocked})`;
-                            connection.query(sql, (err, result) => {
+                            sql = `INSERT INTO blocks(blocker_id, blocked_id) VALUES(?, ?)`;
+                            connection.query(sql, [user.id, infos.blocked], (err, result) => {
                                 res.end("");
                             })
                         }
