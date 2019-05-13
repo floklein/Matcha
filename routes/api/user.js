@@ -312,11 +312,10 @@ router.post('/login', (req, res) => {
   let response = {};
   let error = false;
 
-  // if (!info.position || !info.position.latitude || !info.position.longitude || isNaN(info.position.latitude) || isNaN(info.position.longitude)) {
-  //   return res.status(400).json({
-  //     position: "Erreur de position"
-  //   });}
-
+  if (!info.position || !info.position.latitude || !info.position.longitude || isNaN(info.position.latitude) || isNaN(info.position.longitude)) {
+    return res.status(400).json({
+      position: "Erreur de position"
+    });}
 
   //Check if password and username are not empty and defined
     if (typeof info.username == 'undefined' || info.username == "") {
@@ -453,7 +452,7 @@ router.patch('/password', (req, res) => {
     }
       let hashed_pw = pw_hash.generate(request.new_pw);
       sql = "UPDATE users " +
-        `SET password = "${hashed_pw} WHERE id = ${user.id}";`;
+        `SET password = "${hashed_pw}" WHERE id = ${user.id};`;
       connection.query(sql, (err) => {
         if (err) throw err;
         return res.json({
@@ -461,102 +460,6 @@ router.patch('/password', (req, res) => {
           message: "Mot de passe modifié !"
         });
       })
-  })
-});
-
-//Set user infos
-router.post('/infos/:id', (req, res) => {
-  let info = {
-    bio: req.body.bio,
-    sexuality: req.body.sexuality,
-    age: req.body.age,
-    latitude: req.body.latitude,
-    longitude: req.body.longitude,
-    popularity: req.body.popularity,
-    profilePic: req.body.profilePic
-  };
-  let res_err = {};
-  let error = false;
-
-  const sql = `SELECT id from users WHERE id = ${req.params.id}`;
-  connection.query(sql, (err, result) => {
-    if (result && result.length == 0) {
-        res_err = {
-            ...res_err,
-            id: "Utilisateur non trouvé"
-        };
-        return res.status(400).json(res_err);
-    }
-    else {
-      if (typeof info.bio == 'undefined' || info.bio == "") {
-          res_err = {
-              ...res_err,
-              bio: "La bio est requise"
-          };
-          error = true
-      }
-      else if (info.bio.length > 420) {
-          res_err = {
-              ...res_err,
-              bio: "La bio doit faire moins de 420 caractères"
-          };
-          error = true
-      }
-    }
-    if (typeof info.sexuality == 'undefined' || (info.sexuality != "bisexual" && info.sexuality != "heterosexual" && info.sexuality != "homosexual")) {
-        res_err = {
-            ...res_err,
-            sexuality: "La sexualité est incorrecte"
-        };
-        error = true
-    }
-    if (typeof info.age == 'undefined' || info.age == "" || isNaN(info.age)) {
-        res_err = {
-            ...res_err,
-            age: "L'age est incorrect"
-        };
-        error = true
-    }
-      if (typeof info.latitude == 'undefined' || info.latitude == "") {
-          res_err = {
-              ...res_err,
-              latitude: "La latitude est incorrecte"
-          };
-          error = true
-      }
-      if (typeof info.longitude == 'undefined' || info.longitude == "") {
-          res_err = {
-              ...res_err,
-              longitude: "La longitude est incorrecte"
-          };
-          error = true
-      }
-      if (typeof info.popularity == 'undefined' || info.popularity == "") {
-          res_err = {
-              ...res_err,
-              popularity: "La popularité est incorrecte"
-          };
-          error = true
-      }
-      if (typeof info.profilePic == 'undefined' || info.profilePic == "") {
-          res_err = {
-              ...res_err,
-              profilePic: "La photo de profil est requise"
-          };
-          error = true
-      }
-    if (error) {
-      res.status(400);
-      res.status(400).json(res_err);
-    }
-    else {
-      const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}, profile_pic = "${info.profilePic}"` +
-        `WHERE user_id = ${req.params.id}`;
-      connection.query(sql2, (err) => {
-        if (err) throw (err);
-      })
-    }
-    res.end(req.params.id);
   })
 });
 

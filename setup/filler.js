@@ -13,6 +13,103 @@ let connection = mysql.createConnection({
   database: 'matcha',
 });
 
+function additional_infos(id, bio, sexuality, age, latitude, longitude, popularity, profilePic) {
+  return new Promise((resolve) => {
+  //Set user infos
+    let info = {
+      bio,
+      sexuality,
+      age,
+      latitude,
+      longitude,
+      popularity,
+      profilePic,
+    };
+    let res_err = {};
+    let error = false;
+
+    const sql = `SELECT id from users WHERE id = ${id}`;
+    connection.query(sql, (err, result) => {
+      if (result && result.length == 0) {
+        res_err = {
+          ...res_err,
+          id: "Utilisateur non trouvé"
+        };
+        resolve(res_err);
+      }
+      else {
+        if (typeof info.bio == 'undefined' || info.bio == "") {
+          res_err = {
+            ...res_err,
+            bio: "La bio est requise"
+          };
+          error = true
+        }
+        else if (info.bio.length > 420) {
+          res_err = {
+            ...res_err,
+            bio: "La bio doit faire moins de 420 caractères"
+          };
+          error = true
+        }
+      }
+      if (typeof info.sexuality == 'undefined' || (info.sexuality != "bisexual" && info.sexuality != "heterosexual" && info.sexuality != "homosexual")) {
+        res_err = {
+          ...res_err,
+          sexuality: "La sexualité est incorrecte"
+        };
+        error = true
+      }
+      if (typeof info.age == 'undefined' || info.age == "" || isNaN(info.age)) {
+        res_err = {
+          ...res_err,
+          age: "L'age est incorrect"
+        };
+        error = true
+      }
+      if (typeof info.latitude == 'undefined' || info.latitude == "") {
+        res_err = {
+          ...res_err,
+          latitude: "La latitude est incorrecte"
+        };
+        error = true
+      }
+      if (typeof info.longitude == 'undefined' || info.longitude == "") {
+        res_err = {
+          ...res_err,
+          longitude: "La longitude est incorrecte"
+        };
+        error = true
+      }
+      if (typeof info.popularity == 'undefined' || info.popularity == "") {
+        res_err = {
+          ...res_err,
+          popularity: "La popularité est incorrecte"
+        };
+        error = true
+      }
+      if (typeof info.profilePic == 'undefined' || info.profilePic == "") {
+        res_err = {
+          ...res_err,
+          profilePic: "La photo de profil est requise"
+        };
+        error = true
+      }
+      if (error) {
+        resolve(res_err);
+      }
+      else {
+        const sql2 = `UPDATE infos SET bio = "${info.bio}", sexuality = "${info.sexuality}", age = ${info.age} , latitude = ${info.latitude}, longitude = ${info.longitude}, popularity = ${info.popularity}, profile_pic = "${info.profilePic}"` +
+          `WHERE user_id = ${id}`;
+        connection.query(sql2, (err) => {
+          if (err) throw (err);
+        })
+      }
+      resolve(id);
+    })
+  });
+}
+
 function fill_db(data, pos_array) {
   return new Promise((resolve, reject) => {
     const firstName = data.name.first.charAt(0).toUpperCase() + data.name.first.slice(1);
@@ -47,15 +144,7 @@ function fill_db(data, pos_array) {
     })
       .then(response => {
         const id = response.data;
-        axios.post("http://localhost:5000/api/user/infos/" + id, {
-          bio,
-          sexuality,
-          age,
-          latitude,
-          longitude,
-          popularity,
-          profilePic
-        })
+        additional_infos(id, bio, sexuality, age, latitude, longitude, popularity, profilePic)
           .then(response2 => {
             console.log('ID:' + id + ' user created.');
 
