@@ -32,6 +32,9 @@ app.use('/api/connection', require('./routes/api/connection'));
 const port = 5000;
 
 let server = app.listen(port);
-global.io = require('socket.io').listen(server);
+global.io = require('socket.io')(server, {
+  pingTimeout: 30000,
+});
+
 
 require("./sockets/socketIO")(io);
