@@ -14,7 +14,7 @@ connection.connect((err) => {
 
   const sql = "CREATE TABLE IF NOT EXISTS users (" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-    "username VARCHAR (24), " +
+    "username VARCHAR (30), " +
     "email VARCHAR(50), " +
     "password VARCHAR(128)); " +
     "" +
