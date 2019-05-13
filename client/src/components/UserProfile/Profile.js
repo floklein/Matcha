@@ -21,7 +21,8 @@ class Profile extends Component {
   state = {
     images: [],
     current: 0,
-    vbwStep: ''
+    vbwStep: '',
+    bigPicture: false
   };
 
   componentDidMount() {
@@ -117,7 +118,8 @@ class Profile extends Component {
     const current = this.whichPhoto(e.target);
     this.setState({
       images: this.props.profile.photos,
-      current: current
+      current: current,
+      bigPicture: true
     });
   };
 
@@ -140,6 +142,12 @@ class Profile extends Component {
   closeVBW = () => {
     this.setState({
       vbwStep: ''
+    });
+  };
+
+  closeBigPicture = () => {
+    this.setState({
+      bigPicture: false
     });
   };
 
@@ -166,7 +174,7 @@ class Profile extends Component {
 
     return (
       <React.Fragment>
-        <BigPicture images={this.state.images} current={this.state.current}/>
+        <BigPicture images={this.state.images} current={this.state.current} shown={this.state.bigPicture} closeBigPicture={this.closeBigPicture}/>
         <div className="profile__top">
           <div className="profile__top-img" style={bgPhoto}/>
         </div>
