@@ -20,13 +20,13 @@ class Account extends Component {
               <p>Comment les autres utilisateurs voient-ils mon profil ?</p>
             </div>
         </NavLink>
-        <a className="item edit" href="/account/profile/edit">
+        <NavLink className="item edit" to="/account/profile/edit">
             <div className="item__img"/>
             <div className="item__txt">
               <h4>Éditer mon profil</h4>
               <p>Modifier mes informations publiques (sexe, âge, etc).</p>
             </div>
-        </a>
+        </NavLink>
         <NavLink className="item settings" to="/account/settings">
             <div className="item__img"/>
             <div className="item__txt">
