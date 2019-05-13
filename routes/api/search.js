@@ -78,8 +78,8 @@ router.post('/', (req, res) => {
     });
   }
   const sql = "SELECT age, bio, profile_pic from infos " +
-    `WHERE user_id = ${user.id};`;
-  connection.query(sql, (err, first_result) => {
+    `WHERE user_id = ?;`;
+  connection.query(sql, [user.id],(err, first_result) => {
     if (err) throw err;
     if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === "/photos/default.png" || first_result[0].bio === null) {
       return res.status(400).json({
@@ -87,18 +87,24 @@ router.post('/', (req, res) => {
       })
     }
     const sql_getAll = "SELECT u.id, i.latitude, i.longitude, i.popularity " +
-      `FROM users u INNER JOIN infos i on i.user_id = u.id WHERE u.id != ${user.id} AND ` +
-      `i.age >= ${request.ageMin} AND i.age <= ${request.ageMax}  AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
-    connection.query(sql_getAll, (err, result) => {
+      `FROM users u INNER JOIN infos i on i.user_id = u.id WHERE u.id != ? AND ` +
+      `i.age >= ? AND i.age <= ?  AND i.popularity >= ? and i.popularity <= ?;`;
+    connection.query(sql_getAll, [
+      user.id,
+      request.ageMin,
+      request.ageMax,
+      request.popularityMin,
+      request.popularityMax
+    ],(err, result) => {
 
       const tag_sql = "SELECT tag from interests " +
-        `WHERE user_id = ${user.id}`;
-      connection.query(tag_sql, (err, tag_res) => {
+        `WHERE user_id = ?`;
+      connection.query(tag_sql, [user.id], (err, tag_res) => {
         if (err) throw err;
 
         let sql_pos = "SELECT latitude, longitude FROM infos " +
-          `WHERE user_id = ${user.id}`;
-        connection.query(sql_pos, (err, pos_res) => {
+          `WHERE user_id = ?`;
+        connection.query(sql_pos, [user.id], (err, pos_res) => {
           if (err) throw err;
           if (request.latitude && request.longitude)
             pos_res[0] = {

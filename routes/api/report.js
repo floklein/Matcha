@@ -52,8 +52,8 @@ router.post('/', (req, res) => {
         }
         else {
             //Check if reported exists
-            sql = `SELECT id, username from users WHERE id = ${infos.reported}`;
-            connection.query(sql, (err, result0) => {
+            sql = `SELECT id, username from users WHERE id = ?`;
+            connection.query(sql, [infos.reported],(err, result0) => {
                 if (result0 && result0.length == 0) {
                     if (user.id === infos.reported) {
                         response = {
@@ -65,14 +65,20 @@ router.post('/', (req, res) => {
                 }
                 else {
                     //Check if already reported
-                    sql = `SELECT * FROM reports WHERE reporter_id = ${user.id} AND reported_id = ${infos.reported}`;
-                    connection.query(sql, (err, result) => {
+                    sql = `SELECT * FROM reports WHERE reporter_id = ? AND reported_id = ?`;
+                    connection.query(sql, [
+                      user.id,
+                      infos.reported
+                    ], (err, result) => {
                         if (result && result.length !== 0) { //If already reported, do nothing
                             res.end();
                         }
                         else {  //Else, report
-                            sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(${user.id}, ${infos.reported})`;
-                            connection.query(sql, (err, result) => {
+                            sql = `INSERT INTO reports(reporter_id, reported_id) VALUES(?, ?)`;
+                            connection.query(sql, [
+                              user.id,
+                              infos.reported
+                            ],(err, result) => {
                                 const content = mail.templateEmail(`Bonjour Florent et Tanguy,`, "Voir l'utilisateur", "Signalement d'un faux compte", `${user.username} a signalé ${result0[0].username} comme étant un faux utilisateur.`, `http://localhost:3000/profile/${infos.reported}`);
 
                                 let transporter = nodemailer.createTransport({

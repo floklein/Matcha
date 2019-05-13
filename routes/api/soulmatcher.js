@@ -81,8 +81,8 @@ router.post('/', (req, res) => {
     })
   }
   const sql = "SELECT age, bio, profile_pic from infos " +
-    `WHERE user_id = ${user.id};`;
-  connection.query(sql, (err, first_result) => {
+    `WHERE user_id = ?;`;
+  connection.query(sql, [user.id], (err, first_result) => {
     if (err) throw err;
     if (!first_result || !first_result.length || first_result[0].age === null || first_result[0].profile_pic === "/photos/default.png" || first_result[0].bio === null) {
       res.status(400).json({
@@ -92,8 +92,8 @@ router.post('/', (req, res) => {
     }
     //get sexuality infos from user
     const sql_user_info = "SELECT sexuality, gender FROM infos " +
-      `WHERE user_id = ${user.id}`;
-    connection.query(sql_user_info, (err, result) => {
+      `WHERE user_id = ?`;
+    connection.query(sql_user_info, [user.id],(err, result) => {
       if (err) throw err;
 
       //if user is found, chose next query depending on sexuality and gender;
@@ -107,18 +107,23 @@ router.post('/', (req, res) => {
       else
         sql_main_query += `((i.gender = "${result[0].gender}" AND i.sexuality != "heterosexual") OR (i.gender != "${result[0].gender}" AND i.sexuality != "homosexual")) `;
 
-      sql_main_query += `AND i.age >= ${request.ageMin} AND i.age <= ${request.ageMax} AND i.popularity >= ${request.popularityMin} and i.popularity <= ${request.popularityMax};`;
-      connection.query(sql_main_query, (err, result) => {
+      sql_main_query += `AND i.age >= ? AND i.age <= ? AND i.popularity >= ? and i.popularity <= ?;`;
+      connection.query(sql_main_query, [
+        request.ageMin,
+        request.ageMax,
+        request.popularityMin,
+        request.popularityMax
+      ],(err, result) => {
         if (err) throw err;
 
         const tag_sql = "SELECT tag from interests " +
-          `WHERE user_id = ${user.id}`;
-        connection.query(tag_sql, (err, tag_res) => {
+          `WHERE user_id = ?`;
+        connection.query(tag_sql, [user.id],(err, tag_res) => {
           if (err) throw err;
 
           let sql_pos = "SELECT latitude, longitude FROM infos " +
-            `WHERE user_id = ${user.id}`;
-          connection.query(sql_pos, (err, pos_res) => {
+            `WHERE user_id = ?`;
+          connection.query(sql_pos, [user.id], (err, pos_res) => {
             if (err) throw err;
 
             //Filter by distance
