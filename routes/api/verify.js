@@ -44,8 +44,8 @@ router.post('/', (req, res) => {
     //If both fields are good, keep going
     if (!error) {
         let sql = "SELECT user_id, code FROM verified " +
-        `WHERE user_id = ${response.id};`;
-        connection.query(sql, (err, resp) => {
+        `WHERE user_id = ?;`;
+        connection.query(sql, [response.id],(err, resp) => {
             if (err) throw err;
 
             //if both infos are valid, verify account

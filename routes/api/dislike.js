@@ -46,8 +46,8 @@ router.post('/', (req, res) => {
   }
 
   //Check if disliked exists
-  let sql = `SELECT id from users WHERE id = ${request.disliked}`;
-  connection.query(sql, (err, result) => {
+  let sql = `SELECT id from users WHERE id = ?`;
+  connection.query(sql, [request.disliked], (err, result) => {
     if (result && result.length === 0) {
       errors = {
         ...errors,
@@ -58,14 +58,14 @@ router.post('/', (req, res) => {
 
     if (err) throw err;
     //Check if already disliked
-    sql = `SELECT * FROM dislikes WHERE disliker_id = ${user.id} AND disliked_id = ${request.disliked}`;
-    connection.query(sql, (err, result) => {
+    sql = `SELECT * FROM dislikes WHERE disliker_id = ? AND disliked_id = ?`;
+    connection.query(sql, [user.id, request.disliked], (err, result) => {
       if (result && result.length !== 0) { //If already disliked, do nothing
         return res.json();
       }
 
-      sql = `INSERT INTO dislikes(disliker_id, disliked_id) VALUES(${user.id}, ${request.disliked})`;
-      connection.query(sql, (err, result) => {
+      sql = `INSERT INTO dislikes(disliker_id, disliked_id) VALUES(?, ?)`;
+      connection.query(sql, [user.id, request.disliked], (err, result) => {
         if (err) throw err;
         return res.json();
       });

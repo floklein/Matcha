@@ -24,8 +24,8 @@ router.get('/', (req, res) => {
   }
 
   const sql = "SELECT id, user_id,  type, notifier_name, content, `read` from notifs " +
-    `WHERE user_id = ${user.id} ORDER BY time DESC ; `;
-  connection.query(sql, (err, result) => {
+    `WHERE user_id = ? ORDER BY time DESC ; `;
+  connection.query(sql, [user.id], (err, result) => {
     if (err) throw err;
     res.json(result);
   })
@@ -38,8 +38,8 @@ router.patch('/readAll', (req, res) => {
   }
 
   const sql = "UPDATE notifs SET `read`=true " +
-    `WHERE user_id = ${user.id};`;
-  connection.query(sql, (err) => {
+    `WHERE user_id = ?;`;
+  connection.query(sql, [user.id], (err) => {
     if (err) throw err;
     return res.json({});
   })
@@ -67,9 +67,9 @@ router.patch('/settings', (req, res) => {
   }
 
   const sql = "UPDATE settings " +
-    `SET visit = ${request.visit}, ` + "`like`" + ` = ${request.like}, unlike = ${request.unlike}, \`match\` = ${request.match}, message = ${request.message} `+
-    `WHERE user_id = ${user.id};`;
-  connection.query(sql, (err) => {
+    `SET visit = ?, ` + "`like`" + ` = ?, unlike = ?, \`match\` = ?, message = ? `+
+    `WHERE user_id = ?;`;
+  connection.query(sql, [request.visit, request.like, request.unlike, request.match, request.message, user.id], (err) => {
     if (err) throw err;
     return res.json({
       outcome: "success",
@@ -85,8 +85,8 @@ router.get('/settings', (req, res) => {
   }
 
   const sql = "SELECT * from settings " +
-      `WHERE user_id = ${user.id};`;
-  connection.query(sql, (err, result) => {
+      `WHERE user_id = ?;`;
+  connection.query(sql, [user.id], (err, result) => {
     if (err) throw err;
     return res.json({
       notifVisit: result[0].visit,

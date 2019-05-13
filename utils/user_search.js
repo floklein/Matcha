@@ -20,8 +20,8 @@ module.exports = {
     let matchingScore = 0;
 
     let sql = "SELECT tag from interests " +
-      `WHERE user_id = ${infos.id}`;
-    connection.query(sql, (err, res) => {
+      `WHERE user_id = ?`;
+    connection.query(sql, [infos.id],(err, res) => {
       if (err) throw err;
 
       //Filter one array of tags with the other one to get nb of common tags
@@ -47,8 +47,11 @@ module.exports = {
 
       //Check if other user already liked me and give many extra points
       sql = "Select id from likes " +
-        `WHERE liker_id = ${infos.id} and liked_id = ${id}`;
-      connection.query(sql, (err, res) => {
+        `WHERE liker_id = ? and liked_id = ?`;
+      connection.query(sql, [
+        infos.id,
+        id
+      ],(err, res) => {
         const dist = geolib.getDistance(
           {latitude: infos.latitude, longitude: infos.longitude},
           {latitude: pos_res[0].latitude, longitude: pos_res[0].longitude}
@@ -72,8 +75,8 @@ module.exports = {
     );
 
     const sql = "Select age from infos " +
-      `WHERE user_id = ${infos.id};`;
-    connection.query(sql, (err, res) => {
+      `WHERE user_id = ?;`;
+    connection.query(sql, [infos.id],(err, res) => {
       if (err) throw err;
       resolve({
         score: res[0].age,
@@ -122,8 +125,8 @@ module.exports = {
   return new Promise(resolve => {
 
     const sql = "SELECT tag from interests " +
-      `WHERE user_id = ${infos.id}`;
-    connection.query(sql, (err, res) => {
+      `WHERE user_id = ?`;
+    connection.query(sql, [infos.id],(err, res) => {
       if (err) throw err;
 
       //Filter one array of tags with the other one to get nb of common tags
@@ -148,20 +151,31 @@ module.exports = {
   isBlocked_liked_or_disliked: function isBlocked_liked_or_disliked(id, user, i) { //need to add dislike
   return new Promise(resolve => {
     let sql = "SELECT id from blocks " +
-      `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
-    connection.query(sql, (err, res) => {
+      `WHERE (blocker_id = ? AND blocked_id = ?) OR (blocked_id = ? AND blocker_id = ?);`;
+    connection.query(sql, [
+      id,
+      user.id,
+      id,
+      user.id
+    ],(err, res) => {
       if (err) throw err;
       if (res.length)
         resolve(i);
       sql = "SELECT id from likes " +
-        `WHERE (liker_id = ${id} AND liked_id = ${user.id});`;
-      connection.query(sql, (err, res) => {
+        `WHERE (liker_id = ? AND liked_id = ?);`;
+      connection.query(sql, [
+        id,
+        user.id
+      ],(err, res) => {
         if (err) throw err;
         if (res.length)
           resolve(i);
         sql = "Select id from dislikes " +
-          `WHERE (disliker_id = ${id} AND disliked_id = ${user.id});`;
-        connection.query(sql, (err, res) => {
+          `WHERE (disliker_id = ? AND disliked_id = ?);`;
+        connection.query(sql, [
+          id,
+          user.id
+        ],(err, res) => {
           if (err) throw err;
           resolve(res.length ? i : -1);
         })
@@ -192,8 +206,13 @@ module.exports = {
   isBlocked: function isBlocked(id, user, i) {
     return new Promise(resolve => {
       let sql = "SELECT id from blocks " +
-        `WHERE (blocker_id = ${id} AND blocked_id = ${user.id}) OR (blocked_id = ${id} AND blocker_id = ${user.id});`;
-      connection.query(sql, (err, res) => {
+        `WHERE (blocker_id = ? AND blocked_id = ?) OR (blocked_id = ? AND blocker_id = ?);`;
+      connection.query(sql, [
+        id,
+        user.id,
+        id,
+        user.id
+      ],(err, res) => {
         if (err) throw err;
         resolve(res.length ? i : -1);
       })
@@ -221,8 +240,8 @@ module.exports = {
 get_and_filter_dist: async function get_and_filter_dist(infos, resI, i) {
   return new Promise(resolve => {
     let sql = "SELECT latitude, longitude FROM infos " +
-      `WHERE user_id = ${resI.id};`;
-    connection.query(sql, (err, res) => {
+      `WHERE user_id = ?;`;
+    connection.query(sql, [resI.id],(err, res) => {
       if (err) throw err;
       let dist = this.syncDistanceScore(0, infos, 0, res);
       resolve(dist > 50000 ? i : -1);
@@ -256,8 +275,8 @@ get_rid_interests: async function get_rid_interests(resI, tags_array, i) {
   return new Promise (resolve => {
       let tags_array_filtered = [];
       const sql = "select tag from interests " +
-        `Where user_id = ${resI.id}`;
-      connection.query(sql, (err, res) => {
+        `Where user_id = ?`;
+      connection.query(sql, [resI.id],(err, res) => {
         if (err) throw err;
         tags_array_filtered = tags_array.filter((tag) => {
           for (let j = 0; j < res.length; j++) {

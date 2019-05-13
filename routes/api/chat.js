@@ -30,9 +30,9 @@ router.get('/', (req, res) => {
   if (typeof match_id === 'undefined' || isNaN(match_id) || match_id == 0)
     return res.status(400).json({error: "L'id est requis"});
   const sql = "SELECT id, sender_id, receiver_id, message , DATE_FORMAT(`time`, '%k:%i') AS `date` FROM messages " +
-    `WHERE (sender_id = ${match_id} AND receiver_id = ${user.id}) OR (sender_id = ${user.id} AND receiver_id = ${match_id}) ` +
+    `WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ` +
     "ORDER BY time DESC;";
-  connection.query(sql, (err, resp) => {
+  connection.query(sql, [match_id, user.id, user.id, match_id], (err, resp) => {
     if (err) throw err;
     resp.map((message) => {
       response.push({
@@ -60,21 +60,21 @@ router.post('/', (req, res) => {
     return res.status(400).json({error: "L'id et le message sont requis"});
 
   let sql = "SELECT id FROM likes " +
-    `WHERE (liker_id = ${match_id} AND liked_id = ${user.id}) OR (liked_id = ${match_id} AND liker_id = ${user.id});`;
-  connection.query(sql, (err, result) => {
+    `WHERE (liker_id = ? AND liked_id = ?) OR (liked_id = ? AND liker_id = ?);`;
+  connection.query(sql, [match_id, user.id, match_id, user.id], (err, result) => {
     if (err) throw err;
     if (result.length !== 2)
       return res.status(400).json({id: "Vous ne pouvez envoyer de message qu'aux utilisateurs déjà matchés"});
     sql = "SELECT id from blocks " +
-      `WHERE (blocker_id = ${match_id} AND blocked_id = ${user.id}) OR (blocked_id = ${match_id} AND blocker_id = ${user.id});`;
-    connection.query(sql, (err, result) => {
+      `WHERE (blocker_id = ? AND blocked_id = ?) OR (blocked_id = ? AND blocker_id = ?);`;
+    connection.query(sql, [match_id, user.id, match_id, user.id], (err, result) => {
       if (err) throw err;
       if (result.length)
         return res.status(400).json({id: "Vous ne pouvez envoyer de message aux utilisateurs bloqués / qui vous ont bloqués"});
 
       sql = "INSERT INTO messages(sender_id, receiver_id, message, time) " +
-        `VALUES(${user.id}, ${match_id}, "${message}", now());`;
-      connection.query(sql, (err, resp) => {
+        `VALUES(?, ?, ?, now());`;
+      connection.query(sql, [user.id, match_id, message], (err, resp) => {
         if (err) throw err;
         notifs.postNotif(match_id, 'message', `${user.username} vous a envoyé un nouveau message.`, user.id, user.username);
         return res.json({});

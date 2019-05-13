@@ -24,8 +24,8 @@ router.post('/', (req, res) => {
   }
 
   const sql = "UPDATE connection SET last_connection=NOW()" +
-    `WHERE user_id = ${user.id};`;
-  connection.query(sql, (err) => {
+    `WHERE user_id = ?;`;
+  connection.query(sql, [user.id], (err) => {
     if (err) throw err;
     return res.end();
   })

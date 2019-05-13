@@ -40,8 +40,10 @@ router.get('/', (req, res) => {
         return res.json({});
     }
 
-    let sql = `SELECT id FROM users WHERE id = ${visited_id};`;
-    connection.query(sql, (err, resp) => {
+    let sql = `SELECT id FROM users WHERE id = ?;`;
+    connection.query(sql, [
+      visited_id
+    ],(err, resp) => {
         if (err) throw err;
         if (!res) {
             response = {
@@ -52,17 +54,25 @@ router.get('/', (req, res) => {
         }
         else { //if everything is fine, check if querying user already visited
             sql = "Select * from visits " +
-                `WHERE visiter_id = ${user.id} AND visited_id = ${visited_id};`;
-            connection.query(sql, (err, resp) => {
+                `WHERE visiter_id = ? AND visited_id = ?;`;
+            connection.query(sql, [
+              user.id,
+              visited_id
+            ], (err, resp) => {
                 if (err) throw err;
                 if (!resp || !resp.length) { //If not found, insert new visit
                     sql = "INSERT INTO visits(visiter_id, visited_id, time)" +
-                        `VALUES(${user.id}, ${visited_id}, now());`;
-                    connection.query(sql, (err, resp) => {
+                        `VALUES(?, ?, now());`;
+                    connection.query(sql, [
+                      user.id,
+                      visited_id
+                    ],(err, resp) => {
                         if (err) throw err;
                         sql = "UPDATE infos SET popularity = popularity + 1 " +
                             `WHERE user_id = ${visited_id};`;
-                        connection.query(sql, (err, resp) => {
+                        connection.query(sql, [
+                          visited_id
+                        ],(err, resp) => {
                             if (err) throw err;
                           notifs.postNotif(visited_id, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
                             return res.json('');
@@ -72,13 +82,18 @@ router.get('/', (req, res) => {
                 else { //Check is visit is within the last 24 hours and update time if before yesterday
                     sql = "UPDATE visits " +
                         "SET time = now()" +
-                        `WHERE visiter_id = ${user.id} AND visited_id = ${visited_id} AND time < (now() - INTERVAL 1 DAY);`;
-                    connection.query(sql, (err, resp) => {
+                        `WHERE visiter_id = ? AND visited_id = ? AND time < (now() - INTERVAL 1 DAY);`;
+                    connection.query(sql, [
+                      user.id,
+                      visited_id
+                    ],(err, resp) => {
                         if (err) throw err;
                         if (resp.affectedRows) {
                             sql = "UPDATE infos SET popularity = popularity + 1 " +
                                 `WHERE user_id = ${visited_id};`;
-                            connection.query(sql, (err, resp) => {
+                            connection.query(sql, [
+                              visited_id
+                            ],(err, resp) => {
                                 if (err) throw err;
                             });
                           notifs.postNotif(visited_id, 'visit', `${user.username} a visité votre profil`, user.id, user.username);
