@@ -17,21 +17,6 @@ connection.connect(function (err) {
   if (err) throw err;
 });
 
-router.get('/unread', (req, res) => {
-  const user = jwt_check.getUsersInfos(req.headers.authorization);
-  if (user.id === -1) {
-    return res.status(401).json({error: 'unauthorized access'});
-  }
-
-  const sql = "SELECT COUNT(id) as nb from notifs " +
-    `WHERE user_id = ${user.id} AND` +
-    "`read` = false; ";
-  connection.query(sql, (err, result) => {
-    if (err) throw err;
-    res.json(result);
-  })
-});
-
 router.get('/', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
@@ -39,7 +24,7 @@ router.get('/', (req, res) => {
   }
 
   const sql = "SELECT id, user_id,  type, notifier_name, content, `read` from notifs " +
-    `WHERE user_id = ${user.id} ORDER BY time DESC LIMIT 50; `;
+    `WHERE user_id = ${user.id} ORDER BY time DESC ; `;
   connection.query(sql, (err, result) => {
     if (err) throw err;
     res.json(result);
@@ -57,24 +42,6 @@ router.patch('/readAll', (req, res) => {
   connection.query(sql, (err) => {
     if (err) throw err;
     return res.json({});
-  })
-});
-
-router.post('/', (req, res) => {
-  const user = jwt_check.getUsersInfos(req.headers.authorization);
-  if (user.id === -1) {
-    return res.status(401).json({error: 'unauthorized access'});
-  }
-  const request = {
-    type: req.body.type,
-    content: req.body.content,
-  };
-
-  const sql = "INSERT INTO notifs(user_id, type, content, time) " +
-    `VALUES(${user.id}, "${request.type}", "${request.content}", now());`;
-  connection.query(sql, (err) => {
-    if (err) throw err;
-    res.json({});
   })
 });
 
@@ -110,7 +77,6 @@ router.patch('/settings', (req, res) => {
     });
   })
 });
-
 
 router.get('/settings', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
