@@ -20,15 +20,15 @@ connection.connect(function (err) {
 function isLikedBack(liked, liker) {
   return new Promise(resolve => {
     let sql = "SELECT id from likes " +
-      `WHERE liker_id = ${liked} AND liked_id = ${liker};`;
-    connection.query(sql, (err, res) => {
+      `WHERE liker_id = ? AND liked_id = ?;`;
+    connection.query(sql, [liked, liker], (err, res) => {
       if (err) throw err;
       if (res.length === 0)
         resolve(false);
       else {
         let sql = "SELECT id from blocks " +
-          `WHERE (blocker_id = ${liked} AND blocked_id = ${liker}) OR (blocked_id = ${liked} AND blocker_id = ${liker});`;
-        connection.query(sql, (err, res) => {
+          `WHERE (blocker_id = ? AND blocked_id = ?) OR (blocked_id = ? AND blocker_id = ?);`;
+        connection.query(sql, [liked, liker, liked, liker], (err, res) => {
           if (err) throw err;
           resolve (!(res.length));
         })
@@ -46,8 +46,8 @@ router.get('/', (req, res) => {
 
   //Get all our likes
   const sql = "SELECT liked_id, liker_id from likes " +
-    `WHERE liker_id = ${user.id};`;
-  connection.query(sql, (err, resp) => {
+    `WHERE liker_id = ?;`;
+  connection.query(sql, [user.id], (err, resp) => {
     if (err) throw err;
     if (resp.length === 0)
       return res.json({});

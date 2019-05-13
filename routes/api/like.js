@@ -49,9 +49,8 @@ router.post('/', (req, res) => {
 
   //Check if user has profile pic
   let sql = "Select profile_pic from infos " +
-    `WHERE user_id = ${user.id};`;
-  connection.query(sql, (err, mypic) => {
-    console.log(mypic[0].profile_pic);
+    `WHERE user_id = ?;`;
+  connection.query(sql, [user.id], (err, mypic) => {
     if (err) throw err;
     if (mypic[0].profile_pic === "/photos/default.png") {
       return res.status(400).json({
@@ -59,8 +58,8 @@ router.post('/', (req, res) => {
       });
     }
     //Check if liked exists
-    sql = `SELECT u.id, u.username, i.profile_pic  from users u INNER JOIN infos i ON u.id = i.user_id WHERE id = ${response.liked}`;
-    connection.query(sql, (err, result0) => {
+    sql = `SELECT u.id, u.username, i.profile_pic  from users u INNER JOIN infos i ON u.id = i.user_id WHERE id = ?`;
+    connection.query(sql, [response.liked], (err, result0) => {
       if (result0 && result0.length === 0) {
         errors = {
           ...errors,
@@ -75,20 +74,20 @@ router.post('/', (req, res) => {
         };
         return res.status(400).json(errors);
       }
-      sql = `SELECT * FROM likes WHERE liked_id = ${user.id} AND liker_id = ${response.liked}`;
-      connection.query(sql, (err, result) => {
+      sql = `SELECT * FROM likes WHERE liked_id = ? AND liker_id = ?`;
+      connection.query(sql, [user.id, response.liked], (err, result) => {
         if (err) throw err;
         const is_liked = (!!result.length);
 
         //Check if already liked
-        sql = `SELECT * FROM likes WHERE liker_id = ${user.id} AND liked_id = ${response.liked}`;
-        connection.query(sql, (err, result) => {
+        sql = `SELECT * FROM likes WHERE liker_id = ? AND liked_id = ?`;
+        connection.query(sql, [user.id, response.liked], (err, result) => {
           if (result && result.length !== 0) { //If already liked, unlike
-            sql = `DELETE FROM likes WHERE liker_id = ${user.id} AND liked_id = ${response.liked}`;
-            connection.query(sql, (err, result) => {
+            sql = `DELETE FROM likes WHERE liker_id = ? AND liked_id = ?`;
+            connection.query(sql, [user.id, response.liked], (err, result) => {
               sql = "UPDATE infos SET popularity = popularity - 5 " +
-                `WHERE user_id = ${response.liked};`;
-              connection.query(sql, (err) => {
+                `WHERE user_id = ?;`;
+              connection.query(sql, [response.liked], (err) => {
                 if (err) throw err;
                 if (is_liked) {
                   notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`, user.id, user.username);
@@ -97,12 +96,12 @@ router.post('/', (req, res) => {
               });
             });
           } else {  //Else, like
-            sql = `INSERT INTO likes(liker_id, liked_id) VALUES(${user.id}, ${response.liked})`;
-            connection.query(sql, (err, result) => {
+            sql = `INSERT INTO likes(liker_id, liked_id) VALUES(?, ?)`;
+            connection.query(sql, [user.id, response.liked], (err, result) => {
               //Give 5 popularity points when liked
               sql = "UPDATE infos SET popularity = popularity + 5 " +
-                `WHERE user_id = ${response.liked};`;
-              connection.query(sql, (err, resp) => {
+                `WHERE user_id = ?;`;
+              connection.query(sql, [response.liked], (err, resp) => {
                 if (err) throw err;
                 if (!is_liked)
                   notifs.postNotif(response.liked, 'like', `${user.username} vous a aimé.`, user.id, user.username);
