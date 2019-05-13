@@ -139,6 +139,7 @@
     border-radius: 0.5rem;
     color: #8A8DAA;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .checkbox-group > input {

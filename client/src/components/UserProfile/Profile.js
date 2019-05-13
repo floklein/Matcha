@@ -155,7 +155,7 @@ class Profile extends Component {
     if (this.props.error)
       return (<Error errTitle="Profil inexistant."
                      errText="la page de profil à laquelle vous tentez d'accéder ne semble pas exister."/>);
-    if (!this.props.profile)
+    if (!this.props.profile || !this.props.profile.rgb)
       return (<Loading/>);
     if (this.props.profile.amBlocked)
       return (<Error errTitle="Vous êtes bloqué."
@@ -168,7 +168,7 @@ class Profile extends Component {
     const popularity = this.getPopularity(profile.popularity);
     const likeStatus = this.getLikeStatus(profile.like);
     const likeButton = this.getLikeButton(profile.like);
-    const {r, g, b} = profile.rgb;
+      const {r, g, b} = profile.rgb;
     const bgPhoto = {backgroundImage: `url('${profile.profile_pic}')`};
     const bgColor = {backgroundColor: `rgb(${r}, ${g}, ${b})`};
 

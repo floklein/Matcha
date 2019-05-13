@@ -144,6 +144,9 @@
     all: unset;
     margin: 0 0.5rem 0.5rem 0;
     padding: 0.3rem 0.7rem;
+    max-width: 7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-radius: 1rem;
     color: white;
     font-size: 0.9rem;
@@ -184,11 +187,11 @@
 
 .react-tags li {
     border-top: 2px solid lightgrey;
-    font-size: 1rem;
+    font-size: 0.9rem;
     height: 2.5rem;
-    padding: 0.7rem 1rem 0.8rem 1rem;
+    padding: 0.75rem 0.8rem 0.8rem 0.8rem;
     background-color: white;
-    transition: border 0.4s, background-color 0.4s;
+    transition: border 0.4s;
     cursor: pointer;
     text-transform: lowercase;
 }
@@ -199,14 +202,16 @@
 
 .react-tags li::before {
     content: "#";
+    margin-right: 0.1rem;
 }
 
 .react-tags li :not(span) {
-    background-color: orange;
-    color: white;
-    border-radius: 0.2rem;
-    padding: 0 0.2rem;
-    margin-right: 0.1rem;
+    background: none;
+    color: black;
+    /*border-radius: 0.2rem;*/
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
 }
 
 /*MAIN PANEL*/
@@ -217,6 +222,7 @@
     align-items: center;
     justify-content: center;
     height: auto;
+    margin-bottom: 2rem;
 }
 
 /*LIKE AND DISLIKE BUTTONS*/
