@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 import classnames from 'classnames';
 import axios from 'axios';
 import ReactTags from 'react-tag-autocomplete';
@@ -108,7 +109,8 @@ class EditProfile extends Component {
           suggestions: res.data
         });
       })
-      .catch(err => {});
+      .catch(err => {
+      });
   }
 
   componentDidMount() {
@@ -119,7 +121,7 @@ class EditProfile extends Component {
   componentWillUnmount() {
     const script = document.getElementById('google-maps');
     document.getElementsByTagName('head')[0].removeChild(script);
-    window.google = null;
+    // window.google = null;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -128,10 +130,9 @@ class EditProfile extends Component {
         ...nextProps.profile
       });
     }
-    if (nextProps.submitOutcome !== this.props.submitOutcome) {
-      if (nextProps.submitOutcome === true) {
-        // window.location.href = '/account/profile';
-      }
+    if (this.props.submitOutcome !== nextProps.submitOutcome && nextProps.submitOutcome === true) {
+      this.props.history.push('/account/profile');
+      // window.location.href = '/account/profile';
     }
   }
 
@@ -176,14 +177,15 @@ class EditProfile extends Component {
         .then(() => {
           this.props.fetchProfile(this.props.me.id);
         })
-        .catch(err => {});
+        .catch(err => {
+        });
     } else if (position > 70) {
       axios.post(`/api/picture/profile_pic/${e.target.id}`)
         .then(() => {
-          console.log('uodate');
           this.props.fetchProfile(this.props.me.id);
         })
-        .catch(err => {});
+        .catch(err => {
+        });
     }
   };
 
@@ -353,7 +355,8 @@ class EditProfile extends Component {
                 </div>
                 <div className="profile__cp-content my photos">
                   {profile.photos.map((photo, i) => (
-                    <div key={i} style={{backgroundImage: `url('${photo.url}')`}} onClick={this.photoAction} id={photo.n}/>
+                    <div key={i} style={{backgroundImage: `url('${photo.url}')`}} onClick={this.photoAction}
+                         id={photo.n}/>
                   ))}
                   {!profile.photos.length &&
                   <div className="no-photo" style={bgColor} title="Cet utilisateur n'a pas publié de photos."/>}
@@ -396,4 +399,4 @@ const mapStateToProps = state => ({
   submitOutcome: state.user.outcome
 });
 
-export default connect(mapStateToProps, {fetchProfile, uploadImage, changeInfos})(EditProfile);
+export default connect(mapStateToProps, {fetchProfile, uploadImage, changeInfos})(withRouter(EditProfile));

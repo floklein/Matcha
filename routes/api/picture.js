@@ -42,7 +42,7 @@ router.delete('/:pic_nb', (req, res) =>{
   }
 
   if (!req.params.pic_nb || req.params.pic_nb > 5 || isNaN(req.params.pic_nb)) {
-    return res.status(400).json({pic_nb: "Le numero de la photo est incorrect"});
+    return res.status(400).json({pic_nb: "L'ID de l'image est incorrect"});
   }
   let sql = `SELECT pic${req.params.pic_nb} as pic FROM photos ` +
     `WHERE user_id = ${user.id};`;
@@ -71,17 +71,17 @@ router.post('/', upload.single('picture'), (req, res) => {
 
   if(req.file) {
     const magicNb = fs.readFileSync(req.file.path).toString('hex', 0, 4);
-    if (magicNb !== "ffd8ffe0" && magicNb !== "89504e47") {
+    if (!magicNb.match("ffd8") && magicNb !== "89504e47") {
       fs.unlink(req.file.path, () => {});
       return res.status(400).json({
-        photo: "La photo doit être au format jpg ou png"
+        photo: "L'image ne semble pas être au format PNG ou JPEG"
       })
     }
     photos.moveLeftPhotos(user.id)
       .then (pic_nb => {
         if (pic_nb > 5)
           return res.json({
-            picture: "Pas plus de 5 photos"
+            picture: "Vous avez atteint la limite maximale de 5 images"
           });
         const sql = "UPDATE photos " +
           `SET pic${pic_nb + 1} = "/photos/${req.file.filename}" WHERE user_id = ${user.id};`;
@@ -102,7 +102,7 @@ router.post('/profile_pic/:pic_nb', (req, res) => {
     return res.status(401).json({error: 'unauthorized access'});
   }
   if (!req.params.pic_nb || req.params.pic_nb > 5 || isNaN(req.params.pic_nb)) {
-    return res.status(400).json({pic_nb: "Le numero de la photo est incorrect"});
+    return res.status(400).json({pic_nb: "Le numero de l'image est incorrect"});
   }
   let sql = `SELECT pic${req.params.pic_nb} as pic FROM photos ` +
     `WHERE user_id = ${user.id};`;
@@ -116,7 +116,7 @@ router.post('/profile_pic/:pic_nb', (req, res) => {
       })
     }
     else {
-      return res.status(400).json({pic: "La photo sélectionnée n'existe pas"})
+      return res.status(400).json({pic: "L'image sélectionnée n'existe pas"})
     }
   })
 });
