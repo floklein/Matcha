@@ -93,7 +93,6 @@ router.patch('/settings', (req, res) => {
   })
 });
 
-
 router.get('/settings', (req, res) => {
   const user = jwt_check.getUsersInfos(req.headers.authorization);
   if (user.id === -1) {
