@@ -148,8 +148,9 @@ function fill_db(data, pos_array) {
           .then(response2 => {
             console.log('ID:' + id + ' user created.');
 
-            let sql = "INSERT INTO photos(user_id, pic1, pic2, pic3, pic4, pic5)" +
-              `VALUES(${id}, "${profilePic}", "${pic2}", "${pic3}", "${pic4}", "${pic5}");`;
+            let sql = "Update photos " +
+              `SET pic1 = "${profilePic}", pic2 = "${pic2}", pic3 = "${pic3}", pic4 = "${pic4}", pic5 = "${pic5}" 
+            WHERE user_id = ${id};`;
             connection.query(sql, (err, res) => {
               if (err) throw err;
               connection.query("UPDATE verified SET status = 1 WHERE user_id = " + id, err => {
