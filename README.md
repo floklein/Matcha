@@ -45,6 +45,6 @@ npm run seeder
 **Soulmatch** does not use any CSS frameworks. Its design is completly homemade.
 
 
-![demo](demo/demo.png) | ![demo](demo/demo1.png) | ![demo](demo/demo2.png) |
-:---------------------:|:-----------------------:|:-----------------------:|
-Home page on mobile    | Matching page           | User profile & live chat|
+| ![demo](demo/demo1.png) | ![demo](demo/demo2.png) |
+|:-----------------------:|:-----------------------:|
+| Matching page           | User profile & live chat|
