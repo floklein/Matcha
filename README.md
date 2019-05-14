@@ -8,12 +8,13 @@
 - live chat
 - instant notifications
 - complete fake profiles seeding
+- user geolocation
 
 We are using:
 - React
 - Node.js, with Express
 - MySQL
-- webSockets
+- WebSocket
 - GoogleMaps API
 
 ## Installation
