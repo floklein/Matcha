@@ -30,7 +30,7 @@ class Footer extends Component {
               </div>
               <div>
                 <h4>À propos</h4>
-                <NavLink to="/"><p>© 2019 Soulmatch</p></NavLink>
+                <p>© 2019 Soulmatch</p>
               </div>
             </div>
           </div>
@@ -41,7 +41,6 @@ class Footer extends Component {
             <div>
               <div>
                 <h4>Soulmatch</h4>
-                <NavLink to="/"><p>Accueil</p></NavLink>
                 <NavLink to="/soulmatcher"><p>Soulmatcher</p></NavLink>
                 <NavLink to="/search"><p>Recherche</p></NavLink>
               </div>
@@ -58,7 +57,7 @@ class Footer extends Component {
               </div>
               <div>
                 <h4>À propos</h4>
-                <NavLink to="/"><p>© 2019 Soulmatch</p></NavLink>
+                <p>© 2019 Soulmatch</p>
               </div>
             </div>
           </div>

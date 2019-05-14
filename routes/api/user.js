@@ -97,7 +97,7 @@ router.post('/register', (req, res) => {
     }
 
     //Check if username is long enough
-    if (typeof info.username === 'undefined' || !info.username.match('^[a-zA-Z0-9]{4,30}$')) {
+    if (typeof info.username === 'undefined' || !info.username.match('^[a-zA-Z]{4,30}$')) {
       response = {
         ...response,
         username: "Nom d'utilisateur de 4 à 30 lettres."
@@ -599,7 +599,7 @@ router.post('/update', (req, res) => {
     }
 
     //Check if username is long enough
-    if (typeof request.username === 'undefined' || !request.username.match('^[a-zA-Z0-9]{4,30}$')) {
+    if (typeof request.username === 'undefined' || !request.username.match('^[a-zA-Z]{4,30}$')) {
       response = {
         ...response,
         username: "Nom d'utilisateur de 4 à 30 lettres."

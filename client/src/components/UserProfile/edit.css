@@ -98,6 +98,12 @@ input.editable {
 /*OVERWRITING ReactTagsAutocomplete CLASSES*/
 .profile__cp-content.my.tags .react-tags {
     width: 100%;
+    margin-left: -0.5rem;
+}
+
+.profile__cp-content.my.tags .react-tags__suggestions {
+    width: 100%;
+    margin-left: 0.5rem !important;
 }
 
 .profile__cp-content.my.tags .react-tags input {
