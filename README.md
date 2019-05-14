@@ -48,3 +48,7 @@ npm run seeder
 | ![demo](demo/demo1.png) | ![demo](demo/demo2.png) |
 |:-----------------------:|:-----------------------:|
 | Matching page           | User profile & live chat|
+|:-----------------------:|:-----------------------:|
+| ![demo](demo/demo3.png) | ![demo](demo/demo4.png) |
+|:-----------------------:|:-----------------------:|
+| Advanced search page    | Profile edit & live notifications|
