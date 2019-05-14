@@ -50,8 +50,8 @@ router.post('/', (req, res) => {
         }
         else {
             //Check if blocked exists
-            sql = `SELECT id from users WHERE id = ${infos.blocked}`;
-            connection.query(sql, (err, result) => {
+            sql = `SELECT id from users WHERE id = ?`;
+            connection.query(sql, [infos.blocked], (err, result) => {
                 if (result && result.length == 0) {
                     if (user.id === infos.blocked) {
                         response = {
