@@ -61,13 +61,13 @@ class Search extends Component {
               sliderAge.noUiSlider.updateOptions({
                 range: {
                   'min': [18],
-                  'max': [this.state.rangeAgeMax]
+                  'max': [this.state.rangeAgeMax + 1]
                 }
               });
               sliderPopularity.noUiSlider.updateOptions({
                 range: {
-                  'min': 0,
-                  'max': this.state.rangePopMax
+                  'min': [0],
+                  'max': [this.state.rangePopMax + 1]
                 }
               });
             }, 1);
