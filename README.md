@@ -44,4 +44,4 @@ npm run seeder
 ## Design
 **Soulmatch** does not use any CSS frameworks. Its design is completly homemade.
 
-[demo](demo/demo.png)
+![demo](demo/demo.png)
