@@ -11,6 +11,7 @@
 - instant notifications
 - complete fake profiles seeding
 - user geolocation
+- responsive for mobile
 
 We are using:
 - React
@@ -39,3 +40,8 @@ In an other terminal, while the server is running, run the seeder:
 ```bash
 npm run seeder
 ```
+
+## Design
+**Soulmatch** does not use any CSS frameworks. Its design is completly homemade.
+
+[demo](demo/demo.png)
