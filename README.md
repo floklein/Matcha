@@ -1,5 +1,7 @@
 # Matcha
 
+> *Hi! We are Tanguy Boissel-Dallier and Florent Klein. This is our work on 42's projetc "Matcha".*
+
 ## Soulmatch
 **Soulmatch** is a complete dating site, with:
 - matching algorithm
