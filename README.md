@@ -7,11 +7,13 @@
 - profile pages
 - live chat
 - instant notifications
+- complete fake profiles seeding
 
 We are using:
 - React
 - Node.js, with Express
 - MySQL
+- webSockets
 - GoogleMaps API
 
 ## Installation
@@ -20,7 +22,7 @@ Clone the repo:
 git clone https://github.com/floklein/Matcha.git && cd Matcha
 ```
 
-Install the *node_modules* and setup the database:
+Install the `node_modules` and setup the database:
 ```bash
 npm i && npm run client-install && npm run init
 ```
