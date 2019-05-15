@@ -1,0 +1,217 @@
+.profile__cp-content.bio span,
+.profile__sp-content h1 span {
+    font-family: inherit;
+}
+
+.profile__cp-content.my.photos > div:not(.add-photo):not(.no-photo):hover::before {
+    content: "Supprimer ?";
+    box-sizing: border-box;
+    display: block;
+    width: 4.2rem;
+    height: 0.95rem;
+    margin: 0.5rem 0.9rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.5rem;
+    background-color: black;
+    color: white;
+    font-size: 0.6rem;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.profile__cp-content.my.photos > div:not(.add-photo):not(.no-photo):hover::after {
+    content: "Photo de profil";
+    box-sizing: border-box;
+    display: block;
+    width: 5rem;
+    height: 0.95rem;
+    margin: 3rem 0.5rem 0.5rem 0.5rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.5rem;
+    background-color: black;
+    color: white;
+    font-size: 0.6rem;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.profile__cp-content.my.photos > div.add-photo {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    background: grey url("../../assets/img/add-photo.svg") no-repeat center;
+    background-size: 3rem;
+    cursor: pointer;
+}
+
+.profile__cp-content.my.photos > div.add-photo:not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)):not(:nth-child(5)):not(:nth-child(6)) {
+    display: none;
+}
+
+.profile__cp-content.my.photos > div.add-photo:hover {
+    opacity: 1;
+}
+
+.profile__cp-content.my.photos > div.add-photo.loading {
+    background-image: url("../../assets/img/loading-circle.svg") !important;
+    background-size: 8rem !important;
+}
+
+select.editable,
+input.editable {
+    all: unset;
+    position: relative;
+    align-self: center;
+    width: fit-content;
+    text-align-last: center;
+}
+
+.age-input {
+    max-width: 2rem !important;
+    margin-left: 0.8rem !important;
+}
+
+.select-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.select-wrapper::after {
+    content: "";
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    margin-bottom: -1rem;
+    background: url("../../assets/img/arrow-down.svg") center no-repeat;
+    background-size: 1rem;
+    z-index: 10000000;
+    opacity: 0.5;
+}
+
+.select-wrapper.age::after {
+    background-image: url("../../assets/img/profile-moreless.svg");
+    background-size: 0.9rem;
+}
+
+/*OVERWRITING ReactTagsAutocomplete CLASSES*/
+.profile__cp-content.my.tags .react-tags {
+    width: 100%;
+    margin-left: -0.5rem;
+}
+
+.profile__cp-content.my.tags .react-tags__suggestions {
+    width: 100%;
+    margin-left: 0.5rem !important;
+}
+
+.profile__cp-content.my.tags .react-tags input {
+    width: 100% !important;
+    margin: 0.5rem 0 0 0.5rem;
+}
+
+.profile__cp-content.my.tags .react-tags button {
+    all: unset;
+    margin: 0 0 0.5rem 0.5rem;
+    padding: 0.3rem 0.7rem;
+    max-width: 10rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: grey;
+    border-radius: 1rem;
+    color: white;
+    font-size: 0.9rem;
+    box-shadow: 0 0 16px -6px rgba(0, 0, 0, 0.4);
+    word-wrap: unset;
+    text-transform: lowercase;
+    transition: background-color 0.4s, opacity 0.4s;
+    cursor: pointer;
+}
+
+.profile__cp-content.my.tags .react-tags button::before {
+    content: "#";
+    opacity: 0.5;
+    margin-right: 0.2rem;
+}
+
+.profile__cp-content.my.tags .react-tags button:hover {
+    opacity: 0.8;
+}
+
+.profile__cp-content.my.tags .react-tags button:active {
+    opacity: 0.9;
+}
+
+.profile__cp-content.my.tags .react-tags ul {
+    max-height: 10rem;
+    list-style: none;
+    margin: -0.3rem 0 0 0;
+    padding: 0;
+    border: 2px solid lightgrey;
+    border-radius: 0.3rem;
+    outline: none;
+    transition: border 0.4s, background-color 0.4s;
+    color: #3c3c3c;
+    overflow-y: auto;
+}
+
+.profile__cp-content.my.tags .react-tags li {
+    border-top: 2px solid lightgrey;
+    font-size: 0.9rem;
+    height: 2.5rem;
+    padding: 0.75rem 0.8rem 0.8rem 0.8rem;
+    background-color: white;
+    transition: border 0.4s;
+    cursor: pointer;
+    text-transform: lowercase;
+}
+
+.profile__cp-content.my.tags .react-tags li:hover {
+    background-color: whitesmoke;
+}
+
+.profile__cp-content.my.tags .react-tags li::before {
+    content: "#";
+    margin-right: 0.1rem;
+}
+
+.profile__cp-content.my.tags .react-tags li :not(span) {
+    background: none;
+    color: black;
+    /*border-radius: 0.2rem;*/
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+}
+
+#gm-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 15rem;
+    max-width: calc(100% - 60px - 0.5rem);
+    margin: 0.5rem;
+    font-size: 1rem;
+    z-index: 11;
+    box-shadow: 0 0 8px -2px rgba(0, 0, 0, 0.4);
+}
+
+#gm-map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+.no-map {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9;
+    font-size: 0.8rem;
+    color: lightgrey;
+}

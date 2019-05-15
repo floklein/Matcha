@@ -1,0 +1,22 @@
+.popup {
+    position: fixed;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    top: 0;
+    left: 50%;
+    z-index: 9999999;
+    width: fit-content;
+    max-width: 90%;
+    min-width: 10rem;
+    margin-top: -10rem;
+    padding: 1.5rem 3rem;
+    transform: translate(-50%);
+    background-color: black;
+    color: white;
+    word-break: break-word;
+    border-radius: 0.2rem;
+    text-shadow: 0 0 2px white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    transition: margin-top 0.2s;
+}

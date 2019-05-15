@@ -3,14 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
+    "classnames": "^2.2.6",
+    "faker": "^4.1.0",
+    "get-average-color": "0.0.6",
+    "google-map-react": "^1.1.4",
+    "google-maps-react": "^2.0.2",
+    "http-proxy-middleware": "^0.19.1",
+    "jwt-decode": "^2.2.0",
+    "nouislider": "^13.1.5",
     "prop-types": "^15.7.2",
+    "query-string": "^6.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-redux": "^5.0.6",
-    "react-scripts": "1.0.17",
+    "react-google-maps-loader": "^4.2.5",
+    "react-google-places-suggest": "^3.7.1",
+    "react-redux": "^7.0.2",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "^2.1.8",
     "react-spring": "^8.0.19",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "react-tag-autocomplete": "^5.10.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^2.0.3",
+    "uuid": "^3.3.2",
+    "wnumb": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -18,5 +35,10 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000"
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
