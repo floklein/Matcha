@@ -2,98 +2,121 @@ const express = require('express');
 const router = express.Router();
 
 const mysql = require('mysql');
+const jwt_check = require('../../utils/jwt_check');
+const notifs = require('../../utils/notifs');
 
 //Connect to db
 let connection = mysql.createConnection({
-    host: 'localhost',
-    port: '3306',
-    user: 'root',
-    password: 'root',
-    database: 'matcha'
-})
+  host: 'localhost',
+  port: '3306',
+  user: 'root',
+  password: 'root',
+  database: 'matcha'
+});
 
-connection.connect(function(err) {
-    if (err) throw err
-    console.log('You are now connected...')
-})
+connection.connect(function (err) {
+  if (err) throw err;
+});
 
+router.post('/', (req, res) => {
 
+  const user = jwt_check.getUsersInfos(req.headers.authorization);
+  if (user.id === -1) {
+    return res.status(401).json({error: 'unauthorized access'});
+  }
 
-router.post('/:id', (req, res) => {
-    let response = {
-        likee: req.query.likee
+  let response = {
+    liked: req.body.liked
+  };
+  let errors = {};
+
+  if (typeof response.liked === 'undefined' || response.liked === "") {
+    errors = {
+      ...errors,
+      liked: "Utilisateur requis"
+    };
+    return res.status(400).json(errors);
+  }
+
+  //Check if 2 users are the same
+  if (user.id === response.liked) {
+    errors = {
+      ...errors,
+      liked: "Vous ne pouvez pas vous liker"
+    };
+    return res.status(400).json(errors);
+  }
+
+  //Check if user has profile pic
+  let sql = "Select profile_pic from infos " +
+    `WHERE user_id = ?;`;
+  connection.query(sql, [user.id], (err, mypic) => {
+    if (err) throw err;
+    if (mypic[0].profile_pic === "/photos/default.png") {
+      return res.status(400).json({
+        liked: "Vous devez posséder une photo de profil pour liker"
+      });
     }
+    //Check if liked exists
+    sql = `SELECT u.id, u.username, i.profile_pic  from users u INNER JOIN infos i ON u.id = i.user_id WHERE id = ?`;
+    connection.query(sql, [response.liked], (err, result0) => {
+      if (result0 && result0.length === 0) {
+        errors = {
+          ...errors,
+          liked: "Utilisateur inexistant"
+        };
+        return res.status(400).json(errors);
+      }
+      if (result0 && result0[0].profile_pic === '/photos/default.png') {
+        errors = {
+          ...errors,
+          liked: "Vous ne pouvez liker un utilisateur qui n'a pas de photo de profil"
+        };
+        return res.status(400).json(errors);
+      }
+      sql = `SELECT * FROM likes WHERE liked_id = ? AND liker_id = ?`;
+      connection.query(sql, [user.id, response.liked], (err, result) => {
+        if (err) throw err;
+        const is_liked = (!!result.length);
 
-    let error = false;
-    let res_array = [];
-
-    if (typeof response.likee == 'undefined' || response.likee == "") {
-        error = true;
-        res_array.push({
-            error: "likee",
-            errorText: "le compte likee est requis"
-        })
-        res.status(400);
-        res.end(JSON.stringify(res_array));
-    }
-    else {
-        //Check if 2 users are the same
-        if (req.params.id === response.likee) {
-            res_array.push({
-                error: "id",
-                errorText: "Les deux utilisateurs ne peuvent etre identiques"
+        //Check if already liked
+        sql = `SELECT * FROM likes WHERE liker_id = ? AND liked_id = ?`;
+        connection.query(sql, [user.id, response.liked], (err, result) => {
+          if (result && result.length !== 0) { //If already liked, unlike
+            sql = `DELETE FROM likes WHERE liker_id = ? AND liked_id = ?`;
+            connection.query(sql, [user.id, response.liked], (err, result) => {
+              sql = "UPDATE infos SET popularity = popularity - 5 " +
+                `WHERE user_id = ?;`;
+              connection.query(sql, [response.liked], (err) => {
+                if (err) throw err;
+                if (is_liked) {
+                  notifs.postNotif(response.liked, 'unlike', `${user.username} ne vous like plus`, user.id, user.username);
+                }
+                return res.json({like: (is_liked ? "you" : "no")});
+              });
             });
-            res.status(400);
-            res.end(JSON.stringify(res_array));
-        }
-        else {
-            //Check if liker exists
-            let sql = `SELECT id from users WHERE id = ${req.params.id}`;
-            connection.query(sql, (err, result) => {
-                if (result && result.length == 0) {
-                    res_array.push({
-                        error: "id",
-                        errorText: "Liker non trouve"
-                    });
-                    res.status(400);
-                    res.end(JSON.stringify(res_array));
-                }
+          } else {  //Else, like
+            sql = `INSERT INTO likes(liker_id, liked_id) VALUES(?, ?)`;
+            connection.query(sql, [user.id, response.liked], (err, result) => {
+              //Give 5 popularity points when liked
+              sql = "UPDATE infos SET popularity = popularity + 5 " +
+                `WHERE user_id = ?;`;
+              connection.query(sql, [response.liked], (err, resp) => {
+                if (err) throw err;
+                if (!is_liked)
+                  notifs.postNotif(response.liked, 'like', `${user.username} vous a aimé.`, user.id, user.username);
                 else {
-                    //Check if likee exists
-                    sql = `SELECT id from users WHERE id = ${response.likee}`;
-                    connection.query(sql, (err, result) => {
-                        if (result && result.length == 0) {
-                            res_array.push({
-                                error: "id",
-                                errorText: "Utilisateur like non trouve"
-                            });
-                            res.status(400);
-                            res.end(JSON.stringify(res_array));
-                        }
-                        else {
-                            //Check if already liked
-                            sql = `SELECT * FROM likes WHERE liker_id = ${req.params.id} AND likee_id = ${response.likee}`;
-                            connection.query(sql, (err, result) => {
-                                if (result && result.length != 0) { //If already liked, unlike
-                                    //Check if already liked
-                                    sql = `DELETE FROM likes WHERE liker_id = ${req.params.id} AND likee_id = ${response.likee}`;
-                                    connection.query(sql, (err, result) => {
-                                        res.end("dislike");
-                                    })
-                                }
-                                else {  //Else, like
-                                    sql = `INSERT INTO likes(liker_id, likee_id) VALUES(${req.params.id}, ${response.likee})`;
-                                    connection.query(sql, (err, result) => {
-                                        res.end("like");
-                                    })
-                                }
-                            })
-                        }
-                    })
+                  notifs.postNotif(response.liked, 'match', `Vous avez matché avec ${user.username}.`, user.id, user.username);
+                  notifs.postNotif(user.id, 'match', `Vous avez matché avec ${result0[0].username}.`, response.liked, result0[0].username);
                 }
-            })
-        }
-    }
+                return res.json({like: (is_liked ? "both" : "me")});
+              });
+            });
+          }
+        });
+      });
+    });
+  });
 });
 
 module.exports = router;

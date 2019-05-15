@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,700');
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700');
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
 
 /*GLOBAL CSS*/
@@ -8,6 +8,10 @@
 * {
     box-sizing: border-box;
     font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background-color: whitesmoke;
 }
 
 ::selection {
@@ -36,10 +40,11 @@ h1, h2, h3, h4, h5, h6 {
     display: grid;
     align-items: center;
     justify-items: center;
+    background-color: whitesmoke;
 }
 
 .centered > div {
-    width: 90vw;
+    width: 100vw;
     max-width: 70rem;
 }
 
@@ -50,7 +55,7 @@ button {
     margin: 0.6rem 0 1.2rem 0;
     padding: 0.4rem 0;
     border: none;
-    border-radius: 1.75rem;
+    border-radius: 1.25rem;
     background: #a5abb6 linear-gradient(to right, #d6dde7, rgba(0, 0, 0, 0));
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
@@ -180,6 +185,32 @@ input.validation:valid:focus, select.validation:valid:focus {
     border-color: #b3d9af;
 }
 
+input.invalid, select.invalid {
+    border-color: #ffe1e1;
+    background-color: #ffe1e1;
+}
+
+input.invalid:hover, select.invalid:hover {
+    border-color: #f5c4bf;
+}
+
+input.invalid:focus, select.invalid:focus {
+    border-color: #f5aea9;
+}
+
+input:not(:focus).invalid, select.invalid {
+    border-color: #ffe1e1 !important;
+    background-color: #ffe1e1 !important;
+}
+
+input:not(:focus).invalid:hover, select.invalid:hover {
+    border-color: #f5c4bf !important;
+}
+
+input:not(:focus).invalid:focus, select.invalid:focus {
+    border-color: #f5aea9 !important;
+}
+
 /*BODY CSS*/
 
 #wrapper {
@@ -193,5 +224,4 @@ input.validation:valid:focus, select.validation:valid:focus {
     display: grid;
     grid-template-columns: 1fr;
     width: 100vw;
-    background-color: white;
 }

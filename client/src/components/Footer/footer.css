@@ -6,6 +6,7 @@
     width: 100vw;
     height: 9.5rem;
     background-color: #383945;
+    cursor: default;
     /*box-shadow: 0 -3px 15px -6px rgba(0, 0, 0, 0.2);*/
 }
 

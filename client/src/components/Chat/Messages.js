@@ -1,36 +1,38 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import Message from './Message';
 
 import './chatpanel.css';
+import noMsgImg from '../../assets/img/chat-no-msg.svg';
 
 class Messages extends Component {
+  componentDidUpdate() {
+    const msgDiv = document.querySelector('.chat__messages');
+    msgDiv.scrollTop = msgDiv.scrollHeight;
+  }
+
   render() {
+    const {messages} = this.props;
+
     return (
       <div className="chat__messages">
-        <Message
-          content={'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis delectus eaque enim ex exercitationem nemo officia quas sapiente sint, voluptate!'}
-          date={'19:37'}
-          whose={'mine'}
-        />
-        <Message
-          content={'Je suis un message.'}
-          date={'19:45'}
-          whose={'yours'}
-        />
-        <Message
-          content={'Salut sa va ??'}
-          date={'20:02'}
-          whose={'mine'}
-        />
-        <Message
-          content={'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad distinctio magni nemo pariatur quasi sequi.'}
-          date={'20:21'}
-          whose={'yours'}
-        />
+        {messages && Array.isArray(messages)
+        && messages.slice().reverse().map((message) => (
+          <Message key={message.id} content={message.message} date={message.date} whose={message.whose}/>
+        ))}
+        <div className="chat__msg-no-messages">
+          <img src={noMsgImg} alt="no message"/>
+          <br/><br/>
+          <span>Pas de messages.</span>
+        </div>
       </div>
     );
   }
 }
 
-export default Messages;
+const mapStateToProps = (state) => ({
+  messages: state.chat.messages
+});
+
+export default connect(mapStateToProps)(Messages);

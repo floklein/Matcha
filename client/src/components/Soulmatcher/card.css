@@ -1,0 +1,215 @@
+/*CARD LAYOUT*/
+.card {
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    background-color: white;
+    transition: box-shadow 0.4s, background-color 1s, transform 1s, filter 1s;
+    overflow: hidden;
+    cursor: grab;
+}
+
+.card:last-child, .card:nth-last-child(2) {
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.2);
+}
+
+.card:last-child, .card:nth-last-child(2), .card:nth-last-child(3) {
+    display: block;
+}
+
+.card:nth-last-child(2) {
+    transform: translateY(2.5rem) scale(0.9);
+    filter: blur(3px);
+}
+
+.card:nth-last-child(3) {
+    transform: translateY(5rem) scale(0.8);
+    filter: blur(6px);
+}
+
+.card:hover {
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3);
+}
+
+.card:active {
+    cursor: grabbing;
+}
+
+/*CARD DURING DRAG'n'DROP*/
+
+.card.liking::before,
+.card.disliking::before {
+    display: block;
+    position: absolute;
+    margin: 0.45rem;
+    padding: 0.1rem 0.5rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    z-index: 12 !important;
+}
+
+.card.liking::before {
+    content: "J'aime !";
+    color: #3fd39f;
+}
+
+.card.disliking::before {
+    content: "Bof...";
+    right: 0;
+    color: #8579e0;
+}
+
+.card.liking .after,
+.card.disliking .after {
+    content: "";
+    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    z-index: 11 !important;
+}
+
+/*CONTENT*/
+.card__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+}
+
+.card__profile-pic {
+    width: 8rem;
+    height: 8rem;
+    margin: 2rem auto 1rem auto;
+    border-radius: 4rem;
+    background-color: lightgrey;
+    background-size: cover;
+    background-position: center;
+}
+
+.card__name {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    word-break: break-word;
+    color: white;
+}
+
+.card__username {
+    text-align: center;
+    word-break: break-word;
+    color: white;
+    opacity: 0.5;
+}
+
+.card__infos {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 90%;
+    margin: 1.75rem auto;
+}
+
+.card__infos > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+}
+
+.card__infos > div > div:first-child {
+    margin-bottom: 0.2rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    opacity: 0.2;
+}
+
+.card__infos > div > div:last-child {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    opacity: 0.5;
+}
+
+.card__photos {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-top: -0.5rem;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+.card__photos > div {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 6rem;
+    height: 6rem;
+    margin: 0.5rem 0 0.5rem 1rem;
+    background-color: white;
+    background-size: cover;
+    background-position: center;
+    border-radius: 1rem;
+    box-shadow: 0 0 12px -5px rgba(0, 0, 0, 0.5);
+}
+
+.card__photos .empty {
+    width: 0.01rem;
+    background-color: unset !important;
+}
+
+.card__tags {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0.5rem 1rem 1rem 1rem;
+    padding-top: 0.5rem;
+    max-height: 4.5rem;
+    overflow-y: auto;
+}
+
+.card__tags > div {
+    margin: 0 0 0.5rem 0.5rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 1rem;
+    color: white;
+    background-color: white;
+    font-size: 0.9rem;
+    box-shadow: 0 0 12px -4px rgba(0, 0, 0, 0.5);
+    word-wrap: unset;
+    text-transform: lowercase;
+}
+
+.card__tags > div::before {
+    content: "#";
+    opacity: 0.5;
+    margin-right: 0.2rem;
+}
+
+.card__more {
+    position: absolute;
+    width: 100%;
+    bottom: 1.5rem;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: white;
+    opacity: 0.5;
+    font-size: 1rem;
+}
