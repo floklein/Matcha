@@ -10,7 +10,8 @@
     "client": "npm start --prefix client",
     "init": "node setup/init.js && node setup/tables.js",
     "seeder": "node setup/filler.js && node setup/tags.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Brad Traversy",
   "license": "MIT",
