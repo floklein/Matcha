@@ -1,26 +1,14 @@
 const express = require('express');
 const router = express.Router();
-
 const pw_hash = require('password-hash');
-const mysql = require('mysql');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
 const jwt_check = require('../../utils/jwt_check');
 const nodemailer = require('nodemailer');
 const mail = require('../../template/email');
 
-// CONNECT TO DATABASE
-let connection = mysql.createConnection({
-  host: 'eu-cdbr-west-02.cleardb.net',
-  port: '3306',
-  user: 'bf02fec967e054',
-  password: '4623bc9a',
-  database: 'heroku_13dc1576b26f0ef',
-});
+const connection = require('../../utils/sql_connection');
 
-connection.connect(function (err) {
-  if (err) throw err
-});
 
 // PRE-REGISTER
 router.post('/preregister', (req, res) => {
