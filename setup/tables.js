@@ -1,16 +1,16 @@
 const mysql = require('mysql');
 
 let connection = mysql.createConnection({
-  host: 'localhost',
+  host: 'eu-cdbr-west-02.cleardb.net',
   port: '3306',
-  user: 'root',
-  password: 'root',
-  database: 'matcha',
+  user: 'bf02fec967e054',
+  password: '4623bc9a',
+  database: 'heroku_13dc1576b26f0ef',
   multipleStatements: 'true'
-})
+});
 
 connection.connect((err) => {
-  if (err) throw err
+  if (err) throw err;
 
   const sql = "CREATE TABLE IF NOT EXISTS users (" +
     "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY," +
