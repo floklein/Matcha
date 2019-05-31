@@ -1,5 +1,5 @@
 const axios = require('axios');
-let GMapiKey = require('../../config/GMapikey');
+let GMapiKey = require('../../config/GMapiKey');
 GMapiKey = GMapiKey.GMapiKey;
 
 const express = require('express');
