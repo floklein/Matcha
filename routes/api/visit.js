@@ -6,11 +6,11 @@ const notifs = require('../../utils/notifs');
 
 //Connect to db
 let connection = mysql.createConnection({
-    host: 'localhost',
-    port: '3306',
-    user: 'root',
-    password: 'root',
-    database: 'matcha'
+  host: 'eu-cdbr-west-02.cleardb.net',
+  port: '3306',
+  user: 'bf02fec967e054',
+  password: '4623bc9a',
+  database: 'heroku_13dc1576b26f0ef',
 });
 
 connection.connect(function (err) {

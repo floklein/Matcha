@@ -2,11 +2,11 @@ const mysql = require('mysql');
 
 //Connect to db
 let connection = mysql.createConnection({
-  host: 'localhost',
+  host: 'eu-cdbr-west-02.cleardb.net',
   port: '3306',
-  user: 'root',
-  password: 'root',
-  database: 'matcha'
+  user: 'bf02fec967e054',
+  password: '4623bc9a',
+  database: 'heroku_13dc1576b26f0ef',
 });
 
 connection.connect(function (err) {
