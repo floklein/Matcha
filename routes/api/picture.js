@@ -1,19 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const jwt_check = require('../../utils/jwt_check');
-const mysql = require('mysql');
 const path = require('path');
 const photos = require('../../utils/photos');
 const fs = require('fs');
 
-//Connect to db
-let connection = mysql.createConnection({
-  host: 'eu-cdbr-west-02.cleardb.net',
-  port: '3306',
-  user: 'bf02fec967e054',
-  password: '4623bc9a',
-  database: 'heroku_13dc1576b26f0ef',
-});
+const connection = require('../../utils/sql_connection');
 
 const multer = require('multer');
 const upload = multer({
@@ -29,10 +21,6 @@ const upload = multer({
   }
 });
 const uuid = require('uuid');
-
-connection.connect(function (err) {
-  if (err) throw err;
-});
 
 
 router.delete('/:pic_nb', (req, res) => {

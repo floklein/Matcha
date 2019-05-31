@@ -1,17 +1,5 @@
-const mysql = require('mysql');
+const connection = require('./sql_connection');
 
-//Connect to db
-let connection = mysql.createConnection({
-  host: 'eu-cdbr-west-02.cleardb.net',
-  port: '3306',
-  user: 'bf02fec967e054',
-  password: '4623bc9a',
-  database: 'heroku_13dc1576b26f0ef',
-});
-
-connection.connect(function (err) {
-  if (err) throw err;
-});
 
 module.exports = {
   postNotif: function postNotif(id, type, content, user_id, notifier_name) {
