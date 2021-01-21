@@ -35,7 +35,7 @@
     "nodeadmin": "^0.1.2",
     "nodemailer": "^6.1.1",
     "password-hash": "^1.2.2",
-    "socket.io": "^2.0.3",
+    "socket.io": "^2.4.0",
     "uuid": "^3.3.2"
   }
 }
